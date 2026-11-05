@@ -1,1 +1,25 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HyperWarp — Quick guide</title><style>body{max-width:780px;margin:45px auto;padding:24px;font:17px/1.7 system-ui;background:#19150f;color:#fff1d6}a{color:#a4e2d4}h1,h2{line-height:1.2}code{background:#352a1d;padding:3px 6px;border-radius:5px}li{margin:16px 0}.note{padding:18px;border-left:2px solid #a4e2d4;background:#241d14}</style><h1>Understand the code. Check the source.</h1><p><a href="/">Open HyperWarp →</a></p><h2>A 30-second walkthrough</h2><ol><li>Choose a <b>Codebase</b>, or use one of the example questions.</li><li>Click <b>Explain the code</b>. Read the plain-language explanation first.</li><li>Expand <b>Source evidence</b> and click <b>Read code</b> to inspect the actual function.</li></ol><div class="note"><b>Why did the old demo say False?</b><br>It displayed a raw Python return value. For <code>Signer.validate</code>, False means that the signature did not pass validation. The new interface explains that behavior first. The original return value remains under <b>Technical details</b>. False does not mean the same thing for every function.</div><h2>Other screens</h2><p><b>Sources:</b> upload files, add a document, or edit/delete a record. Changes refresh retrieval. When a source no longer matches the trained memory, the service explicitly switches to live retrieval.</p><p><b>Results:</b> inspect the saved evaluation on 61 questions. These are recorded experimental results, not a fresh test of your current query.</p><h2>Read-only costs</h2><p>Costs cover processing a question, retrieving or reading memory, and generating an answer. The charts exclude training, baking, document updates, index construction and cold start. Per-query costs use measured service time and an assumed GPU hourly price; they are estimates, not a cloud invoice.</p><h2>Advanced options</h2><p>Hybrid is selected automatically when its source snapshot matches. Expand Advanced options only to select RAG or compare live modes. You do not need to change these settings for the walkthrough.</p><p><b>Hide window</b> or <b>Esc</b> hides the workspace. <b>Show memory</b> restores it without losing your question.</p><p>Answers can be wrong. Use the source evidence to assess them.</p></html>
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HyperWarp — Quick start</title>
+<style>body{max-width:760px;margin:48px auto;padding:24px;font:17px/1.7 system-ui;background:#19150f;color:#fff1d6}a{color:#a4e2d4}h1,h2{line-height:1.2}h1{font-size:38px;letter-spacing:-1px}h2{font-size:23px;margin-top:36px}code{background:#352a1d;padding:3px 6px;border-radius:5px}li{margin:14px 0}.start{display:inline-block;margin:10px 0;padding:10px 18px;border:1px solid #a4e2d4;border-radius:24px;text-decoration:none}.lead{font-size:20px;opacity:.85}</style></head>
+<body>
+<h1>Ask your codebase.<br>See the source.</h1>
+<p class="lead">HyperWarp answers questions about connected repositories and lets you inspect the code behind each answer.</p>
+<a class="start" href="/">Open HyperWarp ↗</a>
+<h2>Try it in 30 seconds</h2>
+<ol>
+<li>Choose <b>itsdangerous</b> in <b>Codebase</b>.</li>
+<li>Click <b>Reject invalid signatures</b>.</li>
+<li>Read the explanation: <b>“Invalid signatures are rejected.”</b></li>
+<li>Expand <b>Source evidence</b> and click <b>Read code</b> to inspect the validation function.</li>
+</ol>
+<h2>Explore another repository</h2>
+<p>Try <b>Understand an HTTP error</b> for HTTPX or <b>Escape HTML safely</b> for Django. You can also type your own question and click <b>Explain the code</b>.</p>
+<h2>Manage your sources</h2>
+<p>Open <b>Sources</b> to upload files, create a document, or edit an existing record. Search refreshes when documents change.</p>
+<h2>Inspect the results</h2>
+<p><b>Results</b> shows recorded evaluation scores, errors and estimated read-only inference costs. These measurements come from the saved experiment. Training and document-update costs are excluded from the serving-cost charts.</p>
+<h2>Optional details</h2>
+<p><b>Technical details</b> shows the underlying output and execution mode. <b>Advanced options</b> lets you select a mode or compare live responses.</p>
+<p><b>Hide window</b> or <b>Esc</b> hides the workspace. <b>Show memory</b> brings it back without losing your question.</p>
+</body></html>
