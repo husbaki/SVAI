@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Корпоративная память</title>
+<title>Corporate Memory</title>
 <style>
 :root {
   --bg: #f6f6f4; --panel: #ffffff; --line: #e3e2de; --line-strong: #cfcdc7;
@@ -211,121 +211,121 @@ html.embed .toast { background: #fff1d6; color: #2a170a; }
 <body>
 <header>
   <div class="bar">
-    <span class="brand">Корпоративная память</span>
-    <label class="project">Проект
+    <span class="brand">Corporate Memory</span>
+    <label class="project">Project
       <input id="project" type="text" list="projects" value="acme" spellcheck="false">
       <datalist id="projects"></datalist>
     </label>
     <nav role="tablist">
-      <button role="tab" data-tab="query" aria-selected="true">Запрос</button>
-      <button role="tab" data-tab="memory" aria-selected="false">Память</button>
-      <button role="tab" data-tab="compare" aria-selected="false">Сравнение</button>
+      <button role="tab" data-tab="query" aria-selected="true">Query</button>
+      <button role="tab" data-tab="memory" aria-selected="false">Memory</button>
+      <button role="tab" data-tab="compare" aria-selected="false">Compare</button>
     </nav>
     <div class="version" id="version"></div>
   </div>
 </header>
 
 <main>
-  <!-- ============ Запрос ============ -->
+  <!-- ============ Query ============ -->
   <section id="tab-query">
     <div class="grid">
       <div>
         <div class="card">
-          <textarea id="q-text" placeholder="Например: Какой срок возврата для корпоративных клиентов?"></textarea>
+          <textarea id="q-text" placeholder="e.g. What is the return period for corporate clients?"></textarea>
           <div class="row" style="margin-top:10px">
-            <select id="q-variant" aria-label="Архитектура"></select>
-            <label class="switch"><input type="checkbox" id="q-compare"> Сравнить варианты</label>
+            <select id="q-variant" aria-label="Architecture"></select>
+            <label class="switch"><input type="checkbox" id="q-compare"> Compare variants</label>
             <span class="muted" style="margin-left:auto;font-size:12px">Ctrl+Enter</span>
-            <button class="btn primary" id="q-ask">Спросить</button>
+            <button class="btn primary" id="q-ask">Ask</button>
           </div>
         </div>
         <div id="q-result"></div>
       </div>
       <aside class="card">
-        <h2>Использованные факты</h2>
-        <ul class="facts" id="q-facts"><li class="empty">Задайте вопрос</li></ul>
+        <h2>Facts used</h2>
+        <ul class="facts" id="q-facts"><li class="empty">Ask a question</li></ul>
       </aside>
     </div>
   </section>
 
-  <!-- ============ Память ============ -->
+  <!-- ============ Memory ============ -->
   <section id="tab-memory" hidden>
     <div class="grid">
       <div>
         <div class="card">
           <div class="drop" id="drop">
-            Перетащите папку с документами сюда<br>
-            <span style="font-size:12px">.md .txt .rst .csv .json .html · новая загрузка заменяет корпус</span>
-            <div style="margin-top:12px"><label class="btn">Выбрать папку<input type="file" id="folder" webkitdirectory multiple hidden></label></div>
+            Drop a folder of documents here<br>
+            <span style="font-size:12px">.md .txt .rst .csv .json .html · a new upload replaces the corpus</span>
+            <div style="margin-top:12px"><label class="btn">Choose folder<input type="file" id="folder" webkitdirectory multiple hidden></label></div>
           </div>
         </div>
         <div class="card">
-          <div class="row" style="justify-content:space-between"><h2>Документы</h2><span class="muted mono" id="m-corpus"></span></div>
+          <div class="row" style="justify-content:space-between"><h2>Documents</h2><span class="muted mono" id="m-corpus"></span></div>
           <div class="table-wrap"><table>
-            <thead><tr><th>Документ</th><th>Версия</th><th class="num">Факты</th><th>Изменение</th></tr></thead>
+            <thead><tr><th>Document</th><th>Version</th><th class="num">Facts</th><th>Change</th></tr></thead>
             <tbody id="m-docs"></tbody>
           </table></div>
         </div>
       </div>
       <aside>
         <div class="card">
-          <h2>Запекание</h2>
+          <h2>Bake</h2>
           <details id="experiment">
-            <summary>Эксперимент</summary>
+            <summary>Experiment</summary>
             <div id="m-variants" style="display:grid;gap:6px;margin-bottom:8px"></div>
-            <p class="muted" style="font-size:12px;margin:0">Обучающие примеры генерируются из фактов автоматически.</p>
+            <p class="muted" style="font-size:12px;margin:0">Training examples are generated from facts automatically.</p>
           </details>
-          <button class="btn primary" id="m-bake" style="width:100%;margin-top:8px">Запечь</button>
+          <button class="btn primary" id="m-bake" style="width:100%;margin-top:8px">Bake</button>
           <div class="steps" id="m-steps"></div>
           <div id="m-job"></div>
         </div>
         <div class="card">
-          <h2>Активная версия памяти</h2>
-          <div id="m-active" class="empty">Память ещё не запечена</div>
+          <h2>Active memory version</h2>
+          <div id="m-active" class="empty">Memory not baked yet</div>
         </div>
       </aside>
     </div>
   </section>
 
-  <!-- ============ Сравнение ============ -->
+  <!-- ============ Compare ============ -->
   <section id="tab-compare" hidden>
     <div class="card">
       <div class="row">
-        <label class="btn">Набор вопросов (.jsonl)<input type="file" id="c-suite" accept=".jsonl,.json,.txt" hidden></label>
-        <span class="muted" id="c-suite-name" style="flex:1;min-width:180px">Без файла используется демо-набор: 14 вопросов</span>
-        <button class="btn primary" id="c-eval">Проверить качество</button>
-        <button class="btn" id="c-bench">Измерить скорость</button>
+        <label class="btn">Question suite (.jsonl)<input type="file" id="c-suite" accept=".jsonl,.json,.txt" hidden></label>
+        <span class="muted" id="c-suite-name" style="flex:1;min-width:180px">No file: the demo suite of 14 questions is used</span>
+        <button class="btn primary" id="c-eval">Evaluate quality</button>
+        <button class="btn" id="c-bench">Benchmark speed</button>
       </div>
     </div>
     <div class="card">
       <div class="table-wrap"><table>
         <thead><tr>
-          <th>Вариант</th><th class="num">Точность</th><th class="num">Доля отвеченных</th><th class="num">p95 задержки</th>
-          <th class="num">Стоимость 1 000 запросов</th><th class="num">Запекание</th>
+          <th>Variant</th><th class="num">Accuracy</th><th class="num">Answered</th><th class="num">p95 latency</th>
+          <th class="num">Cost per 1,000 queries</th><th class="num">Bake</th>
         </tr></thead>
         <tbody id="c-table"></tbody>
       </table></div>
       <p class="muted" style="font-size:12px;margin:8px 0 0" id="c-note"></p>
     </div>
     <div class="charts">
-      <div class="card"><h2>Качество против стоимости ответа</h2><div id="c-chart1"></div></div>
+      <div class="card"><h2>Quality vs cost per answer</h2><div id="c-chart1"></div></div>
       <div class="card">
         <div class="row" style="justify-content:space-between;align-items:flex-start">
-          <h2>Общая стоимость против числа запросов</h2>
-          <label class="muted" style="font-size:12px">обновлений памяти <input type="text" id="c-updates" value="12" inputmode="numeric" style="width:52px"></label>
+          <h2>Total cost vs number of queries</h2>
+          <label class="muted" style="font-size:12px">memory updates <input type="text" id="c-updates" value="12" inputmode="numeric" style="width:52px"></label>
         </div>
         <div id="c-chart2"></div>
       </div>
     </div>
     <div class="card" id="c-errors-card" hidden style="margin-top:16px">
-      <h2 id="c-errors-title">Ошибки</h2>
+      <h2 id="c-errors-title">Errors</h2>
       <div id="c-errors"></div>
     </div>
   </section>
 </main>
 
-<div class="drawer" id="drawer" role="dialog" aria-label="Исходный документ">
-  <header><strong id="d-title" class="mono"></strong><button class="btn" id="d-close">Закрыть</button></header>
+<div class="drawer" id="drawer" role="dialog" aria-label="Source document">
+  <header><strong id="d-title" class="mono"></strong><button class="btn" id="d-close">Close</button></header>
   <pre id="d-text"></pre>
 </div>
 
@@ -345,69 +345,68 @@ const Mock = (() => {
   const CONFIG = { top_k: 5, min_coverage: 0.5 };
 
   const DEMO_DOCS = [
-    { path: "returns.md", content: `# Политика возврата товаров
+    { path: "returns.md", content: `# Returns policy
 
-## Общие условия
-Покупатель может вернуть товар надлежащего качества в течение 14 дней с момента получения.
-Товар должен сохранить товарный вид, упаковку и чек.
-Деньги возвращаются на карту в течение 10 рабочих дней после проверки товара.
+## General terms
+Customers may return items in good condition within 14 days of delivery.
+Items must keep their original look, packaging and receipt.
+Refunds are sent to the card within 10 business days after the item is inspected.
 
-## Корпоративные клиенты
-Срок возврата для корпоративных клиентов составляет 30 дней с даты подписания акта приёмки.
-Возврат корпоративного заказа оформляется через персонального менеджера.
+## Corporate clients
+The return period for corporate clients is 30 days from the signing of the acceptance certificate.
+Corporate order returns are processed through a dedicated account manager.
 
-## Исключения
-Товары, изготовленные на заказ по индивидуальным размерам, возврату не подлежат.
-Лицензии на программное обеспечение после активации возврату не подлежат, даже для корпоративных клиентов.
+## Exceptions
+Items made to order with custom measurements cannot be returned.
+Software licenses cannot be returned after activation, even for corporate clients.
 ` },
-    { path: "delivery.md", content: `# Доставка
+    { path: "delivery.md", content: `# Delivery
 
-Доставка по Москве занимает от 1 до 2 рабочих дней.
-Доставка в регионы России занимает от 3 до 7 рабочих дней.
-Бесплатная доставка действует для заказов от 5000 рублей.
-Для корпоративных клиентов доставка бесплатна независимо от суммы заказа.
-Крупногабаритные товары доставляются только до подъезда, подъём на этаж оплачивается отдельно.
+Delivery within the city takes 1 to 2 business days.
+Delivery to other regions takes 3 to 7 business days.
+Free delivery applies to orders over 5000 dollars.
+Delivery is free for corporate clients regardless of order amount.
+Bulky items are delivered to the building entrance only, carrying upstairs is charged separately.
 ` },
-    { path: "support.md", content: `# Служба поддержки
+    { path: "support.md", content: `# Customer support
 
-Поддержка частных клиентов работает ежедневно с 9:00 до 21:00 по московскому времени.
-Корпоративные клиенты получают круглосуточную поддержку через выделенную линию.
-Время первого ответа по корпоративному договору не превышает 2 часов.
-Обращения по гарантии рассматриваются в течение 5 рабочих дней.
-Гарантийный срок на электронику составляет 12 месяцев.
+Support for private customers works daily from 9:00 to 21:00 local time.
+Corporate clients get 24/7 support through a dedicated line.
+First response time under a corporate contract does not exceed 2 hours.
+Warranty claims are reviewed within 5 business days.
+The warranty period for electronics is 12 months.
 ` },
-    { path: "archive/returns-2023.md", content: `# Политика возврата (редакция 2023 года)
+    { path: "archive/returns-2023.md", content: `# Returns policy (2023 edition)
 
-## Корпоративные клиенты
-Срок возврата для корпоративных клиентов составляет 21 день с даты подписания акта приёмки.
+## Corporate clients
+The return period for corporate clients is 21 days from the signing of the acceptance certificate.
 ` },
   ];
   const DEMO_QUESTIONS = [
-    { question: "Сколько дней есть у покупателя на возврат товара?", answer: "14 дней" },
-    { question: "Через сколько дней возвращаются деньги на карту?", answer: "10 рабочих дней" },
-    { question: "Какой срок возврата для корпоративных клиентов?", answer: "30 дней" },
-    { question: "Можно ли вернуть товар, сделанный на заказ по индивидуальным размерам?", answer: "возврату не подлежат" },
-    { question: "Можно ли вернуть активированную лицензию на программное обеспечение?", answer: "после активации возврату не подлежат" },
-    { question: "Сколько занимает доставка по Москве?", answer: "от 1 до 2 рабочих дней" },
-    { question: "Сколько идёт доставка в регионы?", answer: "от 3 до 7 рабочих дней" },
-    { question: "С какой суммы заказа доставка бесплатная?", answer: "5000 рублей" },
-    { question: "Платят ли корпоративные клиенты за доставку?", answer: "бесплатна независимо от суммы" },
-    { question: "Когда работает поддержка для частных клиентов?", answer: "с 9:00 до 21:00" },
-    { question: "Как быстро отвечают корпоративным клиентам?", answer: "не превышает 2 часов" },
-    { question: "Какой гарантийный срок на электронику?", answer: "12 месяцев" },
-    { question: "Есть ли у компании офис в Казани?", answer: null },
-    { question: "Какая скидка для студентов?", answer: null },
+    { question: "How many days does a customer have to return an item?", answer: "14 days" },
+    { question: "How long until the refund reaches the card?", answer: "10 business days" },
+    { question: "What is the return period for corporate clients?", answer: "30 days" },
+    { question: "Can items made to order with custom measurements be returned?", answer: "cannot be returned" },
+    { question: "Can an activated software license be returned?", answer: "cannot be returned after activation" },
+    { question: "How long does delivery within the city take?", answer: "1 to 2 business days" },
+    { question: "How long does delivery to other regions take?", answer: "3 to 7 business days" },
+    { question: "From what order amount is delivery free?", answer: "5000 dollars" },
+    { question: "Do corporate clients pay for delivery?", answer: "free for corporate clients regardless" },
+    { question: "When does support for private customers work?", answer: "from 9:00 to 21:00" },
+    { question: "How fast is the first response for corporate clients?", answer: "does not exceed 2 hours" },
+    { question: "What is the warranty period for electronics?", answer: "12 months" },
+    { question: "Does the company have an office in Berlin?", answer: null },
+    { question: "What discount do students get?", answer: null },
   ];
 
   /* ---------- text ---------- */
-  const STOP = new Set(`и в во не что он на я с со как а то все она так его но да ты к у же вы за бы по только ее её мне было вот
-    от меня еще ещё нет о из ему теперь когда даже ну ли если уже или ни быть был него до вас нибудь опять уж вам ведь там потом
-    себя ничего ей может они тут где есть надо ней для мы тебя их чем была сам чтобы без будто чего раз тоже себе под будет ж тогда
-    кто этот того потому этого какой какая какие совсем ним здесь этом один почти мой тем нее сейчас были куда зачем всех никогда
-    можно при об другой хоть после над больше тот через эти нас про всего них много разве эту моя свою этой перед иногда лучше
-    чуть том нельзя такой им более всегда конечно всю между это сколько the a an of to in is are for and or on at by with what`.split(/\s+/));
+  const STOP = new Set(`the a an of to in on at by for from with within under over after before and or but not no is are was were be been
+    being do does did can could may might must will would shall should has have had it its this that these those there their
+    they them we our you your i me my he she his her what which who whom how when where why any some all each than then
+    as if so too very just also only about into out up down off again more most much many such own same other until while
+    get gets got take takes per`.split(/\s+/));
   const stem = w => /^\d/.test(w) ? w.replace(",", ".") : w.slice(0, 5);
-  const terms = t => (String(t).toLowerCase().match(/[a-zа-яё0-9]+(?:[.,][0-9]+)?/g) || []).filter(w => !STOP.has(w)).map(stem);
+  const terms = t => (String(t).toLowerCase().match(/[a-z0-9]+(?:[.,][0-9]+)?/g) || []).filter(w => !STOP.has(w)).map(stem);
   const nums = t => new Set((String(t).match(/\d+(?:[.,]\d+)?/g) || []).map(n => n.replace(",", ".")));
   const bigr = ts => ts.slice(1).map((b, i) => ts[i] + "|" + b);
   const count = arr => arr.reduce((m, t) => (m.set(t, (m.get(t) || 0) + 1), m), new Map());
@@ -480,7 +479,7 @@ const Mock = (() => {
   }
   const coverage = (question, f) => { const q = new Set(terms(question)); if (!q.size) return 0; const ft = new Set(factTerms(f)); return [...q].filter(t => ft.has(t)).length / q.size; };
   function answer(question, hits, facts) {
-    const none = { status: "insufficient", answer: "Недостаточно данных в корпоративной памяти.", used: [] };
+    const none = { status: "insufficient", answer: "Not enough data in corporate memory.", used: [] };
     if (!hits.length) return none;
     const top = facts[hits[0][0]];
     if (coverage(question, top) < CONFIG.min_coverage) return none;
@@ -493,20 +492,20 @@ const Mock = (() => {
       const fn = nums(f.text);
       if (jac >= 0.5 && tn.size && fn.size && [...tn].join() !== [...fn].join())
         return { status: "contradiction", used: [hits[0][0], i],
-          answer: `Источники расходятся: «${top.text}» (${top.doc_id}) и «${f.text}» (${f.doc_id}).` };
+          answer: `Sources disagree: “${top.text}” (${top.doc_id}) vs “${f.text}” (${f.doc_id}).` };
     }
     return { status: "grounded", answer: top.text, used: [hits[0][0]] };
   }
 
   /* ---------- store ---------- */
   const projects = {}, jobs = {}, artifacts = {};
-  const proj = p => projects[p] || fail("PROJECT_NOT_FOUND", `Проект «${p}» не найден. Загрузите документы на вкладке «Память».`);
+  const proj = p => projects[p] || fail("PROJECT_NOT_FOUND", `Project “${p}” not found. Upload documents on the Memory tab.`);
 
   function prepare(p, files) {
     const docs = files.filter(f => /\.(md|markdown|txt|rst|csv|json|html?)$/i.test(f.path))
       .map(f => ({ id: f.path, text: String(f.content), version: hash(String(f.content)).slice(0, 12) }))
       .sort((a, b) => a.id.localeCompare(b.id));
-    if (!docs.length) fail("CORPUS_EMPTY", "В загрузке нет текстовых документов");
+    if (!docs.length) fail("CORPUS_EMPTY", "The upload has no text documents");
     const P = projects[p] ||= { corpora: {}, current: null, snapshots: [], active: null, last_changes: {}, runs: [] };
     const facts = docs.flatMap(d => { const f = extractFacts(d.id, d.text); d.facts = f.length; return f; });
     const cv = "c_" + hash(docs.map(d => d.id + ":" + d.version).join("\n")).slice(0, 12);
@@ -548,9 +547,9 @@ const Mock = (() => {
   }
   function startBake(p, variants) {
     const P = proj(p);
-    if (!Array.isArray(variants) || !variants.length) fail("INVALID_VARIANT", "Выберите хотя бы один вариант");
+    if (!Array.isArray(variants) || !variants.length) fail("INVALID_VARIANT", "Select at least one variant");
     const bad = variants.filter(v => !VARIANTS.includes(v));
-    if (bad.length) fail("INVALID_VARIANT", `Неизвестные варианты: ${bad.join(", ")}`);
+    if (bad.length) fail("INVALID_VARIANT", `Unknown variants: ${bad.join(", ")}`);
     const job = { job_id: newId("job"), kind: "bake", project: p, corpus_version: P.current, variants, config: CONFIG,
       status: "queued", stage: null, stages: ["prepare_examples", "train", "validate", "done"], created_at: nowIso(), progress: {} };
     jobs[job.job_id] = job;
@@ -572,11 +571,11 @@ const Mock = (() => {
 
   function snapshotOf(p, sid) {
     const P = proj(p), id = sid || P.active;
-    if (!id) fail("NO_SNAPSHOT", "Память ещё не запечена. Нажмите «Запечь» на вкладке «Память».");
-    return P.snapshots.find(s => s.snapshot_id === id) || fail("SNAPSHOT_NOT_FOUND", `Версия памяти ${id} не найдена`);
+    if (!id) fail("NO_SNAPSHOT", "Memory not baked yet. Press Bake on the Memory tab.");
+    return P.snapshots.find(s => s.snapshot_id === id) || fail("SNAPSHOT_NOT_FOUND", `Memory version ${id} not found`);
   }
   function queryOne(p, snap, v, text) {
-    if (!snap.variants[v]) fail("VARIANT_NOT_BAKED", `Вариант ${v} не запечён в версии ${snap.snapshot_id}`);
+    if (!snap.variants[v]) fail("VARIANT_NOT_BAKED", `Variant ${v} is not baked in version ${snap.snapshot_id}`);
     const facts = projects[p].corpora[snap.corpus_version].facts, art = artifacts[snap.variants[v].artifact].art;
     const t0 = performance.now();
     const hits = search(art, text, CONFIG.top_k), a = answer(text, hits, facts);
@@ -585,7 +584,7 @@ const Mock = (() => {
       facts: hits.map(([i, s]) => ({ ...facts[i], score: +s.toFixed(4), used: a.used.includes(i) })) };
   }
   function query(p, { text, variant, snapshot, compare }) {
-    if (!text || !text.trim()) fail("EMPTY_QUESTION", "Введите вопрос");
+    if (!text || !text.trim()) fail("EMPTY_QUESTION", "Enter a question");
     const snap = snapshotOf(p, snapshot);
     const base = { run_id: newId("q"), project: p, snapshot_id: snap.snapshot_id, corpus_version: snap.corpus_version, config: snap.config, question: text };
     if (compare) return { ...base, results: VARIANTS.filter(v => snap.variants[v]).map(v => queryOne(p, snap, v, text)),
@@ -594,11 +593,11 @@ const Mock = (() => {
     return { ...base, ...queryOne(p, snap, v, text) };
   }
 
-  const norm = s => String(s).toLowerCase().replace(/ё/g, "е").replace(/\s+/g, " ").trim();
+  const norm = s => String(s).toLowerCase().replace(/\u2019/g, "'").replace(/\s+/g, " ").trim();
   const expected = it => { const a = it.answers ?? it.answer; return a == null || a === "" ? [] : [].concat(a); };
   function evaluate(p, { suite }) {
-    if (!Array.isArray(suite) || !suite.length) fail("SUITE_INVALID", "Набор вопросов пуст");
-    suite.forEach((it, i) => it?.question || fail("SUITE_INVALID", `Вопрос ${i + 1}: нет поля question`));
+    if (!Array.isArray(suite) || !suite.length) fail("SUITE_INVALID", "The question suite is empty");
+    suite.forEach((it, i) => it?.question || fail("SUITE_INVALID", `Question ${i + 1}: no "question" field`));
     const snap = snapshotOf(p), results = {};
     for (const v of Object.keys(snap.variants)) {
       let correct = 0, answered = 0; const errors = [];
@@ -641,7 +640,7 @@ const Mock = (() => {
   const costPer1k = (v, p50) => +((p50 / 1000 / 3600 * PRICING.serve_usd_per_hour + PRICING.context_tokens[v] / 1000 * PRICING.llm_usd_per_1k_input_tokens) * 1000).toFixed(6);
   function compare(p) {
     const P = proj(p), evals = P.runs.filter(r => r.kind === "evaluate"), benches = P.runs.filter(r => r.kind === "benchmark");
-    if (!evals.length && !benches.length) fail("NO_RESULTS", "Нет результатов экспериментов");
+    if (!evals.length && !benches.length) fail("NO_RESULTS", "No experiment results");
     const rows = [];
     for (const v of VARIANTS) {
       const ev = evals.find(r => r.results[v]), be = benches.find(r => r.results[v]);
@@ -655,7 +654,7 @@ const Mock = (() => {
         snapshot_id: (ev || be).snapshot_id, corpus_version: (ev || be).corpus_version });
     }
     return { run_id: newId("cmp"), project: p, rows, pricing: PRICING,
-      cost_note: "Демо-режим: данные в браузере. Стоимость — расчёт по задержке и допущениям PRICING; время запекания смоделировано." };
+      cost_note: "Demo mode: data lives in the browser. Cost is estimated from latency and PRICING assumptions; bake time is simulated." };
   }
   function overview(p) {
     const P = proj(p), c = P.current ? P.corpora[P.current] : null;
@@ -673,7 +672,7 @@ const Mock = (() => {
     const m = path.match(/^\/api\/projects\/([^/]+)(?:\/(\w+))?$/), p = m && decodeURIComponent(m[1]), act = m?.[2];
     if (method === "GET" && path === "/api/projects") return { projects: Object.keys(projects) };
     const job = path.match(/^\/api\/jobs\/(.+)$/);
-    if (method === "GET" && job) return jobs[decodeURIComponent(job[1])] || fail("JOB_NOT_FOUND", "Задание не найдено");
+    if (method === "GET" && job) return jobs[decodeURIComponent(job[1])] || fail("JOB_NOT_FOUND", "Job not found");
     if (!m) fail("NO_ROUTE", `${method} ${path}`);
     if (method === "GET" && !act) return overview(p);
     if (method === "POST" && act === "upload") return prepare(p, body.files || []);
@@ -684,7 +683,7 @@ const Mock = (() => {
     if (method === "GET" && act === "compare") return compare(p);
     if (method === "GET" && act === "document") {
       const P = proj(p), c = P.corpora[q.get("corpus") || P.current];
-      const d = c?.documents.find(x => x.id === q.get("doc")) || fail("DOCUMENT_NOT_FOUND", "Документ не найден");
+      const d = c?.documents.find(x => x.id === q.get("doc")) || fail("DOCUMENT_NOT_FOUND", "Document not found");
       return { project: p, corpus_version: c.corpus_version, id: d.id, version: d.version, text: d.text };
     }
     fail("NO_ROUTE", `${method} ${path}`);
@@ -705,19 +704,19 @@ const Mock = (() => {
 </script>
 <script>
 const VARIANT_LABEL ={ rag: "RAG", latent: "Latent", address: "Address", hybrid: "Hybrid" };
-const STATUS_LABEL = { grounded: "Найдены основания", insufficient: "Недостаточно данных", contradiction: "Обнаружено противоречие" };
-const STAGE_LABEL = { prepare_examples: "Подготовка примеров", train: "Обучение", validate: "Проверка", done: "Готово" };
-const CHANGE_LABEL = { new: "новый", changed: "изменён", unchanged: "без изменений", removed: "удалён" };
+const STATUS_LABEL = { grounded: "Grounded", insufficient: "Not enough data", contradiction: "Contradiction found" };
+const STAGE_LABEL = { prepare_examples: "Preparing examples", train: "Training", validate: "Validating", done: "Done" };
+const CHANGE_LABEL = { new: "new", changed: "changed", unchanged: "unchanged", removed: "removed" };
 const TEXT_EXT = /\.(md|markdown|txt|rst|csv|json|html?)$/i;
-const EMPTY_TABLE = `<tr><td colspan="6" class="empty">Нет результатов. Запустите «Проверить качество» и «Измерить скорость».</td></tr>`;
+const EMPTY_TABLE = `<tr><td colspan="6" class="empty">No results yet. Run “Evaluate quality” and “Benchmark speed”.</td></tr>`;
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const project = () => $("#project").value.trim();
 const P = () => `/api/projects/${encodeURIComponent(project())}`;
 const color = v => `var(--c-${v})`;
-const fmtPct = x => x == null ? "—" : (x * 100).toFixed(1) + " %";
-const fmtMs = x => x == null ? "—" : x.toFixed(2) + " мс";
+const fmtPct = x => x == null ? "—" : (x * 100).toFixed(1) + "%";
+const fmtMs = x => x == null ? "—" : x.toFixed(2) + " ms";
 const fmtUsd = x => x == null ? "—" : x === 0 ? "$0" : x < 0.0001 ? "<$0.0001" : "$" + (x < 0.01 ? x.toFixed(4) : x.toFixed(4).replace(/0+$/, "").replace(/\.$/, ""));
 // greedy label placement: shift a label (down for dir=1, up for dir=-1) until it clears earlier ones
 function placeLabels(items, minDy = 13, minDx = 70, dir = 1) {
@@ -729,7 +728,7 @@ function placeLabels(items, minDy = 13, minDx = 70, dir = 1) {
   }
   return placed;
 }
-const fmtS = x => x == null ? "—" : (x < 1 ? (x * 1000).toFixed(0) + " мс" : x.toFixed(1) + " с");
+const fmtS = x => x == null ? "—" : (x < 1 ? (x * 1000).toFixed(0) + " ms" : x.toFixed(1) + " s");
 
 const state = { overview: null, lastQuery: null, selected: null, compare: null, selectedRow: null };
 
@@ -766,8 +765,8 @@ async function loadOverview() {
 function renderHeader() {
   const s = state.overview?.active_snapshot;
   $("#version").innerHTML = s
-    ? `<span class="muted">Память</span><span class="chip mono">${esc(s.snapshot_id)}</span><span class="muted">корпус</span><span class="chip mono">${esc(s.corpus_version)}</span>`
-    : `<span class="muted">Память не запечена</span>`;
+    ? `<span class="muted">Memory</span><span class="chip mono">${esc(s.snapshot_id)}</span><span class="muted">corpus</span><span class="chip mono">${esc(s.corpus_version)}</span>`
+    : `<span class="muted">Memory not baked</span>`;
 }
 function renderVariantSelect() {
   const baked = Object.keys(state.overview?.active_snapshot?.variants || {});
@@ -805,31 +804,31 @@ function answerBlock(x) {
 }
 function renderQuery() {
   const r = state.lastQuery; if (!r) return;
-  const version = `<span>Память <span class="mono">${esc(r.snapshot_id)}</span></span><span>Корпус <span class="mono">${esc(r.corpus_version)}</span></span>`;
+  const version = `<span>Memory <span class="mono">${esc(r.snapshot_id)}</span></span><span>Corpus <span class="mono">${esc(r.corpus_version)}</span></span>`;
   if (r.results) {
     $("#q-result").innerHTML = `<div class="card"><div class="variants">${r.results.map(x => `
       <button class="vcard" data-v="${x.variant}" aria-pressed="${x.variant === state.selected}">
         <div class="row" style="justify-content:space-between"><span class="vname"><span class="dot" style="background:${color(x.variant)}"></span>${VARIANT_LABEL[x.variant]}</span>
         <span class="muted" style="font-size:12px">${fmtMs(x.latency_ms)}</span></div>
         ${answerBlock(x)}</button>`).join("")}
-      ${r.missing_variants.map(v => `<div class="vcard muted" style="cursor:default"><span class="vname">${VARIANT_LABEL[v]}</span><p>Не запечён в этой версии памяти.</p></div>`).join("")}
-      </div><div class="meta" style="margin-top:12px">${version}<span>Нажмите на вариант, чтобы увидеть его факты</span></div></div>`;
+      ${r.missing_variants.map(v => `<div class="vcard muted" style="cursor:default"><span class="vname">${VARIANT_LABEL[v]}</span><p>Not baked in this memory version.</p></div>`).join("")}
+      </div><div class="meta" style="margin-top:12px">${version}<span>Click a variant to see its facts</span></div></div>`;
     document.querySelectorAll(".vcard[data-v]").forEach(b => b.onclick = () => { state.selected = b.dataset.v; renderQuery(); });
   } else {
     $("#q-result").innerHTML = `<div class="card"><div class="muted" style="font-size:12px;margin-bottom:6px">${VARIANT_LABEL[r.variant]}</div>
-      ${answerBlock(r)}<div class="meta">${version}<span>Время ответа ${fmtMs(r.latency_ms)}</span></div></div>`;
+      ${answerBlock(r)}<div class="meta">${version}<span>Response time ${fmtMs(r.latency_ms)}</span></div></div>`;
   }
   const cur = r.results ? r.results.find(x => x.variant === state.selected) : r;
   renderFacts(cur?.facts || [], r.corpus_version);
 }
 function renderFacts(facts, corpus) {
   const ul = $("#q-facts");
-  if (facts === null) { ul.innerHTML = `<li class="empty">Задайте вопрос</li>`; return; }
-  if (!facts.length) { ul.innerHTML = `<li class="empty">Подходящих фактов не найдено</li>`; return; }
+  if (facts === null) { ul.innerHTML = `<li class="empty">Ask a question</li>`; return; }
+  if (!facts.length) { ul.innerHTML = `<li class="empty">No matching facts found</li>`; return; }
   ul.innerHTML = facts.map((f, i) => `<li><button class="fact ${f.used ? "used" : ""}" data-i="${i}">
       ${f.heading ? `<div class="muted" style="font-size:12px">${esc(f.heading)}</div>` : ""}
       <div>${esc(f.text)}</div>
-      <div class="src"><span class="mono">${esc(f.doc_id)}</span><span class="muted">${f.used ? "в ответе · " : ""}${f.score}</span></div>
+      <div class="src"><span class="mono">${esc(f.doc_id)}</span><span class="muted">${f.used ? "in answer · " : ""}${f.score}</span></div>
     </button></li>`).join("");
   ul.querySelectorAll(".fact").forEach(b => b.onclick = () => openDoc(facts[+b.dataset.i], corpus, b));
 }
@@ -860,11 +859,11 @@ function renderMemory() {
   const o = state.overview;
   const ch = o?.last_changes || {};
   const status = id => (ch.added || []).includes(id) ? "new" : (ch.changed || []).includes(id) ? "changed" : "unchanged";
-  $("#m-corpus").textContent = o?.current_corpus ? `${o.current_corpus} · ${o.facts} фактов` : "";
+  $("#m-corpus").textContent = o?.current_corpus ? `${o.current_corpus} · ${o.facts} facts` : "";
   const rows = (o?.documents || []).map(d => `<tr><td class="mono">${esc(d.id)}</td><td class="mono muted">${esc(d.version)}</td>
       <td class="num">${d.facts}</td><td><span class="badge s-${status(d.id)}">${CHANGE_LABEL[status(d.id)]}</span></td></tr>`)
-    .concat((ch.removed || []).map(id => `<tr><td class="mono muted">${esc(id)}</td><td></td><td></td><td><span class="badge s-removed">удалён</span></td></tr>`));
-  $("#m-docs").innerHTML = rows.join("") || `<tr><td colspan="4" class="empty">Корпус пуст — перетащите папку с документами</td></tr>`;
+    .concat((ch.removed || []).map(id => `<tr><td class="mono muted">${esc(id)}</td><td></td><td></td><td><span class="badge s-removed">removed</span></td></tr>`));
+  $("#m-docs").innerHTML = rows.join("") || `<tr><td colspan="4" class="empty">Corpus is empty: drop a folder of documents</td></tr>`;
 
   const box = $("#m-variants");
   if (!box.children.length) box.innerHTML = (o?.variants || ["rag", "latent", "address", "hybrid"]).map(v =>
@@ -873,12 +872,12 @@ function renderMemory() {
   const s = o?.active_snapshot;
   $("#m-active").className = s ? "" : "empty";
   $("#m-active").innerHTML = s ? `<dl class="kv">
-      <dt>Версия</dt><dd class="mono">${esc(s.snapshot_id)}</dd>
-      <dt>Корпус</dt><dd class="mono">${esc(s.corpus_version)}</dd>
-      <dt>Создана</dt><dd>${esc(s.created_at)}</dd>
+      <dt>Version</dt><dd class="mono">${esc(s.snapshot_id)}</dd>
+      <dt>Corpus</dt><dd class="mono">${esc(s.corpus_version)}</dd>
+      <dt>Created</dt><dd>${esc(s.created_at)}</dd>
       ${Object.entries(s.variants).map(([v, m]) => `<dt class="vname"><span class="dot" style="background:${color(v)}"></span>${VARIANT_LABEL[v]}</dt>
-        <dd>${fmtS(m.bake_s)} · ${fmtUsd(m.bake_cost_usd)} · самопроверка ${fmtPct(m.self_check_recall_at_1)}${m.reused ? " · из кеша" : ""}</dd>`).join("")}
-    </dl>` : "Память ещё не запечена";
+        <dd>${fmtS(m.bake_s)} · ${fmtUsd(m.bake_cost_usd)} · self-check ${fmtPct(m.self_check_recall_at_1)}${m.reused ? " · cached" : ""}</dd>`).join("")}
+    </dl>` : "Memory not baked yet";
 
   const job = o?.jobs?.[0];
   renderJob(job);
@@ -896,10 +895,10 @@ function renderJob(job) {
   if (!job) { $("#m-job").innerHTML = ""; return; }
   const r = job.result;
   $("#m-job").innerHTML = `<dl class="kv">
-      <dt>Задание</dt><dd class="mono">${esc(job.job_id)}</dd>
-      <dt>Статус</dt><dd>${esc(job.status)}</dd>
-      ${r ? `<dt>Время</dt><dd>${fmtS(r.duration_s)}</dd><dt>Стоимость</dt><dd>${fmtUsd(r.bake_cost_usd)}</dd>` : ""}
-      ${job.error ? `<dt>Ошибка</dt><dd style="color:var(--bad)">${esc(job.error.code)}: ${esc(job.error.message)}</dd>` : ""}
+      <dt>Job</dt><dd class="mono">${esc(job.job_id)}</dd>
+      <dt>Status</dt><dd>${esc(job.status)}</dd>
+      ${r ? `<dt>Time</dt><dd>${fmtS(r.duration_s)}</dd><dt>Cost</dt><dd>${fmtUsd(r.bake_cost_usd)}</dd>` : ""}
+      ${job.error ? `<dt>Error</dt><dd style="color:var(--bad)">${esc(job.error.code)}: ${esc(job.error.message)}</dd>` : ""}
     </dl>`;
 }
 let polling = null;
@@ -919,7 +918,7 @@ async function pollJob(id) {
 }
 $("#m-bake").onclick = () => busy($("#m-bake"), async () => {
   const variants = [...document.querySelectorAll("#m-variants input:checked")].map(i => i.value);
-  if (!variants.length) { $("#experiment").open = true; throw new Error("Выберите хотя бы один вариант в блоке «Эксперимент»"); }
+  if (!variants.length) { $("#experiment").open = true; throw new Error("Select at least one variant under “Experiment”"); }
   const job = await api("POST", `${P()}/bake`, { variants });
   renderJob(job); pollJob(job.job_id);
 });
@@ -943,7 +942,7 @@ async function readEntry(entry, prefix, out) {
   }
 }
 async function upload(files) {
-  if (!files.length) throw new Error("В папке нет текстовых документов");
+  if (!files.length) throw new Error("The folder has no text documents");
   await api("POST", `${P()}/upload`, { files });
   await loadProjects(); await loadOverview();
 }
@@ -978,9 +977,9 @@ $("#c-suite").onchange = async e => {
   const f = e.target.files[0]; if (!f) return;
   try {
     suiteItems = (await f.text()).split(/\r?\n/).filter(l => l.trim()).map((l, i) => {
-      try { return JSON.parse(l); } catch { throw new Error(`${f.name}: строка ${i + 1} — не JSON`); }
+      try { return JSON.parse(l); } catch { throw new Error(`${f.name}: line ${i + 1} is not JSON`); }
     });
-    $("#c-suite-name").textContent = `${f.name}: ${suiteItems.length} вопросов`;
+    $("#c-suite-name").textContent = `${f.name}: ${suiteItems.length} questions`;
   } catch (err) { suiteItems = null; toast(err.message); }
   e.target.value = "";
 };
@@ -1004,14 +1003,14 @@ function renderCompare() {
   const c = state.compare;
   if (!c?.rows.length) {
     $("#c-table").innerHTML = EMPTY_TABLE; $("#c-note").textContent = "";
-    $("#c-chart1").innerHTML = $("#c-chart2").innerHTML = `<div class="empty">Нет данных</div>`;
+    $("#c-chart1").innerHTML = $("#c-chart2").innerHTML = `<div class="empty">No data</div>`;
     $("#c-errors-card").hidden = true; return;
   }
   $("#c-table").innerHTML = c.rows.map(r => `<tr class="click" data-v="${r.variant}" aria-selected="${r.variant === state.selectedRow}" tabindex="0">
       <td><span class="vname"><span class="dot" style="background:${color(r.variant)}"></span>${VARIANT_LABEL[r.variant]}</span></td>
       <td class="num">${fmtPct(r.accuracy)}</td><td class="num">${fmtPct(r.answered_rate)}</td><td class="num">${fmtMs(r.p95_ms)}</td>
       <td class="num">${fmtUsd(r.cost_per_1k_usd)}</td><td class="num">${fmtS(r.bake_s)} · ${fmtUsd(r.bake_cost_usd)}</td></tr>`).join("");
-  $("#c-note").textContent = c.cost_note + " Нажмите на строку, чтобы увидеть ошибки.";
+  $("#c-note").textContent = c.cost_note + " Click a row to see its errors.";
   document.querySelectorAll("#c-table tr.click").forEach(tr => {
     const pick = () => { state.selectedRow = state.selectedRow === tr.dataset.v ? null : tr.dataset.v; renderCompare(); };
     tr.onclick = pick; tr.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } };
@@ -1022,13 +1021,13 @@ function renderErrors() {
   const row = state.compare?.rows.find(r => r.variant === state.selectedRow);
   $("#c-errors-card").hidden = !row;
   if (!row) return;
-  $("#c-errors-title").textContent = `Ошибки · ${VARIANT_LABEL[row.variant]} · ${row.errors.length} из ${row.n_questions ?? "—"}`;
+  $("#c-errors-title").textContent = `Errors · ${VARIANT_LABEL[row.variant]} · ${row.errors.length} of ${row.n_questions ?? "—"}`;
   $("#c-errors").innerHTML = row.errors.length ? row.errors.map(e => `<div class="error-item"><dl>
-      <dt>Вопрос</dt><dd>${esc(e.question)}</dd>
-      <dt>Правильный ответ</dt><dd>${e.expected ? esc(e.expected.join(" / ")) : "<span class='muted'>отказ: данных нет</span>"}</dd>
-      <dt>Ответ модели</dt><dd><span class="badge s-${e.status}">${STATUS_LABEL[e.status]}</span> ${esc(e.answer)}</dd>
-      <dt>Выбранные факты</dt><dd>${e.facts.map(f => `<div><span class="mono muted">${esc(f.doc_id)}</span> ${esc(f.text)}</div>`).join("") || "—"}</dd>
-    </dl></div>`).join("") : `<div class="empty">Ошибок нет</div>`;
+      <dt>Question</dt><dd>${esc(e.question)}</dd>
+      <dt>Correct answer</dt><dd>${e.expected ? esc(e.expected.join(" / ")) : "<span class='muted'>refuse: no data</span>"}</dd>
+      <dt>Model answer</dt><dd><span class="badge s-${e.status}">${STATUS_LABEL[e.status]}</span> ${esc(e.answer)}</dd>
+      <dt>Selected facts</dt><dd>${e.facts.map(f => `<div><span class="mono muted">${esc(f.doc_id)}</span> ${esc(f.text)}</div>`).join("") || "—"}</dd>
+    </dl></div>`).join("") : `<div class="empty">No errors</div>`;
 }
 
 /* ---- charts: inline SVG ---- */
@@ -1047,14 +1046,14 @@ function legend(rows) { return `<div class="legend">${rows.map(r => `<span class
 function drawCharts() {
   const rows = (state.compare?.rows || []).filter(r => r.cost_per_1k_usd != null);
   const W = 520, H = 280, PAD = { l: 56, r: 100, t: 12, b: 40 };
-  if (!rows.length) { $("#c-chart1").innerHTML = $("#c-chart2").innerHTML = `<div class="empty">Нужны результаты «Измерить скорость»</div>`; return; }
+  if (!rows.length) { $("#c-chart1").innerHTML = $("#c-chart2").innerHTML = `<div class="empty">Run “Benchmark speed” first</div>`; return; }
   const F = [0, .25, .5, .75, 1];
 
   // 1. accuracy vs cost per 1k queries
   const xMax = nice(Math.max(...rows.map(r => r.cost_per_1k_usd)) * 1.1);
   const x = v => PAD.l + v / xMax * (W - PAD.l - PAD.r), y = v => H - PAD.b - v * (H - PAD.t - PAD.b);
   let s1 = axes(W, H, PAD, F.map(f => ({ x: x(f * xMax), label: money(f * xMax) })), F.map(f => ({ y: y(f), label: f * 100 + "%" })),
-    "стоимость 1 000 запросов", "точность");
+    "cost per 1,000 queries", "accuracy");
   const withAcc = rows.filter(r => r.accuracy != null);
   for (const r of withAcc) {
     s1 += `<circle cx="${x(r.cost_per_1k_usd)}" cy="${y(r.accuracy)}" r="7" fill="${color(r.variant)}" stroke="var(--panel)" stroke-width="2">
@@ -1068,8 +1067,8 @@ function drawCharts() {
   });
   for (const l of placeLabels(labels)) s1 += `<text x="${l.x}" y="${l.y}" style="fill:${color(l.v)}">${l.text}</text>`;
   $("#c-chart1").innerHTML = withAcc.length
-    ? `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Качество против стоимости ответа">${s1}</svg>`
-    : `<div class="empty">Нужны результаты «Проверить качество»</div>`;
+    ? `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Quality vs cost per answer">${s1}</svg>`
+    : `<div class="empty">Run “Evaluate quality” first</div>`;
 
   // 2. total cost vs requests: bake × (1 + updates) + requests × cost per query
   const updates = Math.max(0, parseInt($("#c-updates").value, 10) || 0);
@@ -1078,14 +1077,14 @@ function drawCharts() {
   const yMax = nice(Math.max(...rows.map(r => total(r, N))) * 1.05);
   const x2 = n => PAD.l + n / N * (W - PAD.l - PAD.r), y2 = v => H - PAD.b - v / yMax * (H - PAD.t - PAD.b);
   let s2 = axes(W, H, PAD, F.map(f => ({ x: x2(f * N), label: f ? (f * N / 1000) + "k" : "0" })),
-    F.map(f => ({ y: y2(f * yMax), label: money(f * yMax) })), "число запросов", "общая стоимость");
+    F.map(f => ({ y: y2(f * yMax), label: money(f * yMax) })), "number of queries", "total cost");
   for (const r of rows) {
     s2 += `<polyline fill="none" stroke="${color(r.variant)}" stroke-width="2.5" points="${F.map(f => `${x2(f * N)},${y2(total(r, f * N))}`).join(" ")}">
-      <title>${VARIANT_LABEL[r.variant]}: ${fmtUsd(total(r, N))} на 1M запросов</title></polyline>`;
+      <title>${VARIANT_LABEL[r.variant]}: ${fmtUsd(total(r, N))} per 1M queries</title></polyline>`;
   }
   const ends = rows.map(r => ({ text: `${VARIANT_LABEL[r.variant]} ${money(total(r, N))}`, x: x2(N) + 6, y: y2(total(r, N)) + 4, v: r.variant }));
   for (const l of placeLabels(ends, 13, 70, -1)) s2 += `<text x="${l.x}" y="${l.y}" style="fill:${color(l.v)}">${l.text}</text>`;
-  $("#c-chart2").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Общая стоимость против числа запросов">${s2}</svg>${legend(rows)}`;
+  $("#c-chart2").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Total cost vs number of queries">${s2}</svg>${legend(rows)}`;
 }
 
 /* ---------------- boot ---------------- */
