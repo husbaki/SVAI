@@ -21,6 +21,7 @@ class WorkspaceQuery(BaseModel):
     variant: str | None = None
     compare: bool = False
     snapshot: str | None = None
+    explain: bool = True
 
 
 class UploadFile(BaseModel):
@@ -145,7 +146,7 @@ def create_router(store, ml, query_handler, query_type, root):
             fail("DOCUMENT_NOT_FOUND", "Document is not in this project", 404)
         return dict(project=project, corpus_version=cv, id=record["id"], version=str(record["version"]), text=record["content"])
 
-    def query_one(project, text, variant):
+    def query_one(project, text, variant, explain=False):
         response = query_handler(query_type(question=text, repositories=None if project == "all" else [project],
             top_k=2, mode=variant, use_ml=True))
         actual = response["actual_mode"]
@@ -156,10 +157,19 @@ def create_router(store, ml, query_handler, query_type, root):
                 heading=c["title"], start=0, end=len(excerpt.encode("utf-16-le")) // 2,
                 score="address" if actual == "hybrid" else c["score"], used=bool(response.get("llm_executed")),
                 source_url=c.get("source_url"), verification=c["verification"]))
-        return dict(variant=actual, requested_variant=variant, actual_mode=actual, answer=response["answer"],
+        result = dict(variant=actual, requested_variant=variant, actual_mode=actual, answer=response["answer"], raw_answer=response["answer"],
             status="insufficient" if response["status"] == "unknown" else "grounded",
             status_scope="source attached, not semantic correctness proof", latency_ms=response["elapsed_ms"],
             facts=facts, fallback_reason=response.get("fallback_reason"), trained_code_memory_executed=response["trained_code_memory_executed"])
+        result["answer_latency_ms"] = response["elapsed_ms"]
+        if explain:
+            from .explanation import explain_answer
+            started = time.perf_counter()
+            explanation = explain_answer(text, response["answer"], response["citations"], ml)
+            result.update(explanation=explanation["text"], explanation_source=explanation["source"],
+                explanation_latency_ms=(time.perf_counter()-started)*1000)
+            result["latency_ms"] += result["explanation_latency_ms"]
+        return result
 
     @router.post("/api/projects/{project}/query")
     def project_query(project: str, payload: WorkspaceQuery):
@@ -175,7 +185,7 @@ def create_router(store, ml, query_handler, query_type, root):
         variant = payload.variant or ("hybrid" if "hybrid" in snap["variants"] else "rag")
         if variant not in ("rag", "hybrid"):
             fail("VARIANT_NOT_AVAILABLE", "Live workspace supports rag and hybrid; other variants are offline results", 422)
-        return dict(base, **query_one(project, payload.text, variant))
+        return dict(base, **query_one(project, payload.text, variant, payload.explain))
 
     @router.post("/api/projects/{project}/bake")
     def bake(project: str, payload: Bake):
@@ -243,13 +253,18 @@ def create_router(store, ml, query_handler, query_type, root):
             bake_s = perf["results"][variant].get("rag_index_s") if variant == "rag" else training.get(variant, {}).get("baking_s")
             rows.append(dict(variant=variant, accuracy=q["exact_match"], answered_rate=q["answered"], n_questions=q["n"],
                 p50_ms=b["p50_ms"], p95_ms=b["p95_ms"], cost_per_1k_usd=b["amortized_ms"] / 3600 * hourly,
+                cost_per_query_usd=b["amortized_ms"] / 3_600_000 * hourly, cost_scope="read_only_inference",
+                excluded_costs=["training", "baking", "document_updates", "index_build", "cold_start"],
                 bake_s=bake_s, bake_cost_usd=bake_s / 3600 * hourly if bake_s is not None else None,
                 errors=errors, errors_count=len(errors) if predictions_path.is_file() else round((1-q["exact_match"]) * q["n"]),
                 errors_available=predictions_path.is_file(), evaluate_run_id="saved-code-test", benchmark_run_id="saved-code-benchmark",
                 snapshot_id="saved_" + quality["corpus_version"][:12], corpus_version=quality["corpus_version"]))
         return dict(run_id="saved-code-comparison", project=project, rows=rows, executed_now=False,
             scope="saved_offline_61q_all_repositories", corpus_version=quality["corpus_version"],
-            pricing=dict(serve_usd_per_hour=hourly), cost_note="Saved offline results: 61 held-out questions across all three repositories, not a new test of the selected project. Costs use measured batch=1 service time and an assumed GPU tariff. Offline RAG was dense-only; live RAG combines dense + BM25.")
+            pricing=dict(serve_usd_per_hour=hourly), cost_scope="read_only_inference",
+            cost_assumptions=dict(billing="active service wall-clock time at a flat assumed GPU tariff", gpu_usd_per_hour=hourly,
+                dedicated_gpu_idle="excluded; provisioning and utilization were not measured"),
+            cost_note="Saved offline results: 61 held-out questions across all three repositories, not a new test of the selected project. Read-only costs include measured question encoding, retrieval/memory access and Qwen prefill/decode at an assumed GPU-hour tariff. Training, baking, document updates, index build, cold start and dedicated-GPU idle are excluded. Saved benchmark costs exclude the optional live explanation pass. Offline RAG was dense-only; live RAG combines dense + BM25.")
 
     @router.get("/api/projects/{project}/compare")
     def compare(project: str):

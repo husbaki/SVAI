@@ -266,3 +266,14 @@ body {
   .hero .tagline { display: none; }
   .console { top: auto; left: 12px; right: 12px; width: auto; height: 68vh; }
 }
+/* Keep the workspace readable while preserving the corridor when hidden. */
+.page[data-memory-open="true"] .hero .title{font-size:clamp(44px,5.5vw,100px)}
+.page[data-memory-open="true"] .hero{max-width:27vw}
+.console{width:min(73vw,1100px);background:rgba(28,20,12,.88)}
+@media(max-width:900px){
+ .page[data-memory-open="true"] .hero{max-width:100%;padding:18px 22px}
+ .page[data-memory-open="true"] .hero .title{font-size:36px;line-height:1.1}
+ .page[data-memory-open="true"] .hero .title>span{display:inline}
+ .page[data-memory-open="true"] .hero .title>span+span{margin-left:.14em}
+ .console{top:82px;bottom:12px;left:12px;right:12px;width:auto;height:auto}
+}

@@ -213,6 +213,10 @@ html.embed .toast { background: #fff1d6; color: #2a170a; }
   html.embed .version { width: 100%; }
   html.embed textarea { font-size: 21px; min-height: 110px; }
 }
+
+/* Reviewer-first layout: ask, understand, inspect evidence. */
+#version{display:none!important}.review-title{font-size:clamp(24px,3vw,34px);line-height:1.15;font-weight:500;letter-spacing:-.7px;margin:4px 0 12px}.review-intro{font-size:14px;line-height:1.65;opacity:.72;max-width:620px;margin:0 0 22px}.examples{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}.examples .btn{font-size:12px;padding:8px 12px}.question-label{display:block;font-size:12px;opacity:.65;margin-bottom:8px}#q-text{font-size:20px;min-height:84px;line-height:1.5}.ask-actions{margin-top:14px}.advanced{margin-top:20px;font-size:12px;opacity:.75}.advanced summary{font-weight:400}#tab-query>.grid{display:block;max-width:780px;margin:0 auto}.evidence-details{margin-top:24px!important;border-top:1px solid var(--line);padding-top:16px!important}.evidence-details>summary{font-size:13px;font-weight:500}.answer-heading{font-size:12px;opacity:.6;margin-bottom:8px}.answer{font-size:21px;line-height:1.6;margin:0 0 20px;white-space:pre-wrap}.answer-technical{font-size:12px;opacity:.75;margin:8px 0 18px}.answer-technical summary{font-weight:400}.answer-technical dl{margin:12px 0}.meta{font-size:11px;opacity:.6}.source-action{float:right;font-size:12px;opacity:.65}.fact strong{font-weight:500}.bar{gap:14px!important}.bar nav{margin-left:auto!important}.bar>a.btn{font-size:11px;padding:6px 10px}.version{display:none}#q-result>.card>.muted:first-child{display:none}.question-label~textarea:focus-visible{outline:2px solid var(--accent);outline-offset:4px}html.embed .bar{padding-bottom:14px}.row label.switch{font-size:12px}
+
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap">
 <script>if (new URLSearchParams(location.search).has("embed")) document.documentElement.classList.add("embed");</script>
@@ -221,14 +225,14 @@ html.embed .toast { background: #fff1d6; color: #2a170a; }
 <header>
   <div class="bar">
     <span class="brand">Corporate memory</span>
-    <label class="project">Project
+    <label class="project">Codebase
       <input id="project" type="text" list="projects" value="itsdangerous" spellcheck="false">
       <datalist id="projects"></datalist>
     </label>
-    <a class="btn" href="/tutorial.html" target="_blank" rel="noopener">Quick guide ↗</a><nav role="tablist">
-      <button role="tab" data-tab="query" aria-selected="true">Query</button>
-      <button role="tab" data-tab="memory" aria-selected="false">Memory</button>
-      <button role="tab" data-tab="compare" aria-selected="false">Compare</button>
+    <a class="btn" href="/tutorial.html" target="_blank" rel="noopener">How to use ↗</a><nav role="tablist">
+      <button role="tab" data-tab="query" aria-selected="true">Ask</button>
+      <button role="tab" data-tab="memory" aria-selected="false">Sources</button>
+      <button role="tab" data-tab="compare" aria-selected="false">Results</button>
     </nav>
     <div class="version" id="version"></div>
   </div>
@@ -240,20 +244,17 @@ html.embed .toast { background: #fff1d6; color: #2a170a; }
     <div class="grid">
       <div>
         <div class="card">
-          <textarea id="q-text" placeholder="How does Signer.validate handle an invalid signature?"></textarea>
-          <div class="row" style="margin-top:10px">
-            <select id="q-variant" aria-label="Architecture"></select>
-            <label class="switch"><input type="checkbox" id="q-compare"> Compare variants</label>
-            <span class="muted" style="margin-left:auto;font-size:12px">Ctrl+Enter</span>
-            <button class="btn primary" id="q-ask">Ask</button>
-          </div>
+          <h1 class="review-title">Understand the code. See the evidence.</h1>
+          <p class="review-intro">Choose a question below or ask your own. HyperWarp reads the connected codebase and shows the source behind its answer.</p>
+          <div class="examples"><button class="btn example" data-project="itsdangerous" data-question="How does Signer.validate handle an invalid signature?">Reject invalid signatures ↗</button><button class="btn example" data-project="httpx" data-question="What exception does Response.raise_for_status raise on an error status?">Understand an HTTP error ↗</button><button class="btn example" data-project="django" data-question="What does django.utils.html.escape return for '<b>'?">Escape HTML safely ↗</button></div>
+          <label for="q-text" class="question-label">Your question</label>
+          <textarea id="q-text" placeholder="What happens when a signature is invalid?"></textarea>
+          <div class="row ask-actions"><span class="muted" style="font-size:12px">Ctrl+Enter to ask</span><button class="btn primary" id="q-ask" style="margin-left:auto">Explain the code ↗</button></div>
+          <details class="advanced"><summary>Advanced options</summary><div class="row" style="margin-top:12px"><select id="q-variant" aria-label="Architecture"></select><label class="switch"><input type="checkbox" id="q-compare"> Compare live modes</label></div></details>
         </div>
         <div id="q-result"></div>
       </div>
-      <aside class="card">
-        <h2>Supporting facts</h2>
-        <ul class="facts" id="q-facts"><li class="empty">Ask a question</li></ul>
-      </aside>
+      <details class="card evidence-details" id="evidence-details"><summary>Source evidence <span id="evidence-count"></span></summary><ul class="facts" id="q-facts"><li class="empty">Sources appear after you ask a question.</li></ul></details>
     </div>
   </section>
 
@@ -309,19 +310,19 @@ html.embed .toast { background: #fff1d6; color: #2a170a; }
     <div class="card">
       <div class="table-wrap"><table>
         <thead><tr>
-          <th>Variant</th><th class="num">Accuracy</th><th class="num">Answer rate</th><th class="num">p95 latency</th>
-          <th class="num">Cost per 1,000 queries</th><th class="num">Baking</th>
+          <th>Variant</th><th class="num">Accuracy</th><th class="num">p95 latency</th>
+          <th class="num">Cost / read</th><th class="num">Cost / 1,000 reads</th>
         </tr></thead>
         <tbody id="c-table"></tbody>
       </table></div>
       <p class="muted" style="font-size:12px;margin:8px 0 0" id="c-note"></p>
     </div>
     <div class="charts">
-      <div class="card"><h2>Quality vs. response cost</h2><div id="c-chart1"></div></div>
+      <div class="card"><h2>Answer quality vs. read-only cost</h2><div id="c-chart1"></div></div>
       <div class="card">
         <div class="row" style="justify-content:space-between;align-items:flex-start">
-          <h2>Total cost vs. query volume</h2>
-          <label class="muted" style="font-size:12px">memory updates <input type="text" id="c-updates" value="12" inputmode="numeric" style="width:52px"></label>
+          <h2>Read-only serving cost</h2>
+          <span class="muted" style="font-size:12px">Inference only · no training or update costs</span>
         </div>
         <div id="c-chart2"></div>
       </div>
@@ -349,7 +350,7 @@ const STATUS_LABEL = { grounded: "Source evidence attached", insufficient: "Insu
 const STAGE_LABEL = { prepare_examples: "Preparing examples", train: "Training", validate: "Validation", done: "Done" };
 const CHANGE_LABEL = { new: "new", changed: "changed", unchanged: "unchanged", removed: "removed" };
 const TEXT_EXT = /\.(py|js|jsx|ts|tsx|java|go|rs|c|cpp|h|md|markdown|txt|rst|csv|json|html?)$/i;
-const EMPTY_TABLE = `<tr><td colspan="6" class="empty">No results yet. Run Check quality and Measure speed.</td></tr>`;
+const EMPTY_TABLE = `<tr><td colspan="5" class="empty">No results yet. Run Check quality and Measure speed.</td></tr>`;
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -443,37 +444,37 @@ async function ask() {
   });
 }
 function answerBlock(x) {
-  const execution = x.actual_mode ? `<div class="muted" style="font-size:12px">Executed: ${esc(x.actual_mode.toUpperCase())}${x.fallback_reason ? ' · '+esc(x.fallback_reason) : ''}</div>` : '';
-  return `<span class="badge s-${x.status}">${STATUS_LABEL[x.status] || esc(x.status)}</span>${execution}<div class="answer">${esc(x.answer)}</div>`;
+  const raw=x.raw_answer ?? x.answer;
+  const fullExplanation=x.explanation || (String(raw).trim().toUpperCase()==='UNKNOWN' ? 'The available sources do not provide enough information to answer this question.' : ['true','false'].includes(String(raw).trim().toLowerCase()) ? "The function returned a boolean result. Open the source to see the condition it checks." : x.answer);
+  const explanation=x.explanation_source==='verified_ast_branch' && fullExplanation.includes(':') ? fullExplanation.split(':')[0]+'.' : fullExplanation;
+  return `<div class="answer-heading">What it means</div><div class="answer">${esc(explanation)}</div><details class="answer-technical"><summary>Technical details</summary><dl class="kv"><dt>Raw model output</dt><dd><code>${esc(raw)}</code></dd>${explanation!==fullExplanation?'<dt>Code behavior</dt><dd>'+esc(fullExplanation)+'</dd>':''}<dt>Execution mode</dt><dd>${esc((x.actual_mode||x.variant||'').toUpperCase())}</dd></dl>${x.fallback_reason?'<p class="muted">'+esc(x.fallback_reason)+'</p>':''}</details>`;
 }
 function renderQuery() {
   const r = state.lastQuery; if (!r) return;
-  const version = `<span>Memory <span class="mono">${esc(r.snapshot_id)}</span></span><span>Corpus <span class="mono">${esc(r.corpus_version)}</span></span>`;
+  const version = "";
   if (r.results) {
     $("#q-result").innerHTML = `<div class="card"><div class="variants">${r.results.map(x => `
-      <button class="vcard" data-v="${x.variant}" aria-pressed="${x.variant === state.selected}">
+      <article class="vcard" data-v="${x.variant}" tabindex="0" role="group" aria-label="${VARIANT_LABEL[x.variant]} answer">
         <div class="row" style="justify-content:space-between"><span class="vname"><span class="dot" style="background:${color(x.variant)}"></span>${VARIANT_LABEL[x.variant]}</span>
         <span class="muted" style="font-size:12px">${fmtMs(x.latency_ms)}</span></div>
-        ${answerBlock(x)}</button>`).join("")}
+        ${answerBlock(x)}<button class="btn select-mode" data-select="${x.variant}">Show these sources</button></article>`).join("")}
       ${r.missing_variants.map(v => `<div class="vcard muted" style="cursor:default"><span class="vname">${VARIANT_LABEL[v]}</span><p>Not baked in this memory version.</p></div>`).join("")}
       </div><div class="meta" style="margin-top:12px">${version}<span>Select a variant to see its supporting facts</span></div></div>`;
-    document.querySelectorAll(".vcard[data-v]").forEach(b => b.onclick = () => { state.selected = b.dataset.v; renderQuery(); });
+    document.querySelectorAll(".select-mode").forEach(b => b.onclick = () => { state.selected = b.dataset.select; renderQuery(); });
   } else {
     $("#q-result").innerHTML = `<div class="card"><div class="muted" style="font-size:12px;margin-bottom:6px">${VARIANT_LABEL[r.variant]}</div>
-      ${answerBlock(r)}<div class="meta">${version}<span>Response time ${fmtMs(r.latency_ms)}</span></div></div>`;
+      ${answerBlock(r)}<div class="meta"><span>Answered in ${fmtMs(r.latency_ms)}</span><span>${r.facts?.length||0} source fragments</span></div></div>`;
   }
   const cur = r.results ? r.results.find(x => x.variant === state.selected) : r;
   renderFacts(cur?.facts || [], r.corpus_version);
 }
 function renderFacts(facts, corpus) {
   const ul = $("#q-facts");
+  $("#evidence-count").textContent=facts?.length?"("+facts.length+")":"";
   if (facts === null) { ul.innerHTML = `<li class="empty">Ask a question</li>`; return; }
   if (!facts.length) { ul.innerHTML = `<li class="empty">No matching facts found</li>`; return; }
-  ul.innerHTML = facts.map((f, i) => `<li><button class="fact ${f.used ? "used" : ""}" data-i="${i}">
-      ${f.heading ? `<div class="muted" style="font-size:12px">${esc(f.heading)}</div>` : ""}
-      <div>${esc(f.text)}</div>
-      <div class="src"><span class="mono">${esc(f.doc_id)}</span><span class="muted">${f.used ? "used in answer · " : ""}${f.score}</span></div>
-    </button></li>`).join("");
+  $('#evidence-count').textContent='('+facts.length+')';
+  ul.innerHTML = facts.map((f,i)=>`<li><button class="fact" data-i="${i}"><strong>${esc(f.heading||'Source fragment '+(i+1))}</strong><span class="source-action">Read code ↗</span></button></li>`).join('');
   ul.querySelectorAll(".fact").forEach(b => b.onclick = () => openDoc(facts[+b.dataset.i], corpus, b));
 }
 let drawerReturn = null;
@@ -502,6 +503,10 @@ $("#q-ask").onclick = ask;
 $("#q-text").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask(); });
 $("#q-compare").onchange = () => { if (state.lastQuery) ask(); };
 
+document.querySelectorAll('.example').forEach(button=>button.onclick=async()=>{
+  $('#project').value=button.dataset.project;$('#q-text').value=button.dataset.question;
+  await loadOverview();await ask();
+});
 /* ---------------- memory ---------------- */
 function renderMemory() {
   const o = state.overview;
@@ -524,7 +529,7 @@ function renderMemory() {
       <dt>Corpus</dt><dd class="mono">${esc(s.corpus_version)}</dd>
       <dt>Created</dt><dd>${esc(s.created_at)}</dd>
       ${Object.entries(s.variants).map(([v, m]) => `<dt class="vname"><span class="dot" style="background:${color(v)}"></span>${VARIANT_LABEL[v]}</dt>
-        <dd>${fmtS(m.bake_s)} · ${fmtUsd(m.bake_cost_usd)} · self-check ${fmtPct(m.self_check_recall_at_1)}${m.reused ? " · cached" : ""}</dd>`).join("")}
+        <dd>Available${m.reused ? " · installed snapshot" : ""}</dd>`).join("")}
     </dl>` : "Memory has not been baked yet";
 
   const job = o?.jobs?.[0];
@@ -545,7 +550,7 @@ function renderJob(job) {
   $("#m-job").innerHTML = `<dl class="kv">
       <dt>Job</dt><dd class="mono">${esc(job.job_id)}</dd>
       <dt>Status</dt><dd>${esc(job.status)}</dd>
-      ${r ? `<dt>Time</dt><dd>${fmtS(r.duration_s)}</dd><dt>Cost</dt><dd>${fmtUsd(r.bake_cost_usd)}</dd>` : ""}
+      ${r ? `<dt>Validation time</dt><dd>${fmtS(r.duration_s)}</dd>` : ""}
       ${job.error ? `<dt>Error</dt><dd style="color:var(--bad)">${esc(job.error.code)}: ${esc(job.error.message)}</dd>` : ""}
     </dl>`;
 }
@@ -665,7 +670,7 @@ $("#c-bench").onclick = () => busy($("#c-bench"), async () => {
   await api("POST", `${P()}/benchmark`, { batch_sizes: [1, 8, 32] });
   await loadCompare();
 });
-$("#c-updates").oninput = () => drawCharts();
+
 
 async function loadCompare() {
   try { state.compare = await api("GET", `${P()}/compare`); }
@@ -681,8 +686,8 @@ function renderCompare() {
   }
   $("#c-table").innerHTML = c.rows.map(r => `<tr class="click" data-v="${r.variant}" aria-selected="${r.variant === state.selectedRow}" tabindex="0">
       <td><span class="vname"><span class="dot" style="background:${color(r.variant)}"></span>${VARIANT_LABEL[r.variant]}</span></td>
-      <td class="num">${fmtPct(r.accuracy)}</td><td class="num">${fmtPct(r.answered_rate)}</td><td class="num">${fmtMs(r.p95_ms)}</td>
-      <td class="num">${fmtUsd(r.cost_per_1k_usd)}</td><td class="num">${fmtS(r.bake_s)} · ${fmtUsd(r.bake_cost_usd)}</td></tr>`).join("");
+      <td class="num">${fmtPct(r.accuracy)}</td><td class="num">${fmtMs(r.p95_ms)}</td>
+      <td class="num">${r.cost_per_1k_usd==null?'—':'$'+(r.cost_per_query_usd ?? r.cost_per_1k_usd/1000).toFixed(7)}</td><td class="num">${fmtUsd(r.cost_per_1k_usd)}</td></tr>`).join("");
   $("#c-note").textContent = c.cost_note + " Select a row to see errors.";
   document.querySelectorAll("#c-table tr.click").forEach(tr => {
     const pick = () => { state.selectedRow = state.selectedRow === tr.dataset.v ? null : tr.dataset.v; renderCompare(); };
@@ -727,7 +732,7 @@ function drawCharts() {
   const xMax = nice(Math.max(...rows.map(r => r.cost_per_1k_usd)) * 1.1);
   const x = v => PAD.l + v / xMax * (W - PAD.l - PAD.r), y = v => H - PAD.b - v * (H - PAD.t - PAD.b);
   let s1 = axes(W, H, PAD, F.map(f => ({ x: x(f * xMax), label: money(f * xMax) })), F.map(f => ({ y: y(f), label: f * 100 + "%" })),
-    "cost per 1,000 queries", "accuracy");
+    "cost per 1,000 reads", "accuracy");
   const withAcc = rows.filter(r => r.accuracy != null);
   for (const r of withAcc) {
     s1 += `<circle cx="${x(r.cost_per_1k_usd)}" cy="${y(r.accuracy)}" r="7" fill="${color(r.variant)}" stroke="var(--panel)" stroke-width="2">
@@ -744,14 +749,13 @@ function drawCharts() {
     ? `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Quality vs. response cost">${s1}</svg>`
     : `<div class="empty">Run Check quality to see results</div>`;
 
-  // 2. total cost vs requests: bake × (1 + updates) + requests × cost per query
-  const updates = Math.max(0, parseInt($("#c-updates").value, 10) || 0);
+  // 2. Read-only serving cost: query count times measured inference cost.
   const N = 1_000_000;
-  const total = (r, n) => (r.bake_cost_usd || 0) * (1 + updates) + n / 1000 * r.cost_per_1k_usd;
+  const total = (r, n) => n / 1000 * r.cost_per_1k_usd;
   const yMax = nice(Math.max(...rows.map(r => total(r, N))) * 1.05);
   const x2 = n => PAD.l + n / N * (W - PAD.l - PAD.r), y2 = v => H - PAD.b - v / yMax * (H - PAD.t - PAD.b);
   let s2 = axes(W, H, PAD, F.map(f => ({ x: x2(f * N), label: f ? (f * N / 1000) + "k" : "0" })),
-    F.map(f => ({ y: y2(f * yMax), label: money(f * yMax) })), "query count", "total cost");
+    F.map(f => ({ y: y2(f * yMax), label: money(f * yMax) })), "query count", "read-only cost");
   for (const r of rows) {
     s2 += `<polyline fill="none" stroke="${color(r.variant)}" stroke-width="2.5" points="${F.map(f => `${x2(f * N)},${y2(total(r, f * N))}`).join(" ")}">
       <title>${VARIANT_LABEL[r.variant]}: ${fmtUsd(total(r, N))} for 1M queries</title></polyline>`;

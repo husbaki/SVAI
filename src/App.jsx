@@ -35,7 +35,7 @@ export default function App() {
   }, []);
 
   return (
-    <main className="page">
+    <main className="page" data-memory-open={!consoleHidden}>
       <Corridor interactive={false} />
 
       <section className="hero">
@@ -43,12 +43,12 @@ export default function App() {
           <span>Hyper</span>
           <span><span className="echo">W</span>arp<span className="cursor" aria-hidden="true">_</span></span>
         </h1>
-        <p className="tagline">Corporate memory.<br />Ask, bake, compare.</p>
+        <p className="tagline">Understand your code.<br />See the source.</p>
       </section>
 
       <div className="console" id="memory-console" hidden={consoleHidden}>
         <div className="console-header">
-          <span>Corporate memory</span>
+          <span>Ask your codebase</span>
           <button ref={hideButtonRef} className="console-toggle" onClick={hideConsole}
             aria-controls="memory-console" aria-expanded="true" title="Hide window (Esc)">
             Hide window <span aria-hidden="true">−</span>
