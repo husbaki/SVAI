@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Корпоративная память</title>
+<style>
+:root {
+  --bg: #f6f6f4; --panel: #ffffff; --line: #e3e2de; --line-strong: #cfcdc7;
+  --text: #1c1b19; --muted: #6b6963; --accent: #2b5fd9; --accent-weak: #e8eefc;
+  --ok: #1f7a4d; --ok-bg: #e4f3ea; --warn: #8a5a00; --warn-bg: #fbf0d9; --bad: #b42318; --bad-bg: #fde8e6;
+  --mark: #ffe58a; --shadow: 0 1px 2px rgba(0,0,0,.06);
+  --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --c-rag: #8a8780; --c-latent: #2b5fd9; --c-address: #c2410c; --c-hybrid: #0f8a6a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141413; --panel: #1d1c1a; --line: #2e2d2a; --line-strong: #3d3b37;
+    --text: #ecebe7; --muted: #9c9a93; --accent: #7aa2ff; --accent-weak: #1f2a44;
+    --ok: #5fd39a; --ok-bg: #16301f; --warn: #f2c063; --warn-bg: #33270f; --bad: #ff8a7a; --bad-bg: #3a1714;
+    --mark: #6b5600; --shadow: none;
+    --c-rag: #a9a69f; --c-latent: #7aa2ff; --c-address: #fb8c4a; --c-hybrid: #4fd1a8;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.mono { font-family: var(--mono); font-size: 12px; }
+.muted { color: var(--muted); }
+
+header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line); }
+.bar { max-width: 1320px; margin: 0 auto; padding: 10px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.brand { font-weight: 650; letter-spacing: -.01em; }
+.project { display: flex; gap: 6px; align-items: center; }
+.project input { width: 140px; }
+.version { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+nav { display: flex; gap: 2px; }
+nav button { border: 0; background: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--muted); }
+nav button[aria-selected="true"] { background: var(--accent-weak); color: var(--accent); font-weight: 600; }
+
+main { max-width: 1320px; margin: 0 auto; padding: 20px; }
+section[hidden] { display: none !important; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start; }
+@media (max-width: 960px) { .grid { grid-template-columns: 1fr; } main { padding: 16px; } }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 16px; }
+.card + .card, .grid + .card { margin-top: 16px; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+input[type=text], select, textarea { background: var(--bg); border: 1px solid var(--line-strong); border-radius: 6px; padding: 7px 9px; }
+textarea { width: 100%; resize: vertical; min-height: 84px; font-size: 16px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.btn { border: 1px solid var(--line-strong); background: var(--panel); border-radius: 6px; padding: 7px 14px; cursor: pointer; display: inline-block; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.btn:disabled { opacity: .5; cursor: default; }
+.switch { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; user-select: none; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.s-grounded { background: var(--ok-bg); color: var(--ok); }
+.s-insufficient { background: var(--warn-bg); color: var(--warn); }
+.s-contradiction { background: var(--bad-bg); color: var(--bad); }
+.s-new { background: var(--accent-weak); color: var(--accent); }
+.s-changed { background: var(--warn-bg); color: var(--warn); }
+.s-unchanged { background: var(--bg); color: var(--muted); }
+.s-removed { background: var(--bad-bg); color: var(--bad); }
+.chip { border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
+
+.answer { font-size: 18px; line-height: 1.5; margin: 10px 0; }
+.meta { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 12px; }
+.variants { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 700px) { .variants { grid-template-columns: 1fr; } }
+.vcard { border: 1px solid var(--line); border-radius: 8px; padding: 12px; cursor: pointer; background: var(--panel); text-align: left; }
+.vcard[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.vcard .answer { font-size: 15px; }
+.vname { font-weight: 650; display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+
+.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.fact { border: 1px solid var(--line); border-radius: 8px; padding: 10px; cursor: pointer; background: none; text-align: left; width: 100%; }
+.fact:hover { border-color: var(--line-strong); }
+.fact.used { border-left: 3px solid var(--accent); }
+.fact .src { color: var(--accent); font-size: 12px; margin-top: 4px; display: flex; justify-content: space-between; gap: 8px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tbody tr.click { cursor: pointer; }
+tbody tr.click:hover { background: var(--bg); }
+tbody tr[aria-selected="true"] { background: var(--accent-weak); }
+
+.drop { border: 2px dashed var(--line-strong); border-radius: 10px; padding: 28px; text-align: center; color: var(--muted); }
+.drop.over { border-color: var(--accent); background: var(--accent-weak); color: var(--accent); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
+.step { padding: 8px 4px; border-radius: 6px; background: var(--bg); color: var(--muted); font-size: 12px; text-align: center; }
+.step.active { background: var(--accent-weak); color: var(--accent); font-weight: 600; }
+.step.done { background: var(--ok-bg); color: var(--ok); }
+.step.failed { background: var(--bad-bg); color: var(--bad); }
+details summary { cursor: pointer; font-weight: 600; margin: 8px 0; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 13px; margin: 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.charts .card { margin: 0; }
+@media (max-width: 960px) { .charts { grid-template-columns: 1fr; } }
+svg text { fill: var(--muted); font-size: 11px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; margin-top: 6px; }
+
+.drawer { position: fixed; inset: 0 0 0 auto; width: min(640px, 100vw); background: var(--panel); border-left: 1px solid var(--line);
+  box-shadow: -8px 0 24px rgba(0,0,0,.12); z-index: 10; display: flex; flex-direction: column; transform: translateX(100%);
+  transition: transform .2s; visibility: hidden; }
+.drawer.open { transform: none; visibility: visible; }
+.drawer header { position: static; padding: 14px 18px; display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.drawer pre { margin: 0; padding: 18px; overflow: auto; white-space: pre-wrap; font: 14px/1.6 system-ui, sans-serif; flex: 1; }
+mark { background: var(--mark); color: inherit; padding: 1px 0; border-radius: 2px; }
+.toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--bad); color: #fff; padding: 10px 16px;
+  border-radius: 8px; z-index: 20; max-width: 90vw; }
+.empty { color: var(--muted); padding: 18px 0; text-align: center; }
+.error-item { border-top: 1px solid var(--line); padding: 12px 0; }
+.error-item:first-child { border-top: 0; }
+.error-item dl { display: grid; grid-template-columns: 140px 1fr; gap: 4px 12px; margin: 0; }
+@media (max-width: 600px) { .error-item dl { grid-template-columns: 1fr; } }
+.error-item dt { color: var(--muted); }
+.error-item dd { margin: 0; }
+@media (prefers-reduced-motion: reduce) { .drawer { transition: none; } }
+
+/* ===== minimal demo skin: no boxes, monochrome, one accent, more air ===== */
+:root {
+  --bg: #fafaf9; --panel: #fafaf9; --line: #ebeae7; --line-strong: #d6d4cf;
+  --text: #171615; --muted: #8a8780; --accent: #171615; --accent-weak: transparent;
+  --c-rag: #b5b2ab; --c-latent: #171615; --c-address: #e0572b; --c-hybrid: #3b82f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111110; --panel: #111110; --line: #262524; --line-strong: #3a3937;
+    --text: #f2f1ee; --muted: #8a8780; --accent: #f2f1ee; --c-latent: #f2f1ee; --c-rag: #5e5c58; }
+}
+body { font-size: 15px; }
+header { background: var(--bg); border-bottom: 0; }
+.bar { padding: 22px 32px; max-width: 1180px; }
+.brand { font-weight: 500; }
+.project input { border: 0; border-bottom: 1px solid var(--line-strong); border-radius: 0; background: none; padding: 4px 2px; width: 110px; }
+nav { gap: 22px; margin-left: 12px; }
+nav button { padding: 4px 0; border-radius: 0; border-bottom: 1.5px solid transparent; }
+nav button[aria-selected="true"] { background: none; color: var(--text); font-weight: 500; border-bottom-color: var(--text); }
+.version .chip { border: 0; padding: 0; color: var(--muted); }
+.version > .muted { display: none; }
+main { max-width: 1180px; padding: 24px 32px 64px; }
+.grid { gap: 56px; grid-template-columns: minmax(0, 1fr) 340px; }
+.card { border: 0; box-shadow: none; padding: 0; background: none; }
+.card + .card, .grid + .card, .charts { margin-top: 40px; }
+h2 { font-size: 12px; letter-spacing: .08em; font-weight: 500; margin-bottom: 16px; }
+textarea { border: 0; border-bottom: 1px solid var(--line-strong); border-radius: 0; background: none; font-size: 26px;
+  line-height: 1.3; padding: 0 0 14px; min-height: 64px; resize: none; letter-spacing: -.01em; }
+textarea:focus-visible { outline: none; border-bottom-color: var(--text); }
+select, input[type=text] { background: none; border-color: var(--line); }
+.btn { border-color: var(--line-strong); background: none; border-radius: 99px; padding: 7px 18px; }
+.btn.primary { background: var(--text); border-color: var(--text); color: var(--bg); font-weight: 500; }
+.badge { background: none !important; padding: 0; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.answer { font-size: 22px; line-height: 1.45; letter-spacing: -.01em; margin: 12px 0 14px; }
+#q-result .card { margin-top: 36px; }
+.variants { gap: 32px 40px; }
+.vcard { border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 16px 0 0; background: none;
+  display: flex; flex-direction: column; justify-content: flex-start; }
+.vcard[aria-pressed="true"] { box-shadow: none; border-top: 1.5px solid var(--text); }
+.vcard .answer { font-size: 16px; }
+.facts { gap: 0; }
+.fact { border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 14px 0; }
+.fact.used { border-left: 0; }
+.fact.used .src span:first-child::before { content: "● "; }
+.fact .src { color: var(--muted); }
+th { font-weight: 500; }
+th, td { padding: 10px 8px; }
+tbody tr[aria-selected="true"] { background: none; box-shadow: inset 2px 0 0 var(--text); }
+.drop { border: 1px dashed var(--line-strong); padding: 40px; }
+.steps { gap: 0; }
+.step { background: none; border-top: 2px solid var(--line); border-radius: 0; padding: 8px 2px 0; text-align: left; }
+.step.active { background: none; border-top-color: var(--text); color: var(--text); }
+.step.done { background: none; border-top-color: var(--text); color: var(--muted); }
+.step.failed { background: none; border-top-color: var(--bad); }
+.drawer { box-shadow: none; }
+.toast { background: var(--text); color: var(--bg); }
+
+/* ===== embedded over the Hyper Warp corridor: transparent page, cream-on-glass palette ===== */
+html.embed {
+  --bg: rgba(20, 12, 6, 0.35); --panel: transparent; --line: rgba(255, 241, 214, 0.14); --line-strong: rgba(255, 241, 214, 0.32);
+  --text: #fff1d6; --muted: rgba(255, 241, 214, 0.62); --accent: #fff1d6; --mark: rgba(255, 196, 90, 0.45);
+  --ok: #8fe3b0; --warn: #ffd27a; --bad: #ff9a85;
+  --c-rag: rgba(255, 241, 214, 0.45); --c-latent: #fff1d6; --c-address: #ff7a3d; --c-hybrid: #23c4b8;
+  --font: "Inter Tight", system-ui, sans-serif;
+}
+html.embed, html.embed body { background: transparent; }
+html.embed { scrollbar-color: rgba(255, 241, 214, 0.28) transparent; scrollbar-width: thin; }
+html.embed body { font-family: var(--font); }
+html.embed header { background: transparent; }
+html.embed .bar { padding: 18px 28px; max-width: none; }
+html.embed main { max-width: none; padding: 16px 28px 40px; }
+html.embed .brand { display: none; }
+html.embed textarea { color: var(--text); }
+html.embed .btn.primary { color: #2a170a; }
+html.embed select option { background: #2a170a; }
+html.embed .drawer { background: #24160c; border-left-color: var(--line); }
+html.embed .toast { background: #fff1d6; color: #2a170a; }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap">
+<script>if (new URLSearchParams(location.search).has("embed")) document.documentElement.classList.add("embed");</script>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <span class="brand">Корпоративная память</span>
+    <label class="project">Проект
+      <input id="project" type="text" list="projects" value="acme" spellcheck="false">
+      <datalist id="projects"></datalist>
+    </label>
+    <nav role="tablist">
+      <button role="tab" data-tab="query" aria-selected="true">Запрос</button>
+      <button role="tab" data-tab="memory" aria-selected="false">Память</button>
+      <button role="tab" data-tab="compare" aria-selected="false">Сравнение</button>
+    </nav>
+    <div class="version" id="version"></div>
+  </div>
+</header>
+
+<main>
+  <!-- ============ Запрос ============ -->
+  <section id="tab-query">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <textarea id="q-text" placeholder="Например: Какой срок возврата для корпоративных клиентов?"></textarea>
+          <div class="row" style="margin-top:10px">
+            <select id="q-variant" aria-label="Архитектура"></select>
+            <label class="switch"><input type="checkbox" id="q-compare"> Сравнить варианты</label>
+            <span class="muted" style="margin-left:auto;font-size:12px">Ctrl+Enter</span>
+            <button class="btn primary" id="q-ask">Спросить</button>
+          </div>
+        </div>
+        <div id="q-result"></div>
+      </div>
+      <aside class="card">
+        <h2>Использованные факты</h2>
+        <ul class="facts" id="q-facts"><li class="empty">Задайте вопрос</li></ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ Память ============ -->
+  <section id="tab-memory" hidden>
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="drop" id="drop">
+            Перетащите папку с документами сюда<br>
+            <span style="font-size:12px">.md .txt .rst .csv .json .html · новая загрузка заменяет корпус</span>
+            <div style="margin-top:12px"><label class="btn">Выбрать папку<input type="file" id="folder" webkitdirectory multiple hidden></label></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="row" style="justify-content:space-between"><h2>Документы</h2><span class="muted mono" id="m-corpus"></span></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Документ</th><th>Версия</th><th class="num">Факты</th><th>Изменение</th></tr></thead>
+            <tbody id="m-docs"></tbody>
+          </table></div>
+        </div>
+      </div>
+      <aside>
+        <div class="card">
+          <h2>Запекание</h2>
+          <details id="experiment">
+            <summary>Эксперимент</summary>
+            <div id="m-variants" style="display:grid;gap:6px;margin-bottom:8px"></div>
+            <p class="muted" style="font-size:12px;margin:0">Обучающие примеры генерируются из фактов автоматически.</p>
+          </details>
+          <button class="btn primary" id="m-bake" style="width:100%;margin-top:8px">Запечь</button>
+          <div class="steps" id="m-steps"></div>
+          <div id="m-job"></div>
+        </div>
+        <div class="card">
+          <h2>Активная версия памяти</h2>
+          <div id="m-active" class="empty">Память ещё не запечена</div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ Сравнение ============ -->
+  <section id="tab-compare" hidden>
+    <div class="card">
+      <div class="row">
+        <label class="btn">Набор вопросов (.jsonl)<input type="file" id="c-suite" accept=".jsonl,.json,.txt" hidden></label>
+        <span class="muted" id="c-suite-name" style="flex:1;min-width:180px">Без файла используется демо-набор: 14 вопросов</span>
+        <button class="btn primary" id="c-eval">Проверить качество</button>
+        <button class="btn" id="c-bench">Измерить скорость</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr>
+          <th>Вариант</th><th class="num">Точность</th><th class="num">Доля отвеченных</th><th class="num">p95 задержки</th>
+          <th class="num">Стоимость 1 000 запросов</th><th class="num">Запекание</th>
+        </tr></thead>
+        <tbody id="c-table"></tbody>
+      </table></div>
+      <p class="muted" style="font-size:12px;margin:8px 0 0" id="c-note"></p>
+    </div>
+    <div class="charts">
+      <div class="card"><h2>Качество против стоимости ответа</h2><div id="c-chart1"></div></div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;align-items:flex-start">
+          <h2>Общая стоимость против числа запросов</h2>
+          <label class="muted" style="font-size:12px">обновлений памяти <input type="text" id="c-updates" value="12" inputmode="numeric" style="width:52px"></label>
+        </div>
+        <div id="c-chart2"></div>
+      </div>
+    </div>
+    <div class="card" id="c-errors-card" hidden style="margin-top:16px">
+      <h2 id="c-errors-title">Ошибки</h2>
+      <div id="c-errors"></div>
+    </div>
+  </section>
+</main>
+
+<div class="drawer" id="drawer" role="dialog" aria-label="Исходный документ">
+  <header><strong id="d-title" class="mono"></strong><button class="btn" id="d-close">Закрыть</button></header>
+  <pre id="d-text"></pre>
+</div>
+
+<script id="mock">
+/* In-browser mock of the memory API: demo corpus, four toy variants, simulated bake jobs.
+   Answers, statuses, latency and metrics are computed for real on the demo data; costs use the PRICING assumptions. */
+const Mock = (() => {
+  const VARIANTS = ["rag", "latent", "address", "hybrid"];
+  const PRICING = {
+    serve_usd_per_hour: 0.40,
+    bake_usd_per_hour: { rag: 0.40, latent: 2.50, address: 2.50, hybrid: 2.50 },
+    llm_usd_per_1k_input_tokens: 0.0006,
+    context_tokens: { rag: 1800, latent: 250, address: 250, hybrid: 400 },
+  };
+  // simulated training time per 1 000 facts, seconds (demo stand-in for GPU training)
+  const BAKE_S_PER_1K_FACTS = { rag: 40, latent: 900, address: 600, hybrid: 1300 };
+  const CONFIG = { top_k: 5, min_coverage: 0.5 };
+
+  const DEMO_DOCS = [
+    { path: "returns.md", content: `# Политика возврата товаров
+
+## Общие условия
+Покупатель может вернуть товар надлежащего качества в течение 14 дней с момента получения.
+Товар должен сохранить товарный вид, упаковку и чек.
+Деньги возвращаются на карту в течение 10 рабочих дней после проверки товара.
+
+## Корпоративные клиенты
+Срок возврата для корпоративных клиентов составляет 30 дней с даты подписания акта приёмки.
+Возврат корпоративного заказа оформляется через персонального менеджера.
+
+## Исключения
+Товары, изготовленные на заказ по индивидуальным размерам, возврату не подлежат.
+Лицензии на программное обеспечение после активации возврату не подлежат, даже для корпоративных клиентов.
+` },
+    { path: "delivery.md", content: `# Доставка
+
+Доставка по Москве занимает от 1 до 2 рабочих дней.
+Доставка в регионы России занимает от 3 до 7 рабочих дней.
+Бесплатная доставка действует для заказов от 5000 рублей.
+Для корпоративных клиентов доставка бесплатна независимо от суммы заказа.
+Крупногабаритные товары доставляются только до подъезда, подъём на этаж оплачивается отдельно.
+` },
+    { path: "support.md", content: `# Служба поддержки
+
+Поддержка частных клиентов работает ежедневно с 9:00 до 21:00 по московскому времени.
+Корпоративные клиенты получают круглосуточную поддержку через выделенную линию.
+Время первого ответа по корпоративному договору не превышает 2 часов.
+Обращения по гарантии рассматриваются в течение 5 рабочих дней.
+Гарантийный срок на электронику составляет 12 месяцев.
+` },
+    { path: "archive/returns-2023.md", content: `# Политика возврата (редакция 2023 года)
+
+## Корпоративные клиенты
+Срок возврата для корпоративных клиентов составляет 21 день с даты подписания акта приёмки.
+` },
+  ];
+  const DEMO_QUESTIONS = [
+    { question: "Сколько дней есть у покупателя на возврат товара?", answer: "14 дней" },
+    { question: "Через сколько дней возвращаются деньги на карту?", answer: "10 рабочих дней" },
+    { question: "Какой срок возврата для корпоративных клиентов?", answer: "30 дней" },
+    { question: "Можно ли вернуть товар, сделанный на заказ по индивидуальным размерам?", answer: "возврату не подлежат" },
+    { question: "Можно ли вернуть активированную лицензию на программное обеспечение?", answer: "после активации возврату не подлежат" },
+    { question: "Сколько занимает доставка по Москве?", answer: "от 1 до 2 рабочих дней" },
+    { question: "Сколько идёт доставка в регионы?", answer: "от 3 до 7 рабочих дней" },
+    { question: "С какой суммы заказа доставка бесплатная?", answer: "5000 рублей" },
+    { question: "Платят ли корпоративные клиенты за доставку?", answer: "бесплатна независимо от суммы" },
+    { question: "Когда работает поддержка для частных клиентов?", answer: "с 9:00 до 21:00" },
+    { question: "Как быстро отвечают корпоративным клиентам?", answer: "не превышает 2 часов" },
+    { question: "Какой гарантийный срок на электронику?", answer: "12 месяцев" },
+    { question: "Есть ли у компании офис в Казани?", answer: null },
+    { question: "Какая скидка для студентов?", answer: null },
+  ];
+
+  /* ---------- text ---------- */
+  const STOP = new Set(`и в во не что он на я с со как а то все она так его но да ты к у же вы за бы по только ее её мне было вот
+    от меня еще ещё нет о из ему теперь когда даже ну ли если уже или ни быть был него до вас нибудь опять уж вам ведь там потом
+    себя ничего ей может они тут где есть надо ней для мы тебя их чем была сам чтобы без будто чего раз тоже себе под будет ж тогда
+    кто этот того потому этого какой какая какие совсем ним здесь этом один почти мой тем нее сейчас были куда зачем всех никогда
+    можно при об другой хоть после над больше тот через эти нас про всего них много разве эту моя свою этой перед иногда лучше
+    чуть том нельзя такой им более всегда конечно всю между это сколько the a an of to in is are for and or on at by with what`.split(/\s+/));
+  const stem = w => /^\d/.test(w) ? w.replace(",", ".") : w.slice(0, 5);
+  const terms = t => (String(t).toLowerCase().match(/[a-zа-яё0-9]+(?:[.,][0-9]+)?/g) || []).filter(w => !STOP.has(w)).map(stem);
+  const nums = t => new Set((String(t).match(/\d+(?:[.,]\d+)?/g) || []).map(n => n.replace(",", ".")));
+  const bigr = ts => ts.slice(1).map((b, i) => ts[i] + "|" + b);
+  const count = arr => arr.reduce((m, t) => (m.set(t, (m.get(t) || 0) + 1), m), new Map());
+  const fnv = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(16).padStart(8, "0"); };
+  const hash = s => fnv(s) + fnv("#" + s);   // 16 hex chars, content-addressed ids
+  const stamp = () => new Date().toISOString().replace(/\D/g, "").slice(0, 14);
+  const newId = p => `${p}_${stamp()}_${Math.random().toString(16).slice(2, 8)}`;
+  const nowIso = () => new Date().toISOString().slice(0, 19);
+  const fail = (code, message) => { const e = new Error(message); e.code = code; throw e; };
+
+  function extractFacts(docId, text) {
+    const facts = []; let heading = "", offset = 0;
+    for (const line of text.split(/(?<=\n)/)) {
+      const s = line.trim();
+      if (s.startsWith("#")) heading = s.replace(/^#+/, "").trim();
+      else if (s) {
+        for (const m of line.matchAll(/[^.!?\n]+(?:[.!?]+|$)/g)) {
+          const raw = m[0], lead = raw.length - raw.replace(/^[\s\-*•]+/, "").length;
+          const sent = raw.trim().replace(/^[\-*•]+\s*/, "");
+          if (terms(sent).length < 2) continue;
+          const start = offset + m.index + lead;
+          facts.push({ id: `${docId}#${facts.length + 1}`, doc_id: docId, text: sent, heading, start, end: start + sent.length });
+        }
+      }
+      offset += line.length;
+    }
+    return facts;
+  }
+  const factTerms = f => terms(f.heading).concat(terms(f.text));
+  const idfOf = (df, n) => new Map([...df].map(([t, c]) => [t, Math.log(1 + (n - c + 0.5) / (c + 0.5))]));
+
+  /* ---------- variants ---------- */
+  function build(v, facts) {
+    const toks = facts.map(factTerms), n = facts.length;
+    const dfOf = lists => { const df = new Map(); for (const l of lists) for (const t of new Set(l)) df.set(t, (df.get(t) || 0) + 1); return df; };
+    if (v === "rag") return { v, idf: idfOf(dfOf(toks), n), tf: toks.map(count), dl: toks.map(t => t.length), avgdl: toks.reduce((a, t) => a + t.length, 0) / (n || 1) };
+    if (v === "latent") {
+      const feats = toks.map(t => t.concat(bigr(t))), idf = idfOf(dfOf(feats), n);
+      const vecs = feats.map(fs => { const w = new Map([...count(fs)].map(([t, c]) => [t, (1 + Math.log(c)) * idf.get(t)]));
+        const norm = Math.hypot(...w.values()) || 1; return new Map([...w].map(([t, x]) => [t, x / norm])); });
+      return { v, idf, vecs };
+    }
+    if (v === "address") {
+      const df = dfOf(toks), keys = new Map();
+      const add = (k, i) => { if (!keys.has(k)) keys.set(k, []); keys.get(k).push(i); };
+      toks.forEach((ts, i) => { new Set(bigr(ts)).forEach(k => add(k, i)); new Set(ts).forEach(t => { if (df.get(t) <= 2) add(t, i); }); });
+      return { v, keys };
+    }
+    return { v: "hybrid", latent: build("latent", facts), address: build("address", facts) };
+  }
+  const rank = (scores, k) => [...scores].filter(([, s]) => s > 0).sort((a, b) => b[1] - a[1]).slice(0, k);
+  function search(a, question, k) {
+    const q = terms(question), scores = new Map();
+    if (a.v === "rag") {
+      const k1 = 1.5, b = 0.75;
+      a.tf.forEach((tf, i) => { let s = 0;
+        for (const t of new Set(q)) { const c = tf.get(t); if (c) s += (a.idf.get(t) || 0) * c * (k1 + 1) / (c + k1 * (1 - b + b * a.dl[i] / (a.avgdl || 1))); }
+        if (s) scores.set(i, s); });
+    } else if (a.v === "latent") {
+      const qv = new Map([...count(q.concat(bigr(q)))].filter(([t]) => a.idf.has(t)).map(([t, c]) => [t, (1 + Math.log(c)) * a.idf.get(t)]));
+      const norm = Math.hypot(...qv.values()) || 1;
+      a.vecs.forEach((vec, i) => { let s = 0; for (const [t, w] of qv) s += w * (vec.get(t) || 0); if (s) scores.set(i, s / norm); });
+    } else if (a.v === "address") {
+      for (const key of new Set(bigr(q))) for (const i of a.keys.get(key) || []) scores.set(i, (scores.get(i) || 0) + 1);
+      for (const t of new Set(q)) for (const i of a.keys.get(t) || []) scores.set(i, (scores.get(i) || 0) + 0.3);
+    } else {
+      for (const sub of [a.latent, a.address]) search(sub, question, k * 3).forEach(([i], r) => scores.set(i, (scores.get(i) || 0) + 1 / (60 + r)));
+    }
+    return rank(scores, k);
+  }
+  const coverage = (question, f) => { const q = new Set(terms(question)); if (!q.size) return 0; const ft = new Set(factTerms(f)); return [...q].filter(t => ft.has(t)).length / q.size; };
+  function answer(question, hits, facts) {
+    const none = { status: "insufficient", answer: "Недостаточно данных в корпоративной памяти.", used: [] };
+    if (!hits.length) return none;
+    const top = facts[hits[0][0]];
+    if (coverage(question, top) < CONFIG.min_coverage) return none;
+    const noNum = f => new Set(factTerms(f).filter(t => !/^\d/.test(t)));
+    const tt = noNum(top), tn = nums(top.text);
+    for (const [i] of hits.slice(1)) {
+      const f = facts[i];
+      if (f.doc_id === top.doc_id || coverage(question, f) < CONFIG.min_coverage) continue;
+      const ft = noNum(f), inter = [...tt].filter(t => ft.has(t)).length, jac = inter / (new Set([...tt, ...ft]).size || 1);
+      const fn = nums(f.text);
+      if (jac >= 0.5 && tn.size && fn.size && [...tn].join() !== [...fn].join())
+        return { status: "contradiction", used: [hits[0][0], i],
+          answer: `Источники расходятся: «${top.text}» (${top.doc_id}) и «${f.text}» (${f.doc_id}).` };
+    }
+    return { status: "grounded", answer: top.text, used: [hits[0][0]] };
+  }
+
+  /* ---------- store ---------- */
+  const projects = {}, jobs = {}, artifacts = {};
+  const proj = p => projects[p] || fail("PROJECT_NOT_FOUND", `Проект «${p}» не найден. Загрузите документы на вкладке «Память».`);
+
+  function prepare(p, files) {
+    const docs = files.filter(f => /\.(md|markdown|txt|rst|csv|json|html?)$/i.test(f.path))
+      .map(f => ({ id: f.path, text: String(f.content), version: hash(String(f.content)).slice(0, 12) }))
+      .sort((a, b) => a.id.localeCompare(b.id));
+    if (!docs.length) fail("CORPUS_EMPTY", "В загрузке нет текстовых документов");
+    const P = projects[p] ||= { corpora: {}, current: null, snapshots: [], active: null, last_changes: {}, runs: [] };
+    const facts = docs.flatMap(d => { const f = extractFacts(d.id, d.text); d.facts = f.length; return f; });
+    const cv = "c_" + hash(docs.map(d => d.id + ":" + d.version).join("\n")).slice(0, 12);
+    const prev = P.current ? new Map(P.corpora[P.current].documents.map(d => [d.id, d.version])) : new Map();
+    const status = d => !prev.has(d.id) ? "new" : prev.get(d.id) === d.version ? "unchanged" : "changed";
+    const reused = !!P.corpora[cv];
+    P.corpora[cv] ||= { corpus_version: cv, documents: docs, facts, created_at: nowIso() };
+    P.last_changes = { added: docs.filter(d => status(d) === "new").map(d => d.id),
+      changed: docs.filter(d => status(d) === "changed").map(d => d.id),
+      removed: [...prev.keys()].filter(id => !docs.some(d => d.id === id)) };
+    P.current = cv;
+    return { run_id: newId("prep"), project: p, corpus_version: cv, reused, facts: facts.length, changes: P.last_changes,
+      documents: docs.map(d => ({ id: d.id, version: d.version, facts: d.facts, status: status(d) })) };
+  }
+
+  function bakeVariant(p, cv, v) {
+    const key = `${v}_${hash(cv + v)}`;
+    const facts = projects[p].corpora[cv].facts;
+    if (artifacts[key]) return { ...artifacts[key].meta, reused: true };
+    const t0 = performance.now();
+    const art = build(v, facts);
+    const bake_s = (performance.now() - t0) / 1000 + BAKE_S_PER_1K_FACTS[v] * Math.max(facts.length, 1) / 1000;
+    const meta = { artifact: key, bake_s: +bake_s.toFixed(3), bake_cost_usd: +(bake_s / 3600 * PRICING.bake_usd_per_hour[v]).toFixed(6) };
+    // self-check: each fact's own text (numbers removed) must retrieve the fact first
+    const ex = facts.map((f, i) => ({ q: `${f.heading} ${f.text}`.replace(/\d+(?:[.,]\d+)?/g, ""), i }));
+    const hit = ex.filter(e => search(art, e.q, 1)[0]?.[0] === e.i).length;
+    meta.self_check_recall_at_1 = ex.length ? +(hit / ex.length).toFixed(4) : null;
+    artifacts[key] = { art, meta };
+    return { ...meta, reused: false };
+  }
+  function finishBake(job) {
+    const P = projects[job.project], variants = {};
+    for (const v of job.variants) variants[v] = bakeVariant(job.project, job.corpus_version, v);
+    const sid = "s_" + hash(job.corpus_version + Object.values(variants).map(m => m.artifact).sort().join(",")).slice(0, 12);
+    const snap = { snapshot_id: sid, corpus_version: job.corpus_version, variants, config: CONFIG, created_at: nowIso(), job_id: job.job_id };
+    P.snapshots = P.snapshots.filter(s => s.snapshot_id !== sid).concat(snap);
+    P.active = sid;
+    return snap;
+  }
+  function startBake(p, variants) {
+    const P = proj(p);
+    if (!Array.isArray(variants) || !variants.length) fail("INVALID_VARIANT", "Выберите хотя бы один вариант");
+    const bad = variants.filter(v => !VARIANTS.includes(v));
+    if (bad.length) fail("INVALID_VARIANT", `Неизвестные варианты: ${bad.join(", ")}`);
+    const job = { job_id: newId("job"), kind: "bake", project: p, corpus_version: P.current, variants, config: CONFIG,
+      status: "queued", stage: null, stages: ["prepare_examples", "train", "validate", "done"], created_at: nowIso(), progress: {} };
+    jobs[job.job_id] = job;
+    const t0 = performance.now();
+    const steps = [
+      () => { job.status = "running"; job.stage = "prepare_examples"; job.progress.examples = P.corpora[job.corpus_version].facts.length; },
+      () => { job.stage = "train"; },
+      () => { job.stage = "validate"; job._snap = finishBake(job); },
+      () => { const s = job._snap; delete job._snap;
+        const fresh = Object.values(s.variants).filter(m => !m.reused);
+        Object.assign(job, { stage: "done", status: "succeeded", finished_at: nowIso(), result: {
+          snapshot_id: s.snapshot_id, corpus_version: s.corpus_version, variants: s.variants,
+          duration_s: +((performance.now() - t0) / 1000 + fresh.reduce((a, m) => a + m.bake_s, 0)).toFixed(3),
+          bake_cost_usd: +fresh.reduce((a, m) => a + m.bake_cost_usd, 0).toFixed(6) } }); },
+    ];
+    steps.forEach((fn, i) => setTimeout(fn, 500 + i * 700));   // stages visible in the UI
+    return job;
+  }
+
+  function snapshotOf(p, sid) {
+    const P = proj(p), id = sid || P.active;
+    if (!id) fail("NO_SNAPSHOT", "Память ещё не запечена. Нажмите «Запечь» на вкладке «Память».");
+    return P.snapshots.find(s => s.snapshot_id === id) || fail("SNAPSHOT_NOT_FOUND", `Версия памяти ${id} не найдена`);
+  }
+  function queryOne(p, snap, v, text) {
+    if (!snap.variants[v]) fail("VARIANT_NOT_BAKED", `Вариант ${v} не запечён в версии ${snap.snapshot_id}`);
+    const facts = projects[p].corpora[snap.corpus_version].facts, art = artifacts[snap.variants[v].artifact].art;
+    const t0 = performance.now();
+    const hits = search(art, text, CONFIG.top_k), a = answer(text, hits, facts);
+    const latency_ms = +(performance.now() - t0).toFixed(3);
+    return { variant: v, answer: a.answer, status: a.status, latency_ms,
+      facts: hits.map(([i, s]) => ({ ...facts[i], score: +s.toFixed(4), used: a.used.includes(i) })) };
+  }
+  function query(p, { text, variant, snapshot, compare }) {
+    if (!text || !text.trim()) fail("EMPTY_QUESTION", "Введите вопрос");
+    const snap = snapshotOf(p, snapshot);
+    const base = { run_id: newId("q"), project: p, snapshot_id: snap.snapshot_id, corpus_version: snap.corpus_version, config: snap.config, question: text };
+    if (compare) return { ...base, results: VARIANTS.filter(v => snap.variants[v]).map(v => queryOne(p, snap, v, text)),
+      missing_variants: VARIANTS.filter(v => !snap.variants[v]) };
+    const v = variant || ["hybrid", "latent", "address", "rag"].find(x => snap.variants[x]);
+    return { ...base, ...queryOne(p, snap, v, text) };
+  }
+
+  const norm = s => String(s).toLowerCase().replace(/ё/g, "е").replace(/\s+/g, " ").trim();
+  const expected = it => { const a = it.answers ?? it.answer; return a == null || a === "" ? [] : [].concat(a); };
+  function evaluate(p, { suite }) {
+    if (!Array.isArray(suite) || !suite.length) fail("SUITE_INVALID", "Набор вопросов пуст");
+    suite.forEach((it, i) => it?.question || fail("SUITE_INVALID", `Вопрос ${i + 1}: нет поля question`));
+    const snap = snapshotOf(p), results = {};
+    for (const v of Object.keys(snap.variants)) {
+      let correct = 0, answered = 0; const errors = [];
+      for (const it of suite) {
+        const r = queryOne(p, snap, v, it.question), exp = expected(it);
+        const ok = exp.length ? r.status === "grounded" && exp.some(e => norm(r.answer).includes(norm(e))) : r.status === "insufficient";
+        correct += ok; answered += r.status !== "insufficient";
+        if (!ok) errors.push({ question: it.question, expected: exp.length ? exp : null, answer: r.answer, status: r.status,
+          facts: r.facts.filter(f => f.used).length ? r.facts.filter(f => f.used) : r.facts.slice(0, 3) });
+      }
+      results[v] = { n: suite.length, accuracy: +(correct / suite.length).toFixed(4), answered_rate: +(answered / suite.length).toFixed(4), errors };
+    }
+    const run = { run_id: newId("eval"), kind: "evaluate", project: p, created_at: nowIso(), snapshot_id: snap.snapshot_id,
+      corpus_version: snap.corpus_version, config: snap.config, suite: `inline:${suite.length}`, results };
+    projects[p].runs.unshift(run);
+    return run;
+  }
+  const pct = (vals, q) => { const s = [...vals].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.max(0, Math.ceil(s.length * q / 100) - 1))]; };
+  function benchmark(p, { batch_sizes = [1, 8, 32] }) {
+    const snap = snapshotOf(p), facts = projects[p].corpora[snap.corpus_version].facts;
+    const qs = facts.map(f => `${f.heading} ${f.text}`.replace(/\d+/g, "")), results = {};
+    for (const v of Object.keys(snap.variants)) {
+      const art = artifacts[snap.variants[v].artifact].art, per = {};
+      for (const bs of batch_sizes) {
+        const lat = []; let total = 0; const tAll = performance.now();
+        for (let r = 0; r < 20; r++) {
+          const t0 = performance.now();
+          for (let j = 0; j < bs; j++) { const q = qs[(r * bs + j) % qs.length]; answer(q, search(art, q, CONFIG.top_k), facts); }
+          lat.push((performance.now() - t0) / bs); total += bs;
+        }
+        per[bs] = { p50_ms: +pct(lat, 50).toFixed(3), p95_ms: +pct(lat, 95).toFixed(3), qps: +(total / ((performance.now() - tAll) / 1000)).toFixed(1) };
+      }
+      results[v] = per;
+    }
+    const run = { run_id: newId("bench"), kind: "benchmark", project: p, created_at: nowIso(), snapshot_id: snap.snapshot_id,
+      corpus_version: snap.corpus_version, config: snap.config, batch_sizes, rounds: 20, results };
+    projects[p].runs.unshift(run);
+    return run;
+  }
+  const costPer1k = (v, p50) => +((p50 / 1000 / 3600 * PRICING.serve_usd_per_hour + PRICING.context_tokens[v] / 1000 * PRICING.llm_usd_per_1k_input_tokens) * 1000).toFixed(6);
+  function compare(p) {
+    const P = proj(p), evals = P.runs.filter(r => r.kind === "evaluate"), benches = P.runs.filter(r => r.kind === "benchmark");
+    if (!evals.length && !benches.length) fail("NO_RESULTS", "Нет результатов экспериментов");
+    const rows = [];
+    for (const v of VARIANTS) {
+      const ev = evals.find(r => r.results[v]), be = benches.find(r => r.results[v]);
+      if (!ev && !be) continue;
+      const meta = P.snapshots.find(s => s.snapshot_id === (ev || be).snapshot_id)?.variants[v] || {};
+      const b1 = be ? be.results[v][Math.min(...Object.keys(be.results[v]).map(Number))] : null;
+      rows.push({ variant: v, accuracy: ev?.results[v].accuracy ?? null, answered_rate: ev?.results[v].answered_rate ?? null,
+        n_questions: ev?.results[v].n ?? null, p50_ms: b1?.p50_ms ?? null, p95_ms: b1?.p95_ms ?? null,
+        cost_per_1k_usd: b1 ? costPer1k(v, b1.p50_ms) : null, bake_s: meta.bake_s ?? null, bake_cost_usd: meta.bake_cost_usd ?? null,
+        errors: ev?.results[v].errors || [], evaluate_run_id: ev?.run_id ?? null, benchmark_run_id: be?.run_id ?? null,
+        snapshot_id: (ev || be).snapshot_id, corpus_version: (ev || be).corpus_version });
+    }
+    return { run_id: newId("cmp"), project: p, rows, pricing: PRICING,
+      cost_note: "Демо-режим: данные в браузере. Стоимость — расчёт по задержке и допущениям PRICING; время запекания смоделировано." };
+  }
+  function overview(p) {
+    const P = proj(p), c = P.current ? P.corpora[P.current] : null;
+    return { project: p, current_corpus: P.current, facts: c ? c.facts.length : 0, last_changes: P.last_changes,
+      documents: c ? c.documents.map(d => ({ id: d.id, version: d.version, facts: d.facts })) : [],
+      active_snapshot: P.snapshots.find(s => s.snapshot_id === P.active) || null,
+      snapshots: P.snapshots.map(s => ({ snapshot_id: s.snapshot_id, corpus_version: s.corpus_version, variants: Object.keys(s.variants), created_at: s.created_at })),
+      jobs: Object.values(jobs).filter(j => j.project === p).sort((a, b) => b.job_id.localeCompare(a.job_id)).slice(0, 10),
+      variants: VARIANTS };
+  }
+
+  /* ---------- router: same paths as the real HTTP API ---------- */
+  function handle(method, rawPath, body) {
+    const [path, qs] = rawPath.split("?"), q = new URLSearchParams(qs || "");
+    const m = path.match(/^\/api\/projects\/([^/]+)(?:\/(\w+))?$/), p = m && decodeURIComponent(m[1]), act = m?.[2];
+    if (method === "GET" && path === "/api/projects") return { projects: Object.keys(projects) };
+    const job = path.match(/^\/api\/jobs\/(.+)$/);
+    if (method === "GET" && job) return jobs[decodeURIComponent(job[1])] || fail("JOB_NOT_FOUND", "Задание не найдено");
+    if (!m) fail("NO_ROUTE", `${method} ${path}`);
+    if (method === "GET" && !act) return overview(p);
+    if (method === "POST" && act === "upload") return prepare(p, body.files || []);
+    if (method === "POST" && act === "bake") return startBake(p, body.variants);
+    if (method === "POST" && act === "query") return query(p, body);
+    if (method === "POST" && act === "evaluate") return evaluate(p, body);
+    if (method === "POST" && act === "benchmark") return benchmark(p, body);
+    if (method === "GET" && act === "compare") return compare(p);
+    if (method === "GET" && act === "document") {
+      const P = proj(p), c = P.corpora[q.get("corpus") || P.current];
+      const d = c?.documents.find(x => x.id === q.get("doc")) || fail("DOCUMENT_NOT_FOUND", "Документ не найден");
+      return { project: p, corpus_version: c.corpus_version, id: d.id, version: d.version, text: d.text };
+    }
+    fail("NO_ROUTE", `${method} ${path}`);
+  }
+
+  // seed: demo project with a baked memory, so every tab works on first open
+  prepare("acme", DEMO_DOCS);
+  projects.acme.last_changes = { added: [], changed: [], removed: [] };
+  const seedJob = { job_id: newId("job"), project: "acme", corpus_version: projects.acme.current, variants: [...VARIANTS] };
+  const seed = finishBake(seedJob);
+  jobs[seedJob.job_id] = { ...seedJob, kind: "bake", status: "succeeded", stage: "done", config: CONFIG, created_at: nowIso(), progress: {},
+    result: { snapshot_id: seed.snapshot_id, corpus_version: seed.corpus_version, variants: seed.variants,
+      duration_s: +Object.values(seed.variants).reduce((a, m) => a + m.bake_s, 0).toFixed(3),
+      bake_cost_usd: +Object.values(seed.variants).reduce((a, m) => a + m.bake_cost_usd, 0).toFixed(6) } };
+
+  return { handle, DEMO_QUESTIONS };
+})();
+</script>
+<script>
+const VARIANT_LABEL ={ rag: "RAG", latent: "Latent", address: "Address", hybrid: "Hybrid" };
+const STATUS_LABEL = { grounded: "Найдены основания", insufficient: "Недостаточно данных", contradiction: "Обнаружено противоречие" };
+const STAGE_LABEL = { prepare_examples: "Подготовка примеров", train: "Обучение", validate: "Проверка", done: "Готово" };
+const CHANGE_LABEL = { new: "новый", changed: "изменён", unchanged: "без изменений", removed: "удалён" };
+const TEXT_EXT = /\.(md|markdown|txt|rst|csv|json|html?)$/i;
+const EMPTY_TABLE = `<tr><td colspan="6" class="empty">Нет результатов. Запустите «Проверить качество» и «Измерить скорость».</td></tr>`;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const project = () => $("#project").value.trim();
+const P = () => `/api/projects/${encodeURIComponent(project())}`;
+const color = v => `var(--c-${v})`;
+const fmtPct = x => x == null ? "—" : (x * 100).toFixed(1) + " %";
+const fmtMs = x => x == null ? "—" : x.toFixed(2) + " мс";
+const fmtUsd = x => x == null ? "—" : x === 0 ? "$0" : x < 0.0001 ? "<$0.0001" : "$" + (x < 0.01 ? x.toFixed(4) : x.toFixed(4).replace(/0+$/, "").replace(/\.$/, ""));
+// greedy label placement: shift a label (down for dir=1, up for dir=-1) until it clears earlier ones
+function placeLabels(items, minDy = 13, minDx = 70, dir = 1) {
+  const placed = [];
+  for (const it of [...items].sort((a, b) => dir * (a.y - b.y) || a.x - b.x)) {
+    let y = it.y;
+    while (placed.some(p => Math.abs(p.y - y) < minDy && Math.abs(p.x - it.x) < minDx)) y += dir * minDy;
+    placed.push({ ...it, y });
+  }
+  return placed;
+}
+const fmtS = x => x == null ? "—" : (x < 1 ? (x * 1000).toFixed(0) + " мс" : x.toFixed(1) + " с");
+
+const state = { overview: null, lastQuery: null, selected: null, compare: null, selectedRow: null };
+
+// Frontend-only build: the same HTTP contract is served by an in-browser mock (see <script id="mock">).
+// To connect a real backend, replace this function body with fetch(path, ...).
+async function api(method, path, body) {
+  await new Promise(r => setTimeout(r, 60));          // feel of a network round-trip
+  return JSON.parse(JSON.stringify(Mock.handle(method, path, body ? JSON.parse(JSON.stringify(body)) : {})));
+}
+function toast(msg) {
+  const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "alert"); t.textContent = msg;
+  document.body.append(t); setTimeout(() => t.remove(), 5000);
+}
+async function busy(btn, fn) {
+  btn.disabled = true;
+  try { return await fn(); } catch (e) { toast(e.message); } finally { btn.disabled = false; }
+}
+
+/* ---------------- tabs ---------------- */
+function showTab(name) {
+  document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === name));
+  document.querySelectorAll("main > section").forEach(s => s.hidden = s.id !== "tab-" + name);
+  try { localStorage.setItem("memory.tab", name); } catch {}
+  if (name === "compare") loadCompare();
+}
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+/* ---------------- overview / header ---------------- */
+async function loadOverview() {
+  try { state.overview = await api("GET", P()); }
+  catch (e) { state.overview = null; if (e.code !== "PROJECT_NOT_FOUND") toast(e.message); }
+  renderHeader(); renderMemory(); renderVariantSelect();
+}
+function renderHeader() {
+  const s = state.overview?.active_snapshot;
+  $("#version").innerHTML = s
+    ? `<span class="muted">Память</span><span class="chip mono">${esc(s.snapshot_id)}</span><span class="muted">корпус</span><span class="chip mono">${esc(s.corpus_version)}</span>`
+    : `<span class="muted">Память не запечена</span>`;
+}
+function renderVariantSelect() {
+  const baked = Object.keys(state.overview?.active_snapshot?.variants || {});
+  const sel = $("#q-variant"), cur = sel.value;
+  sel.innerHTML = baked.length ? baked.map(v => `<option value="${v}">${VARIANT_LABEL[v]}</option>`).join("") : `<option value="">—</option>`;
+  sel.value = baked.includes(cur) ? cur : (baked.includes("hybrid") ? "hybrid" : baked[0] || "");
+}
+async function loadProjects() {
+  try {
+    const { projects } = await api("GET", "/api/projects");
+    $("#projects").innerHTML = projects.map(p => `<option value="${esc(p)}">`).join("");
+    if (projects.length && !projects.includes(project())) $("#project").value = projects[0];
+  } catch {}
+}
+$("#project").onchange = () => {
+  state.compare = null; state.lastQuery = null; state.selectedRow = null;
+  $("#q-result").innerHTML = ""; renderFacts(null);
+  loadOverview(); if (!$("#tab-compare").hidden) loadCompare();
+};
+
+/* ---------------- query ---------------- */
+async function ask() {
+  const text = $("#q-text").value.trim();
+  if (!text) { $("#q-text").focus(); return; }
+  await busy($("#q-ask"), async () => {
+    const compare = $("#q-compare").checked;
+    const r = await api("POST", `${P()}/query`, { text, variant: compare ? null : ($("#q-variant").value || null), compare });
+    state.lastQuery = r;
+    state.selected = compare ? (r.results.find(x => x.variant === $("#q-variant").value) || r.results[0])?.variant : r.variant;
+    renderQuery();
+  });
+}
+function answerBlock(x) {
+  return `<span class="badge s-${x.status}">${STATUS_LABEL[x.status]}</span><div class="answer">${esc(x.answer)}</div>`;
+}
+function renderQuery() {
+  const r = state.lastQuery; if (!r) return;
+  const version = `<span>Память <span class="mono">${esc(r.snapshot_id)}</span></span><span>Корпус <span class="mono">${esc(r.corpus_version)}</span></span>`;
+  if (r.results) {
+    $("#q-result").innerHTML = `<div class="card"><div class="variants">${r.results.map(x => `
+      <button class="vcard" data-v="${x.variant}" aria-pressed="${x.variant === state.selected}">
+        <div class="row" style="justify-content:space-between"><span class="vname"><span class="dot" style="background:${color(x.variant)}"></span>${VARIANT_LABEL[x.variant]}</span>
+        <span class="muted" style="font-size:12px">${fmtMs(x.latency_ms)}</span></div>
+        ${answerBlock(x)}</button>`).join("")}
+      ${r.missing_variants.map(v => `<div class="vcard muted" style="cursor:default"><span class="vname">${VARIANT_LABEL[v]}</span><p>Не запечён в этой версии памяти.</p></div>`).join("")}
+      </div><div class="meta" style="margin-top:12px">${version}<span>Нажмите на вариант, чтобы увидеть его факты</span></div></div>`;
+    document.querySelectorAll(".vcard[data-v]").forEach(b => b.onclick = () => { state.selected = b.dataset.v; renderQuery(); });
+  } else {
+    $("#q-result").innerHTML = `<div class="card"><div class="muted" style="font-size:12px;margin-bottom:6px">${VARIANT_LABEL[r.variant]}</div>
+      ${answerBlock(r)}<div class="meta">${version}<span>Время ответа ${fmtMs(r.latency_ms)}</span></div></div>`;
+  }
+  const cur = r.results ? r.results.find(x => x.variant === state.selected) : r;
+  renderFacts(cur?.facts || [], r.corpus_version);
+}
+function renderFacts(facts, corpus) {
+  const ul = $("#q-facts");
+  if (facts === null) { ul.innerHTML = `<li class="empty">Задайте вопрос</li>`; return; }
+  if (!facts.length) { ul.innerHTML = `<li class="empty">Подходящих фактов не найдено</li>`; return; }
+  ul.innerHTML = facts.map((f, i) => `<li><button class="fact ${f.used ? "used" : ""}" data-i="${i}">
+      ${f.heading ? `<div class="muted" style="font-size:12px">${esc(f.heading)}</div>` : ""}
+      <div>${esc(f.text)}</div>
+      <div class="src"><span class="mono">${esc(f.doc_id)}</span><span class="muted">${f.used ? "в ответе · " : ""}${f.score}</span></div>
+    </button></li>`).join("");
+  ul.querySelectorAll(".fact").forEach(b => b.onclick = () => openDoc(facts[+b.dataset.i], corpus, b));
+}
+let drawerReturn = null;
+async function openDoc(fact, corpus, opener) {
+  try {
+    const d = await api("GET", `${P()}/document?doc=${encodeURIComponent(fact.doc_id)}&corpus=${encodeURIComponent(corpus)}`);
+    $("#d-title").textContent = d.id;
+    $("#d-text").innerHTML = esc(d.text.slice(0, fact.start)) + `<mark id="hl">${esc(d.text.slice(fact.start, fact.end))}</mark>` + esc(d.text.slice(fact.end));
+    drawerReturn = opener;
+    $("#drawer").classList.add("open");
+    $("#hl").scrollIntoView({ block: "center" });
+    $("#d-close").focus();
+  } catch (e) { toast(e.message); }
+}
+function closeDrawer() {
+  if (!$("#drawer").classList.contains("open")) return;
+  $("#drawer").classList.remove("open"); drawerReturn?.focus();
+}
+$("#d-close").onclick = closeDrawer;
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+$("#q-ask").onclick = ask;
+$("#q-text").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask(); });
+$("#q-compare").onchange = () => { if (state.lastQuery) ask(); };
+
+/* ---------------- memory ---------------- */
+function renderMemory() {
+  const o = state.overview;
+  const ch = o?.last_changes || {};
+  const status = id => (ch.added || []).includes(id) ? "new" : (ch.changed || []).includes(id) ? "changed" : "unchanged";
+  $("#m-corpus").textContent = o?.current_corpus ? `${o.current_corpus} · ${o.facts} фактов` : "";
+  const rows = (o?.documents || []).map(d => `<tr><td class="mono">${esc(d.id)}</td><td class="mono muted">${esc(d.version)}</td>
+      <td class="num">${d.facts}</td><td><span class="badge s-${status(d.id)}">${CHANGE_LABEL[status(d.id)]}</span></td></tr>`)
+    .concat((ch.removed || []).map(id => `<tr><td class="mono muted">${esc(id)}</td><td></td><td></td><td><span class="badge s-removed">удалён</span></td></tr>`));
+  $("#m-docs").innerHTML = rows.join("") || `<tr><td colspan="4" class="empty">Корпус пуст — перетащите папку с документами</td></tr>`;
+
+  const box = $("#m-variants");
+  if (!box.children.length) box.innerHTML = (o?.variants || ["rag", "latent", "address", "hybrid"]).map(v =>
+    `<label class="switch"><input type="checkbox" value="${v}" checked><span class="dot" style="background:${color(v)}"></span>${VARIANT_LABEL[v]}</label>`).join("");
+
+  const s = o?.active_snapshot;
+  $("#m-active").className = s ? "" : "empty";
+  $("#m-active").innerHTML = s ? `<dl class="kv">
+      <dt>Версия</dt><dd class="mono">${esc(s.snapshot_id)}</dd>
+      <dt>Корпус</dt><dd class="mono">${esc(s.corpus_version)}</dd>
+      <dt>Создана</dt><dd>${esc(s.created_at)}</dd>
+      ${Object.entries(s.variants).map(([v, m]) => `<dt class="vname"><span class="dot" style="background:${color(v)}"></span>${VARIANT_LABEL[v]}</dt>
+        <dd>${fmtS(m.bake_s)} · ${fmtUsd(m.bake_cost_usd)} · самопроверка ${fmtPct(m.self_check_recall_at_1)}${m.reused ? " · из кеша" : ""}</dd>`).join("")}
+    </dl>` : "Память ещё не запечена";
+
+  const job = o?.jobs?.[0];
+  renderJob(job);
+  if (job && (job.status === "queued" || job.status === "running")) pollJob(job.job_id);
+}
+function renderJob(job) {
+  const stages = ["prepare_examples", "train", "validate", "done"];
+  const idx = job ? stages.indexOf(job.stage) : -1;
+  $("#m-steps").innerHTML = stages.map((st, i) => {
+    let cls = "";
+    if (job?.status === "succeeded" || i < idx) cls = "done";
+    else if (i === idx) cls = job.status === "failed" ? "failed" : "active";
+    return `<div class="step ${cls}">${STAGE_LABEL[st]}</div>`;
+  }).join("");
+  if (!job) { $("#m-job").innerHTML = ""; return; }
+  const r = job.result;
+  $("#m-job").innerHTML = `<dl class="kv">
+      <dt>Задание</dt><dd class="mono">${esc(job.job_id)}</dd>
+      <dt>Статус</dt><dd>${esc(job.status)}</dd>
+      ${r ? `<dt>Время</dt><dd>${fmtS(r.duration_s)}</dd><dt>Стоимость</dt><dd>${fmtUsd(r.bake_cost_usd)}</dd>` : ""}
+      ${job.error ? `<dt>Ошибка</dt><dd style="color:var(--bad)">${esc(job.error.code)}: ${esc(job.error.message)}</dd>` : ""}
+    </dl>`;
+}
+let polling = null;
+async function pollJob(id) {
+  if (polling === id) return;
+  polling = id;
+  try {
+    for (;;) {
+      const job = await api("GET", `/api/jobs/${encodeURIComponent(id)}`);
+      renderJob(job);
+      if (job.status === "succeeded" || job.status === "failed") break;
+      await new Promise(r => setTimeout(r, 400));
+    }
+  } catch (e) { toast(e.message); }
+  polling = null;
+  await loadOverview();
+}
+$("#m-bake").onclick = () => busy($("#m-bake"), async () => {
+  const variants = [...document.querySelectorAll("#m-variants input:checked")].map(i => i.value);
+  if (!variants.length) { $("#experiment").open = true; throw new Error("Выберите хотя бы один вариант в блоке «Эксперимент»"); }
+  const job = await api("POST", `${P()}/bake`, { variants });
+  renderJob(job); pollJob(job.job_id);
+});
+
+async function readDir(dir, prefix, out) {
+  const reader = dir.createReader();
+  for (;;) {
+    const batch = await new Promise((res, rej) => reader.readEntries(res, rej));
+    if (!batch.length) break;
+    for (const e of batch) await readEntry(e, prefix, out);
+  }
+}
+async function readEntry(entry, prefix, out) {
+  if (entry.name.startsWith(".")) return;
+  if (entry.isFile) {
+    if (!TEXT_EXT.test(entry.name)) return;
+    const file = await new Promise((res, rej) => entry.file(res, rej));
+    out.push({ path: prefix + entry.name, content: await file.text() });
+  } else if (entry.isDirectory) {
+    await readDir(entry, prefix + entry.name + "/", out);
+  }
+}
+async function upload(files) {
+  if (!files.length) throw new Error("В папке нет текстовых документов");
+  await api("POST", `${P()}/upload`, { files });
+  await loadProjects(); await loadOverview();
+}
+const drop = $("#drop");
+drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = async e => {
+  e.preventDefault(); drop.classList.remove("over");
+  const out = [];
+  try {
+    const entries = [...e.dataTransfer.items].map(i => i.webkitGetAsEntry?.()).filter(Boolean);
+    // one dropped folder: paths stay relative to it, like `memory prepare ./folder`
+    if (entries.length === 1 && entries[0].isDirectory) await readDir(entries[0], "", out);
+    else for (const en of entries) await readEntry(en, "", out);
+    await upload(out);
+  } catch (err) { toast(err.message); }
+};
+$("#folder").onchange = async e => {
+  const out = [];
+  for (const f of e.target.files) {
+    const parts = (f.webkitRelativePath || f.name).split("/");
+    if (!TEXT_EXT.test(f.name) || parts.some(p => p.startsWith("."))) continue;
+    out.push({ path: parts.length > 1 ? parts.slice(1).join("/") : f.name, content: await f.text() });
+  }
+  e.target.value = "";
+  try { await upload(out); } catch (err) { toast(err.message); }
+};
+
+/* ---------------- compare ---------------- */
+let suiteItems = null;
+$("#c-suite").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    suiteItems = (await f.text()).split(/\r?\n/).filter(l => l.trim()).map((l, i) => {
+      try { return JSON.parse(l); } catch { throw new Error(`${f.name}: строка ${i + 1} — не JSON`); }
+    });
+    $("#c-suite-name").textContent = `${f.name}: ${suiteItems.length} вопросов`;
+  } catch (err) { suiteItems = null; toast(err.message); }
+  e.target.value = "";
+};
+$("#c-eval").onclick = () => busy($("#c-eval"), async () => {
+  const suite = suiteItems || Mock.DEMO_QUESTIONS;
+  await api("POST", `${P()}/evaluate`, { suite });
+  await loadCompare();
+});
+$("#c-bench").onclick = () => busy($("#c-bench"), async () => {
+  await api("POST", `${P()}/benchmark`, { batch_sizes: [1, 8, 32] });
+  await loadCompare();
+});
+$("#c-updates").oninput = () => drawCharts();
+
+async function loadCompare() {
+  try { state.compare = await api("GET", `${P()}/compare`); }
+  catch (e) { state.compare = null; if (!["NO_RESULTS", "PROJECT_NOT_FOUND"].includes(e.code)) toast(e.message); }
+  renderCompare();
+}
+function renderCompare() {
+  const c = state.compare;
+  if (!c?.rows.length) {
+    $("#c-table").innerHTML = EMPTY_TABLE; $("#c-note").textContent = "";
+    $("#c-chart1").innerHTML = $("#c-chart2").innerHTML = `<div class="empty">Нет данных</div>`;
+    $("#c-errors-card").hidden = true; return;
+  }
+  $("#c-table").innerHTML = c.rows.map(r => `<tr class="click" data-v="${r.variant}" aria-selected="${r.variant === state.selectedRow}" tabindex="0">
+      <td><span class="vname"><span class="dot" style="background:${color(r.variant)}"></span>${VARIANT_LABEL[r.variant]}</span></td>
+      <td class="num">${fmtPct(r.accuracy)}</td><td class="num">${fmtPct(r.answered_rate)}</td><td class="num">${fmtMs(r.p95_ms)}</td>
+      <td class="num">${fmtUsd(r.cost_per_1k_usd)}</td><td class="num">${fmtS(r.bake_s)} · ${fmtUsd(r.bake_cost_usd)}</td></tr>`).join("");
+  $("#c-note").textContent = c.cost_note + " Нажмите на строку, чтобы увидеть ошибки.";
+  document.querySelectorAll("#c-table tr.click").forEach(tr => {
+    const pick = () => { state.selectedRow = state.selectedRow === tr.dataset.v ? null : tr.dataset.v; renderCompare(); };
+    tr.onclick = pick; tr.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } };
+  });
+  drawCharts(); renderErrors();
+}
+function renderErrors() {
+  const row = state.compare?.rows.find(r => r.variant === state.selectedRow);
+  $("#c-errors-card").hidden = !row;
+  if (!row) return;
+  $("#c-errors-title").textContent = `Ошибки · ${VARIANT_LABEL[row.variant]} · ${row.errors.length} из ${row.n_questions ?? "—"}`;
+  $("#c-errors").innerHTML = row.errors.length ? row.errors.map(e => `<div class="error-item"><dl>
+      <dt>Вопрос</dt><dd>${esc(e.question)}</dd>
+      <dt>Правильный ответ</dt><dd>${e.expected ? esc(e.expected.join(" / ")) : "<span class='muted'>отказ: данных нет</span>"}</dd>
+      <dt>Ответ модели</dt><dd><span class="badge s-${e.status}">${STATUS_LABEL[e.status]}</span> ${esc(e.answer)}</dd>
+      <dt>Выбранные факты</dt><dd>${e.facts.map(f => `<div><span class="mono muted">${esc(f.doc_id)}</span> ${esc(f.text)}</div>`).join("") || "—"}</dd>
+    </dl></div>`).join("") : `<div class="empty">Ошибок нет</div>`;
+}
+
+/* ---- charts: inline SVG ---- */
+function axes(W, H, P, xTicks, yTicks, xLabel, yLabel) {
+  let s = "";
+  for (const t of yTicks) s += `<line x1="${P.l}" x2="${W - P.r}" y1="${t.y}" y2="${t.y}" stroke="var(--line)"/><text x="${P.l - 6}" y="${t.y + 4}" text-anchor="end">${t.label}</text>`;
+  for (const t of xTicks) s += `<text x="${t.x}" y="${H - P.b + 16}" text-anchor="middle">${t.label}</text>`;
+  s += `<line x1="${P.l}" x2="${W - P.r}" y1="${H - P.b}" y2="${H - P.b}" stroke="var(--line-strong)"/>`;
+  s += `<text x="${(P.l + W - P.r) / 2}" y="${H - 4}" text-anchor="middle">${xLabel}</text>`;
+  s += `<text transform="translate(12 ${(P.t + H - P.b) / 2}) rotate(-90)" text-anchor="middle">${yLabel}</text>`;
+  return s;
+}
+function nice(max) { if (!(max > 0)) return 1; const p = 10 ** Math.floor(Math.log10(max)); return Math.ceil(max / p) * p; }
+function money(v) { return "$" + (v >= 100 ? Math.round(v) : +v.toPrecision(2)); }
+function legend(rows) { return `<div class="legend">${rows.map(r => `<span class="vname" style="font-weight:400"><span class="dot" style="background:${color(r.variant)}"></span>${VARIANT_LABEL[r.variant]}</span>`).join("")}</div>`; }
+function drawCharts() {
+  const rows = (state.compare?.rows || []).filter(r => r.cost_per_1k_usd != null);
+  const W = 520, H = 280, PAD = { l: 56, r: 100, t: 12, b: 40 };
+  if (!rows.length) { $("#c-chart1").innerHTML = $("#c-chart2").innerHTML = `<div class="empty">Нужны результаты «Измерить скорость»</div>`; return; }
+  const F = [0, .25, .5, .75, 1];
+
+  // 1. accuracy vs cost per 1k queries
+  const xMax = nice(Math.max(...rows.map(r => r.cost_per_1k_usd)) * 1.1);
+  const x = v => PAD.l + v / xMax * (W - PAD.l - PAD.r), y = v => H - PAD.b - v * (H - PAD.t - PAD.b);
+  let s1 = axes(W, H, PAD, F.map(f => ({ x: x(f * xMax), label: money(f * xMax) })), F.map(f => ({ y: y(f), label: f * 100 + "%" })),
+    "стоимость 1 000 запросов", "точность");
+  const withAcc = rows.filter(r => r.accuracy != null);
+  for (const r of withAcc) {
+    s1 += `<circle cx="${x(r.cost_per_1k_usd)}" cy="${y(r.accuracy)}" r="7" fill="${color(r.variant)}" stroke="var(--panel)" stroke-width="2">
+        <title>${VARIANT_LABEL[r.variant]}: ${fmtPct(r.accuracy)}, ${fmtUsd(r.cost_per_1k_usd)}</title></circle>`;
+  }
+  // labels go right of the rightmost point in a cluster of nearby points, stacked without overlap
+  const pts = withAcc.map(r => ({ r, cx: x(r.cost_per_1k_usd), cy: y(r.accuracy) }));
+  const labels = pts.map(p => {
+    const cluster = pts.filter(o => Math.abs(o.cy - p.cy) < 16 && Math.abs(o.cx - p.cx) < 40);
+    return { text: VARIANT_LABEL[p.r.variant], x: Math.max(...cluster.map(o => o.cx)) + 12, y: p.cy + 4, v: p.r.variant };
+  });
+  for (const l of placeLabels(labels)) s1 += `<text x="${l.x}" y="${l.y}" style="fill:${color(l.v)}">${l.text}</text>`;
+  $("#c-chart1").innerHTML = withAcc.length
+    ? `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Качество против стоимости ответа">${s1}</svg>`
+    : `<div class="empty">Нужны результаты «Проверить качество»</div>`;
+
+  // 2. total cost vs requests: bake × (1 + updates) + requests × cost per query
+  const updates = Math.max(0, parseInt($("#c-updates").value, 10) || 0);
+  const N = 1_000_000;
+  const total = (r, n) => (r.bake_cost_usd || 0) * (1 + updates) + n / 1000 * r.cost_per_1k_usd;
+  const yMax = nice(Math.max(...rows.map(r => total(r, N))) * 1.05);
+  const x2 = n => PAD.l + n / N * (W - PAD.l - PAD.r), y2 = v => H - PAD.b - v / yMax * (H - PAD.t - PAD.b);
+  let s2 = axes(W, H, PAD, F.map(f => ({ x: x2(f * N), label: f ? (f * N / 1000) + "k" : "0" })),
+    F.map(f => ({ y: y2(f * yMax), label: money(f * yMax) })), "число запросов", "общая стоимость");
+  for (const r of rows) {
+    s2 += `<polyline fill="none" stroke="${color(r.variant)}" stroke-width="2.5" points="${F.map(f => `${x2(f * N)},${y2(total(r, f * N))}`).join(" ")}">
+      <title>${VARIANT_LABEL[r.variant]}: ${fmtUsd(total(r, N))} на 1M запросов</title></polyline>`;
+  }
+  const ends = rows.map(r => ({ text: `${VARIANT_LABEL[r.variant]} ${money(total(r, N))}`, x: x2(N) + 6, y: y2(total(r, N)) + 4, v: r.variant }));
+  for (const l of placeLabels(ends, 13, 70, -1)) s2 += `<text x="${l.x}" y="${l.y}" style="fill:${color(l.v)}">${l.text}</text>`;
+  $("#c-chart2").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Общая стоимость против числа запросов">${s2}</svg>${legend(rows)}`;
+}
+
+/* ---------------- boot ---------------- */
+(async () => {
+  let tab = "query";
+  try { tab = localStorage.getItem("memory.tab") || tab; } catch {}
+  $("#c-table").innerHTML = EMPTY_TABLE;
+  await loadProjects();
+  await loadOverview();
+  showTab(["query", "memory", "compare"].includes(tab) ? tab : "query");
+})();
+</script>
+</body>
+</html>
