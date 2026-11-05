@@ -217,6 +217,9 @@ html.embed .toast { background: #fff1d6; color: #2a170a; }
 /* Reviewer-first layout: ask, understand, inspect evidence. */
 #version{display:none!important}.review-title{font-size:clamp(24px,3vw,34px);line-height:1.15;font-weight:500;letter-spacing:-.7px;margin:4px 0 12px}.review-intro{font-size:14px;line-height:1.65;opacity:.72;max-width:620px;margin:0 0 22px}.examples{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}.examples .btn{font-size:12px;padding:8px 12px}.question-label{display:block;font-size:12px;opacity:.65;margin-bottom:8px}#q-text{font-size:20px;min-height:84px;line-height:1.5}.ask-actions{margin-top:14px}.advanced{margin-top:20px;font-size:12px;opacity:.75}.advanced summary{font-weight:400}#tab-query>.grid{display:block;max-width:780px;margin:0 auto}.evidence-details{margin-top:24px!important;border-top:1px solid var(--line);padding-top:16px!important}.evidence-details>summary{font-size:13px;font-weight:500}.answer-heading{font-size:12px;opacity:.6;margin-bottom:8px}.answer{font-size:21px;line-height:1.6;margin:0 0 20px;white-space:pre-wrap}.answer-technical{font-size:12px;opacity:.75;margin:8px 0 18px}.answer-technical summary{font-weight:400}.answer-technical dl{margin:12px 0}.meta{font-size:11px;opacity:.6}.source-action{float:right;font-size:12px;opacity:.65}.fact strong{font-weight:500}.bar{gap:14px!important}.bar nav{margin-left:auto!important}.bar>a.btn{font-size:11px;padding:6px 10px}.version{display:none}#q-result>.card>.muted:first-child{display:none}.question-label~textarea:focus-visible{outline:2px solid var(--accent);outline-offset:4px}html.embed .bar{padding-bottom:14px}.row label.switch{font-size:12px}
 
+
+.codebase-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 28px}.repo-card{display:flex;align-items:center;gap:10px;min-width:0;padding:14px 10px;background:transparent;border:1px solid var(--line-strong);border-radius:12px;color:var(--text);text-align:left;cursor:pointer;transition:background .15s,border-color .15s}.repo-card:hover{background:rgba(255,241,214,.05)}.repo-card[aria-pressed="true"]{border-color:#fff1d6;background:rgba(255,241,214,.09)}.repo-logo{width:44px;height:44px;object-fit:contain;flex-shrink:0;background:#fff;border-radius:9px;padding:5px}.repo-info{display:grid;gap:3px;min-width:0}.repo-info strong{font-size:14px;font-weight:500}.repo-info>span{font-size:10px;opacity:.7}.repo-info small{font-size:10px;opacity:.5}.example[hidden]{display:none!important}@media(max-width:520px){.codebase-picker{gap:7px}.repo-card{flex-direction:column;align-items:flex-start;padding:11px 8px;gap:8px}.repo-info strong{font-size:12px}.repo-info>span{font-size:9px}.repo-info small{font-size:9px}}
+
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap">
 <script>if (new URLSearchParams(location.search).has("embed")) document.documentElement.classList.add("embed");</script>
@@ -244,6 +247,11 @@ html.embed .toast { background: #fff1d6; color: #2a170a; }
     <div class="grid">
       <div>
         <div class="card">
+          <div class="codebase-picker" role="group" aria-label="Choose a codebase">
+            <button class="repo-card" data-codebase="itsdangerous" aria-pressed="true"><img class="repo-logo" src="/logos/itsdangerous.svg" alt=""><span class="repo-info"><strong>ItsDangerous</strong><span>Signed data · Small</span><small data-source-count="itsdangerous">79 source records</small></span></button>
+            <button class="repo-card" data-codebase="httpx" aria-pressed="false"><img class="repo-logo" src="/logos/httpx.png" alt=""><span class="repo-info"><strong>HTTPX</strong><span>HTTP client · Medium</span><small data-source-count="httpx">533 source records</small></span></button>
+            <button class="repo-card" data-codebase="django" aria-pressed="false"><img class="repo-logo" src="/logos/django.svg" alt=""><span class="repo-info"><strong>Django</strong><span>Web framework · Large</span><small data-source-count="django">11,632 source records</small></span></button>
+          </div>
           <h1 class="review-title">Understand the code. See the evidence.</h1>
           <p class="review-intro">Choose a question below or ask your own. HyperWarp reads the connected codebase and shows the source behind its answer.</p>
           <div class="examples"><button class="btn example" data-project="itsdangerous" data-question="How does Signer.validate handle an invalid signature?">Reject invalid signatures ↗</button><button class="btn example" data-project="httpx" data-question="What exception does Response.raise_for_status raise on an error status?">Understand an HTTP error ↗</button><button class="btn example" data-project="django" data-question="What does django.utils.html.escape return for '<b>'?">Escape HTML safely ↗</button></div>
@@ -402,9 +410,10 @@ document.querySelectorAll("nav button").forEach(b => b.onclick = () => showTab(b
 
 /* ---------------- overview / header ---------------- */
 async function loadOverview() {
-  try { state.overview = await api("GET", P()); }
-  catch (e) { state.overview = null; if (e.code !== "PROJECT_NOT_FOUND") toast(e.message); }
-  renderHeader(); renderMemory(); renderVariantSelect();
+  const requestedProject=project();
+  try { const overview=await api("GET", P()); if(project()!==requestedProject)return; state.overview=overview; }
+  catch (e) { if(project()!==requestedProject)return; state.overview = null; if (e.code !== "PROJECT_NOT_FOUND") toast(e.message); }
+  renderHeader(); renderMemory(); renderVariantSelect(); syncCodebasePicker();
 }
 function renderHeader() {
   const s = state.overview?.active_snapshot;
@@ -425,6 +434,18 @@ async function loadProjects() {
     if (projects.length && !projects.includes(project())) $("#project").value = projects[0];
   } catch {}
 }
+function syncCodebasePicker(){
+  document.querySelectorAll('[data-codebase]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.codebase===project())));
+  document.querySelectorAll('.example').forEach(button=>button.hidden=button.dataset.project!==project());
+  const example=document.querySelector('.example[data-project="'+CSS.escape(project())+'"]');
+  $('#q-text').placeholder=example?example.dataset.question:'Ask a question about this codebase…';
+  const count=state.overview?.project===project()?state.overview.facts:null, label=document.querySelector('[data-source-count="'+CSS.escape(project())+'"]');
+  if(label&&count!=null)label.textContent=Number(count).toLocaleString()+' source records';
+}
+document.querySelectorAll('[data-codebase]').forEach(button=>button.onclick=async()=>{
+  $('#project').value=button.dataset.codebase;state.lastQuery=null;state.compare=null;state.selectedRow=null;
+  $('#q-result').innerHTML='';$('#q-text').value='';renderFacts(null);syncCodebasePicker();await loadOverview();
+});
 $("#project").onchange = () => {
   state.compare = null; state.lastQuery = null; state.selectedRow = null;
   $("#q-result").innerHTML = ""; renderFacts(null);
