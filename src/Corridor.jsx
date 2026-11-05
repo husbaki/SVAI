@@ -109,11 +109,14 @@ function ps1(mat) {
   return mat;
 }
 
-export default function Corridor({ interactive = false }) {
+// warpKey: change it to fire a warp jump (instant high speed, then smooth slowdown)
+export default function Corridor({ interactive = false, warpKey = 0 }) {
   const mountRef = useRef(null);
   const interactiveRef = useRef(interactive);
+  const warpRef = useRef(warpKey);
 
   useEffect(() => { interactiveRef.current = interactive; }, [interactive]);
+  useEffect(() => { warpRef.current = warpKey; }, [warpKey]);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -334,13 +337,38 @@ export default function Corridor({ interactive = false }) {
     let time = 0;
     let raf = 0;
     let frame = 0;
+    let lastWarp = warpRef.current;
+    const WARP_SPEED = reducedMotion ? 0.15 : 1.8;   // units per frame at the peak of the jump
+    const WARP_RAMP_FRAMES = 45;                      // ~0.75 s of acceleration before the peak
+    let warpFrom = 0, warpFrame = -1;
+    const BASE_FOV = camera.fov;
     const animate = () => {
       raf = requestAnimationFrame(animate);
       time += 0.016;
 
-      const target = boosting ? boostSpeed : baseSpeed;
-      speed += (target - speed) * 0.04;
+      if (warpRef.current !== lastWarp) {             // warp jump: smooth ramp up, then long slowdown
+        lastWarp = warpRef.current;
+        warpFrom = speed;
+        warpFrame = 0;
+      }
+      if (warpFrame >= 0 && warpFrame < WARP_RAMP_FRAMES) {
+        const t = ++warpFrame / WARP_RAMP_FRAMES;
+        const ease = t * t * (3 - 2 * t);             // smoothstep: gentle start, gentle peak
+        speed = warpFrom + (WARP_SPEED - warpFrom) * ease;
+        if (warpFrame === WARP_RAMP_FRAMES) warpFrame = -1;
+      } else {
+        const target = boosting ? boostSpeed : baseSpeed;
+        // slower ease while far above cruise speed = long, smooth deceleration
+        speed += (target - speed) * (speed > 0.4 ? 0.022 : 0.04);
+      }
       camera.position.z -= speed;
+
+      // FOV widens with speed: tunnel stretches during the jump, settles as we slow down
+      const fov = BASE_FOV + Math.min(40, (speed - baseSpeed) * 26);
+      if (Math.abs(camera.fov - fov) > 0.01) {
+        camera.fov = fov;
+        camera.updateProjectionMatrix();
+      }
 
       camPos.x += (targetX - camPos.x) * 0.04;
       camPos.y += (targetY - camPos.y) * 0.04;

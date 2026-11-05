@@ -3,17 +3,25 @@ import Corridor from './Corridor.jsx';
 
 // Corridor = live PS1 background; the memory interface (public/memory.html) sits on a glass panel above it.
 export default function App() {
-  const [consoleHidden, setConsoleHidden] = useState(false);
+  const [consoleHidden, setConsoleHidden] = useState(true);
+  const [started, setStarted] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
+  const [warp, setWarp] = useState(0);
   const frameRef = useRef(null);
   const showButtonRef = useRef(null);
   const hideButtonRef = useRef(null);
 
   const hideConsole = () => {
     setConsoleHidden(true);
+    setStarted(false);
+    setWarp(w => w + 1);
     requestAnimationFrame(() => showButtonRef.current?.focus());
   };
   const showConsole = () => {
     setConsoleHidden(false);
+    setStarted(true);
+    setHasOpened(true);
+    setWarp(w => w + 1);
     requestAnimationFrame(() => hideButtonRef.current?.focus());
   };
 
@@ -35,15 +43,21 @@ export default function App() {
   }, []);
 
   return (
-    <main className="page" data-memory-open={!consoleHidden}>
-      <Corridor interactive={false} />
+    <main className={started ? "page is-started" : "page"} data-memory-open={!consoleHidden}>
+      <Corridor interactive={false} warpKey={warp} />
 
       <section className="hero">
         <h1 className="title">
           <span>Hyper</span>
           <span><span className="echo">W</span>arp<span className="cursor" aria-hidden="true">_</span></span>
         </h1>
-        <p className="tagline">Understand your code.<br />See the source.</p>
+        <div className="taglines">
+          <p className="tagline tagline-start" aria-hidden={started}>Somewhere<br />beyond ordinary.</p>
+          <p className="tagline tagline-main" aria-hidden={!started}>Understand your code.<br />See the source.</p>
+        </div>
+        <button className="explore" onClick={showConsole} hidden={hasOpened} tabIndex={started ? -1 : 0}>
+          Explore the space <span aria-hidden="true">→</span>
+        </button>
       </section>
 
       <div className="console" id="memory-console" hidden={consoleHidden}>
@@ -56,7 +70,7 @@ export default function App() {
         </div>
         <iframe ref={frameRef} src="/memory.html?embed=1" title="Corporate memory" />
       </div>
-      <button ref={showButtonRef} className="console-toggle console-reopen" hidden={!consoleHidden}
+      <button ref={showButtonRef} className="console-toggle console-reopen" hidden={!consoleHidden || !hasOpened}
         onClick={showConsole} aria-controls="memory-console" aria-expanded="false">
         Show memory <span aria-hidden="true">↗</span>
       </button>
