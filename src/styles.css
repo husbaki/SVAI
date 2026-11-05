@@ -1,0 +1,202 @@
+:root {
+  --cream: #fff1d6;
+  --cream-dim: rgba(255, 241, 214, 0.72);
+  --ink: #2a170a;
+  --font: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  height: 100%;
+  background: #4a2a16;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  position: relative;
+  height: 100%;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ---------- corridor layer ---------- */
+.corridor {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.corridor canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  image-rendering: pixelated;          /* PS1 look: upscale low-res canvas without smoothing */
+  filter: contrast(1.14) saturate(0.85) brightness(0.9) sepia(0.14);
+}
+
+.corridor .vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  padding: clamp(16px, 2.5vw, 36px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 62vw;
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  /* own GPU layer: text + blurred shadow rasterized once, not repainted every WebGL frame */
+  will-change: opacity, transform;
+  transform: translateZ(0);
+}
+
+.title {
+  margin: 0;
+  padding-bottom: 0.08em;           /* room for p/y descenders above tagline */
+  font-weight: 500;
+  font-size: clamp(72px, 15vw, 260px);
+  line-height: 1;                   /* cap 0.73em + descender 0.24em: less than ~0.97 = y/p tails hit "Warp" */
+  letter-spacing: 0;                /* Inter Tight already tight; any negative value = letters collide */
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  white-space: nowrap;
+  text-shadow: 0 2px 28px rgba(42, 23, 10, 0.4);
+}
+
+.title > span { display: block; }
+
+/* blinking terminal-style cursor after "Warp" */
+.title .cursor {
+  margin-left: 0.04em;
+  animation: blink 1s steps(1, end) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title .cursor { animation: none; }
+}
+
+/* "W" repeated as stacked colored copies (text-shadow layers, scale with font size) */
+.title .echo {
+  text-shadow:
+    -0.035em 0.035em 0 #ff7a3d,
+    -0.07em  0.07em  0 #ff3d7f,
+    -0.105em 0.105em 0 #8a5cff,
+    -0.14em  0.14em  0 #23c4b8,
+    0 2px 28px rgba(42, 23, 10, 0.4);
+}
+
+.tagline {
+  margin: clamp(24px, 4vh, 48px) 0 0;
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-shadow: 0 1px 16px rgba(42, 23, 10, 0.5);
+}
+
+.explore {
+  align-self: flex-start;
+  margin-top: clamp(20px, 3vh, 32px);
+  padding: 0 0 8px;
+  min-width: 140px;
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  font: 400 13px/1 var(--font);
+  color: var(--cream);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--cream-dim);
+  cursor: pointer;
+}
+
+.explore span { transition: transform 0.3s ease; }
+.explore:hover span { transform: translateY(3px); }
+
+.explore:focus-visible,
+.controls button:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 4px;
+}
+
+.footnote {
+  position: fixed;
+  z-index: 1;
+  left: clamp(16px, 2.5vw, 36px);
+  bottom: calc(clamp(12px, 2vh, 20px) + env(safe-area-inset-bottom, 0px));
+  margin: 0;
+  font-size: 11px;
+  color: var(--cream-dim);
+  transition: opacity 0.9s ease;
+}
+
+/* ---------- exploring state ---------- */
+.controls {
+  position: fixed;
+  z-index: 1;
+  right: clamp(16px, 2.5vw, 36px);
+  bottom: calc(clamp(12px, 2vh, 20px) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease 0.4s;
+}
+
+.controls p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--cream-dim);
+}
+
+.controls button {
+  font: 500 13px/1 var(--font);
+  color: var(--ink);
+  background: var(--cream);
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 18px;
+  cursor: pointer;
+}
+
+.is-exploring .hero {
+  opacity: 0;
+  transform: translateY(-24px);
+  pointer-events: none;
+}
+
+.is-exploring .footnote { opacity: 0; }
+
+.is-exploring .controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+  .hero { max-width: 100%; }
+  .controls p { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero, .footnote, .controls, .explore span { transition: none; }
+}
