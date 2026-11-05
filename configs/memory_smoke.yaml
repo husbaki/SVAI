@@ -1,0 +1,25 @@
+model_id: Qwen/Qwen2.5-0.5B-Instruct
+encoder_id: sentence-transformers/all-MiniLM-L6-v2
+model_cache: .cache-memory
+device: cuda
+dtype: auto
+seed: 17
+data: experiments/smoke_corpus
+output: experiments/smoke
+products: 1
+memory_tokens: 8
+hidden: 128
+depth: 1
+slots: 2
+max_new_tokens: 20
+train_batch: 2
+eval_batch: 4
+answer_epochs: 2
+address_epochs: 80
+benchmark_batches: [1, 4]
+benchmark_repeats: 3
+benchmark_warmup: 1
+hybrid_loss_candidates: [[1.0, 0.25]]
+prices:
+  gpu_hour_usd: 0.35
+  hours_between_updates: 720

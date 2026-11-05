@@ -1,0 +1,40 @@
+model_id: Qwen/Qwen2.5-0.5B-Instruct
+revision: 7ae557604adf67be50417f59c2c2f167def9a775
+encoder_id: sentence-transformers/all-MiniLM-L6-v2
+encoder_revision: 1110a243fdf4706b3f48f1d95db1a4f5529b4d41
+model_cache: .cache-memory
+device: cuda
+dtype: auto
+seed: 37
+data: experiments/code_corpus
+output: experiments/code
+memory_tokens: 8
+hidden: 192
+depth: 2
+slots: 2
+address_head: categorical
+encoder_length: 256
+encoder_batch: 32
+context_tokens_per_fact: 384
+max_prompt_tokens: 1536
+max_new_tokens: 48
+train_batch: 2
+eval_batch: 2
+answer_epochs: 8
+address_epochs: 200
+learning_rate: 0.0004
+address_lr: 0.002
+patience: 3
+hybrid_loss_candidates: [[1.0, 0.5]]
+rag_k_candidates: [1, 2]
+rag_threshold_candidates: [0.0, 0.2, 0.4, 0.6]
+benchmark_batches: [1, 4]
+benchmark_repeats: 7
+benchmark_warmup: 1
+answer_logits_only: true
+last_token_logits: true
+stop_on_eos: true
+system_prompt: 'Answer questions about the supplied repository sources. Output only the requested short value, boolean, exception class, or qualified symbol name. If the answer is not supported, output UNKNOWN. Do not explain or add citations to the answer text.'
+prices:
+  gpu_hour_usd: 0.35
+  hours_between_updates: 720

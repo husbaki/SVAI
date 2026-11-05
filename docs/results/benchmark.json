@@ -1,0 +1,403 @@
+{
+  "results": {
+    "none": {
+      "batches": {
+        "1": {
+          "batch_size": 1,
+          "samples": 7,
+          "p50_ms": 642.4681000644341,
+          "p95_ms": 2550.4132499801913,
+          "ttft_p50_ms": 325.4525001393631,
+          "throughput_queries_s": 0.9368459560421956,
+          "amortized_ms": 1067.4113428685814,
+          "peak_allocated_bytes": 1179707392,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 0.9368459560421956,
+          "model_budget_tokens_s": 1.8736919120843911,
+          "stages_ms": {
+            "encoder_s": 0.05385713718299355,
+            "memory_s": 0.05905714351683855,
+            "preparation_s": 6.899385729671589,
+            "prefill_s": 405.867028582309,
+            "decode_s": 651.6674285688039
+          }
+        },
+        "4": {
+          "batch_size": 4,
+          "samples": 7,
+          "p50_ms": 509.1200000606477,
+          "p95_ms": 622.5036399671807,
+          "ttft_p50_ms": 260.43890009168535,
+          "throughput_queries_s": 7.931693165073051,
+          "amortized_ms": 126.07648571221425,
+          "peak_allocated_bytes": 1192786432,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 7.931693165073052,
+          "model_budget_tokens_s": 15.863386330146104,
+          "stages_ms": {
+            "encoder_s": 0.055828580765851905,
+            "memory_s": 0.08637142101568836,
+            "preparation_s": 9.101757164379316,
+            "prefill_s": 252.2737571770059,
+            "decode_s": 240.65304286445357
+          }
+        }
+      },
+      "corpus_memory_bytes": 0,
+      "shared_model_startup_s": 2.6674225999740884,
+      "checkpoint_load_s": 0,
+      "cold_start_scope": "shared LLM+encoder initialization measured once; not independent process launches",
+      "rag_index_s": 0
+    },
+    "rag": {
+      "batches": {
+        "1": {
+          "batch_size": 1,
+          "samples": 7,
+          "p50_ms": 465.84099996834993,
+          "p95_ms": 505.19957001088187,
+          "ttft_p50_ms": 258.54339997749776,
+          "throughput_queries_s": 2.1396806122946015,
+          "amortized_ms": 467.35947143419514,
+          "peak_allocated_bytes": 1182510592,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 2.1396806122946015,
+          "model_budget_tokens_s": 4.279361224589203,
+          "stages_ms": {
+            "encoder_s": 27.2882714302146,
+            "memory_s": 1.9020142831972666,
+            "preparation_s": 3.356385726614722,
+            "prefill_s": 223.73079997487366,
+            "decode_s": 209.66822858567215
+          }
+        },
+        "4": {
+          "batch_size": 4,
+          "samples": 7,
+          "p50_ms": 478.34699996747077,
+          "p95_ms": 508.11707999091595,
+          "ttft_p50_ms": 241.1528000375256,
+          "throughput_queries_s": 8.571564142161092,
+          "amortized_ms": 116.6648214275483,
+          "peak_allocated_bytes": 1199672320,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 8.571564142161092,
+          "model_budget_tokens_s": 17.143128284322184,
+          "stages_ms": {
+            "encoder_s": 30.390657151916198,
+            "memory_s": 3.272571384773723,
+            "preparation_s": 8.819885718237076,
+            "prefill_s": 202.8568571632994,
+            "decode_s": 219.40440004358865
+          }
+        }
+      },
+      "corpus_memory_bytes": 59508846,
+      "shared_model_startup_s": 2.6674225999740884,
+      "checkpoint_load_s": 0,
+      "cold_start_scope": "shared LLM+encoder initialization measured once; not independent process launches",
+      "rag_index_s": 42.046994899981655
+    },
+    "oracle": {
+      "batches": {
+        "1": {
+          "batch_size": 1,
+          "samples": 7,
+          "p50_ms": 431.87990004662424,
+          "p95_ms": 460.7165099703707,
+          "ttft_p50_ms": 228.77159994095564,
+          "throughput_queries_s": 2.306035028750892,
+          "amortized_ms": 433.6447571404278,
+          "peak_allocated_bytes": 1202668544,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 2.306035028750892,
+          "model_budget_tokens_s": 4.612070057501784,
+          "stages_ms": {
+            "encoder_s": 0.060699996538460255,
+            "memory_s": 10.389528569898435,
+            "preparation_s": 4.882314292314861,
+            "prefill_s": 215.8892571294148,
+            "decode_s": 200.93895714463932
+          }
+        },
+        "4": {
+          "batch_size": 4,
+          "samples": 7,
+          "p50_ms": 406.2774999765679,
+          "p95_ms": 411.2772600376047,
+          "ttft_p50_ms": 208.63589993678033,
+          "throughput_queries_s": 9.874676251791689,
+          "amortized_ms": 101.2691428560564,
+          "peak_allocated_bytes": 1239954944,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 9.874676251791687,
+          "model_budget_tokens_s": 19.749352503583374,
+          "stages_ms": {
+            "encoder_s": 0.050785718485713005,
+            "memory_s": 13.049542837377105,
+            "preparation_s": 13.17228573108358,
+            "prefill_s": 183.640285727701,
+            "decode_s": 193.24622855388694
+          }
+        }
+      },
+      "corpus_memory_bytes": 40702062,
+      "shared_model_startup_s": 2.6674225999740884,
+      "checkpoint_load_s": 0,
+      "cold_start_scope": "shared LLM+encoder initialization measured once; not independent process launches",
+      "rag_index_s": 0
+    },
+    "latent": {
+      "batches": {
+        "1": {
+          "batch_size": 1,
+          "samples": 7,
+          "p50_ms": 481.8323999643326,
+          "p95_ms": 799.4221399887465,
+          "ttft_p50_ms": 259.7779999487102,
+          "throughput_queries_s": 1.725910432558833,
+          "amortized_ms": 579.404342853065,
+          "peak_allocated_bytes": 1180138496,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 2.7121449654495953,
+          "model_budget_tokens_s": 4.438055398008428,
+          "stages_ms": {
+            "encoder_s": 26.851642843601958,
+            "memory_s": 2.5411571509071758,
+            "preparation_s": 4.0970571571961045,
+            "prefill_s": 222.21872857439197,
+            "decode_s": 322.1256285573223
+          }
+        },
+        "4": {
+          "batch_size": 4,
+          "samples": 7,
+          "p50_ms": 1085.2069999091327,
+          "p95_ms": 2010.2947099949229,
+          "ttft_p50_ms": 322.38010002765805,
+          "throughput_queries_s": 3.188033543063914,
+          "amortized_ms": 313.6729857111017,
+          "peak_allocated_bytes": 1194479616,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 5.351342018714427,
+          "model_budget_tokens_s": 11.841267445665967,
+          "stages_ms": {
+            "encoder_s": 59.019414292249294,
+            "memory_s": 4.027200014596539,
+            "preparation_s": 16.271314267734333,
+            "prefill_s": 284.7202142999907,
+            "decode_s": 887.4257571463074
+          }
+        }
+      },
+      "corpus_memory_bytes": 6286629,
+      "shared_model_startup_s": 2.6674225999740884,
+      "checkpoint_load_s": 0.06712559994775802,
+      "cold_start_scope": "shared LLM+encoder initialization measured once; not independent process launches",
+      "rag_index_s": 0
+    },
+    "address": {
+      "batches": {
+        "1": {
+          "batch_size": 1,
+          "samples": 7,
+          "p50_ms": 589.5480000181124,
+          "p95_ms": 841.8687999481334,
+          "ttft_p50_ms": 336.17689996026456,
+          "throughput_queries_s": 1.585451462560001,
+          "amortized_ms": 630.735171409989,
+          "peak_allocated_bytes": 1214629376,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 1.585451462560001,
+          "model_budget_tokens_s": 3.170902925120002,
+          "stages_ms": {
+            "encoder_s": 36.47931427362242,
+            "memory_s": 7.763928567458477,
+            "preparation_s": 6.626471411436796,
+            "prefill_s": 306.7356428364292,
+            "decode_s": 271.3431714302195
+          }
+        },
+        "4": {
+          "batch_size": 4,
+          "samples": 7,
+          "p50_ms": 494.99729997478426,
+          "p95_ms": 616.4308099425398,
+          "ttft_p50_ms": 280.25200008414686,
+          "throughput_queries_s": 7.670829370375259,
+          "amortized_ms": 130.36399999483754,
+          "peak_allocated_bytes": 1260812288,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 7.67082937037526,
+          "model_budget_tokens_s": 15.34165874075052,
+          "stages_ms": {
+            "encoder_s": 33.68631429371557,
+            "memory_s": 11.258842872588762,
+            "preparation_s": 16.262414283119142,
+            "prefill_s": 228.63107141373413,
+            "decode_s": 229.70085712482356
+          }
+        }
+      },
+      "corpus_memory_bytes": 55652275,
+      "shared_model_startup_s": 2.6674225999740884,
+      "checkpoint_load_s": 0.3325201999396086,
+      "cold_start_scope": "shared LLM+encoder initialization measured once; not independent process launches",
+      "rag_index_s": 0
+    },
+    "hybrid": {
+      "batches": {
+        "1": {
+          "batch_size": 1,
+          "samples": 7,
+          "p50_ms": 636.5485000424087,
+          "p95_ms": 797.8176499716936,
+          "ttft_p50_ms": 345.67760000936687,
+          "throughput_queries_s": 1.5304704644227778,
+          "amortized_ms": 653.3938571478108,
+          "peak_allocated_bytes": 1215804928,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 1.5304704644227778,
+          "model_budget_tokens_s": 3.0609409288455556,
+          "stages_ms": {
+            "encoder_s": 36.50597143652184,
+            "memory_s": 7.477942854166031,
+            "preparation_s": 7.02331426353859,
+            "prefill_s": 304.2108714746843,
+            "decode_s": 296.4443428707974
+          }
+        },
+        "4": {
+          "batch_size": 4,
+          "samples": 7,
+          "p50_ms": 494.6205000160262,
+          "p95_ms": 4281.643640028776,
+          "ttft_p50_ms": 274.9976000050083,
+          "throughput_queries_s": 2.9344664062700128,
+          "amortized_ms": 340.777457142914,
+          "peak_allocated_bytes": 1262291456,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 2.9344664062700123,
+          "model_budget_tokens_s": 5.868932812540025,
+          "stages_ms": {
+            "encoder_s": 89.74545713447567,
+            "memory_s": 26.15477141392018,
+            "preparation_s": 38.854642887599766,
+            "prefill_s": 728.1330142536068,
+            "decode_s": 478.20924287329296
+          }
+        }
+      },
+      "corpus_memory_bytes": 61333525,
+      "shared_model_startup_s": 2.6674225999740884,
+      "checkpoint_load_s": 0.26507690001744777,
+      "cold_start_scope": "shared LLM+encoder initialization measured once; not independent process launches",
+      "rag_index_s": 0
+    },
+    "hybrid_no_latent": {
+      "batches": {
+        "1": {
+          "batch_size": 1,
+          "samples": 7,
+          "p50_ms": 1300.7724999915808,
+          "p95_ms": 4222.387469944078,
+          "ttft_p50_ms": 963.3137000491843,
+          "throughput_queries_s": 0.45944215623399665,
+          "amortized_ms": 2176.5525571203657,
+          "peak_allocated_bytes": 1214629376,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 0.45944215623399665,
+          "model_budget_tokens_s": 0.9188843124679933,
+          "stages_ms": {
+            "encoder_s": 151.53172856662422,
+            "memory_s": 30.44465714732983,
+            "preparation_s": 31.369042882163612,
+            "prefill_s": 886.1095142783597,
+            "decode_s": 1069.7246000303753
+          }
+        },
+        "4": {
+          "batch_size": 4,
+          "samples": 7,
+          "p50_ms": 813.820100040175,
+          "p95_ms": 1753.380600037053,
+          "ttft_p50_ms": 442.9985999595374,
+          "throughput_queries_s": 3.7152691989935676,
+          "amortized_ms": 269.1595000090144,
+          "peak_allocated_bytes": 1260812288,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 3.715269198993567,
+          "model_budget_tokens_s": 7.430538397987134,
+          "stages_ms": {
+            "encoder_s": 71.75717143607991,
+            "memory_s": 17.731585722815776,
+            "preparation_s": 31.884000004668323,
+            "prefill_s": 451.8050714063325,
+            "decode_s": 500.44922856613994
+          }
+        }
+      },
+      "corpus_memory_bytes": 61333525,
+      "shared_model_startup_s": 2.6674225999740884,
+      "checkpoint_load_s": 0.26507690001744777,
+      "cold_start_scope": "shared LLM+encoder initialization measured once; not independent process launches",
+      "rag_index_s": 0
+    },
+    "hybrid_no_address": {
+      "batches": {
+        "1": {
+          "batch_size": 1,
+          "samples": 7,
+          "p50_ms": 1598.1008999515325,
+          "p95_ms": 2088.657000043895,
+          "ttft_p50_ms": 1070.3720999881625,
+          "throughput_queries_s": 0.688845605779602,
+          "amortized_ms": 1451.704114259753,
+          "peak_allocated_bytes": 1180237312,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 0.688845605779602,
+          "model_budget_tokens_s": 1.377691211559204,
+          "stages_ms": {
+            "encoder_s": 73.887114246775,
+            "memory_s": 16.064228589779564,
+            "preparation_s": 11.409071440409337,
+            "prefill_s": 777.5122000104083,
+            "decode_s": 567.345971474424
+          }
+        },
+        "4": {
+          "batch_size": 4,
+          "samples": 7,
+          "p50_ms": 1412.6461000414565,
+          "p95_ms": 1568.017519963905,
+          "ttft_p50_ms": 815.9883000189438,
+          "throughput_queries_s": 2.863402430160839,
+          "amortized_ms": 349.23487857200337,
+          "peak_allocated_bytes": 1194872320,
+          "peak_reserved_bytes": 2579496960,
+          "generated_tokens_s": 2.863402430160839,
+          "model_budget_tokens_s": 5.726804860321678,
+          "stages_ms": {
+            "encoder_s": 141.83067142896886,
+            "memory_s": 11.471285717561841,
+            "preparation_s": 30.36014285005097,
+            "prefill_s": 638.5289428622594,
+            "decode_s": 566.7428285315899
+          }
+        }
+      },
+      "corpus_memory_bytes": 61333525,
+      "shared_model_startup_s": 2.6674225999740884,
+      "checkpoint_load_s": 0.26507690001744777,
+      "cold_start_scope": "shared LLM+encoder initialization measured once; not independent process launches",
+      "rag_index_s": 0
+    }
+  },
+  "timing": "synchronized host wall clock; stages include synchronization overhead",
+  "decode": "stop when all batch sequences reach EOS, max_new_tokens is shared cap",
+  "caching": "resident models and precomputed corpus embeddings; query representations not cached",
+  "vram_scope": "process peak allocated; includes all resident memory heads, shared LLM and encoder",
+  "startup_excludes": "Python startup, imports, network download",
+  "repeats": 7,
+  "query_mix": "deterministic round robin across available test tags; same questions/order in all variants; cost assumes this mix"
+}

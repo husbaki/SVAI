@@ -1,0 +1,488 @@
+{
+  "cases": [
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "Signer.validate"
+      ],
+      "question": "What does Signer.validate return for a malformed signature?",
+      "test_question": "An invalid signed token reaches the Signer validation helper. What boolean is returned?",
+      "answer": "False",
+      "observed": "False",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "Signer.unsign"
+      ],
+      "question": "Which exception does Signer.unsign raise when the separator is missing?",
+      "test_question": "A Signer receives an unsigned string with no dot. Name the exception raised by unsign.",
+      "answer": "BadSignature",
+      "observed": "BadSignature",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-66c94ecd7ad7e94dd17adfe2"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "Signer.__init__"
+      ],
+      "question": "What is the default separator character for Signer?",
+      "test_question": "Without a sep argument, which character separates a value from its signature?",
+      "answer": ".",
+      "observed": ".",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-b41c0eba030625674e2dafa0"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "Signer.derive_key"
+      ],
+      "question": "Which exception is raised for an unknown key_derivation method?",
+      "test_question": "Derive a signing key with key_derivation='invalid'. Which exception results?",
+      "answer": "TypeError",
+      "observed": "TypeError",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "Signer.verify_signature"
+      ],
+      "question": "Can a rotated Signer verify a token signed using an older allowed key?",
+      "test_question": "Does verification still accept the old key when both old and new secret keys are configured?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-f0a1374dc36ebbf8eccd76de"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "Signer.derive_key",
+        "Signer.sign"
+      ],
+      "question": "Does key rotation sign new values with the newest configured key?",
+      "test_question": "Are signatures produced with keys ['old','new'] identical to using only 'new'?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-c6f2b32c7f44f94f266a8cb2",
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "base64_encode"
+      ],
+      "question": "Does URL-safe base64_encode keep trailing equals padding?",
+      "test_question": "Is '=' padding preserved by the package's base64 encoding helper?",
+      "answer": "False",
+      "observed": "False",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "bytes_to_int"
+      ],
+      "question": "What integer does bytes_to_int return for empty bytes?",
+      "test_question": "Decode an empty byte string with the package's integer helper. Give the integer.",
+      "answer": "0",
+      "observed": "0",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-f6237feb1fc58e18adc1473f"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "TimestampSigner.unsign"
+      ],
+      "question": "Which exception is raised when a timestamp signature exceeds max_age?",
+      "test_question": "The signed payload is 11 seconds old and max_age is 10. What exception is raised?",
+      "answer": "SignatureExpired",
+      "observed": "SignatureExpired",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "TimestampSigner.unsign"
+      ],
+      "question": "Is a signature exactly max_age seconds old rejected?",
+      "test_question": "Age equals max_age exactly. Does unsign raise an exception or succeed? Return NO_EXCEPTION if it succeeds.",
+      "answer": "NO_EXCEPTION",
+      "observed": "NO_EXCEPTION",
+      "heldout": true,
+      "supporting_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "TimestampSigner.unsign"
+      ],
+      "question": "Which exception handles a timestamp from the future?",
+      "test_question": "A signature has a negative age and max_age is enabled. Name the exception.",
+      "answer": "SignatureExpired",
+      "observed": "SignatureExpired",
+      "heldout": true,
+      "supporting_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ]
+    },
+    {
+      "repository": "itsdangerous",
+      "symbols": [
+        "int_to_bytes"
+      ],
+      "question": "What is the byte order used by int_to_bytes for integer 256?",
+      "test_question": "Does encoding integer 256 put byte 1 before byte 0? Return True or False.",
+      "answer": "True",
+      "observed": "True",
+      "heldout": true,
+      "supporting_fact_ids": [
+        "CODE-960f609434f9fce253cb34a0"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Response.is_success"
+      ],
+      "question": "Is HTTP status 204 considered successful by Response.is_success?",
+      "test_question": "What does the success predicate return for a 204 response?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Response.is_error"
+      ],
+      "question": "Is HTTP status 404 classified as an error by Response.is_error?",
+      "test_question": "A response status is 404. What boolean does the error property report?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Response.is_redirect"
+      ],
+      "question": "Does Response.is_redirect classify status 302 as a redirect?",
+      "test_question": "For a 302 HTTP response, is the redirect flag True or False?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-ebcae66ee1c4ce1bac5742db"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Response.raise_for_status"
+      ],
+      "question": "Which exception does raise_for_status raise on a 404 response with a request attached?",
+      "test_question": "Calling raise_for_status on a requested URL that returned 404 raises which exception class?",
+      "answer": "HTTPStatusError",
+      "observed": "HTTPStatusError",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Response.raise_for_status"
+      ],
+      "question": "Which exception occurs if raise_for_status has no request attached?",
+      "test_question": "A newly constructed Response lacks its Request. Name the error from raise_for_status.",
+      "answer": "RuntimeError",
+      "observed": "RuntimeError",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Headers.__getitem__"
+      ],
+      "question": "Are HTTPX header lookups case insensitive?",
+      "test_question": "Can Headers({'X-Test':'yes'}) be read with key 'x-test'? Return True or False.",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-c6e281604cb62348ceac4c4c"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Timeout.__init__"
+      ],
+      "question": "What is the read timeout for Timeout(5)?",
+      "test_question": "HTTPX receives a scalar timeout of 5. Give the configured read timeout.",
+      "answer": "5",
+      "observed": "5",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Response.json"
+      ],
+      "question": "What Python value is decoded from JSON true by Response.json?",
+      "test_question": "An HTTPX response body contains the JSON literal true. Give the decoded Python boolean.",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-ba7f00ca91b0aad3e4382a92"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Response.is_success"
+      ],
+      "question": "Does the success flag include a 299 status?",
+      "test_question": "Is the upper end of HTTPX's 2xx range, status 299, considered successful?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": true,
+      "supporting_fact_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ]
+    },
+    {
+      "repository": "httpx",
+      "symbols": [
+        "Response.is_error"
+      ],
+      "question": "Does the error flag include status 302?",
+      "test_question": "Is a redirection response also marked as an HTTP error by is_error?",
+      "answer": "False",
+      "observed": "False",
+      "heldout": true,
+      "supporting_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "escape"
+      ],
+      "question": "What does django.utils.html.escape return for '<b>'?",
+      "test_question": "HTML-escape the literal <b> using Django. Return only the resulting text.",
+      "answer": "&lt;b&gt;",
+      "observed": "&lt;b&gt;",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-ea8a34a6fa99cba809e1c902"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "strip_tags"
+      ],
+      "question": "What remains when strip_tags processes '<b>Hello</b>'?",
+      "test_question": "Remove the HTML tags from <b>Hello</b> with Django's helper. Give the result.",
+      "answer": "Hello",
+      "observed": "Hello",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-c56a59cd060c920c06508782"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "slugify"
+      ],
+      "question": "What is slugify('Hello World') with default options?",
+      "test_question": "Convert Hello World into Django's default URL slug.",
+      "answer": "hello-world",
+      "observed": "hello-world",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "force_str"
+      ],
+      "question": "What does force_str return for UTF-8 bytes b'hello'?",
+      "test_question": "Django decodes the byte string b'hello' with force_str. What text is produced?",
+      "answer": "hello",
+      "observed": "hello",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-7facd9b96af1f730825da1eb"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "constant_time_compare"
+      ],
+      "question": "Does constant_time_compare return True for equal strings?",
+      "test_question": "Comparing 'same' with 'same' using Django's timing-safe equality helper gives which boolean?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "constant_time_compare"
+      ],
+      "question": "Does constant_time_compare return True for different strings?",
+      "test_question": "What does Django's constant-time comparison return for 'one' and 'two'?",
+      "answer": "False",
+      "observed": "False",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "parse_date"
+      ],
+      "question": "What does parse_date return when the input is not a date?",
+      "test_question": "Pass the string 'not-a-date' to Django's date parser. Give its return value.",
+      "answer": "None",
+      "observed": "None",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "is_aware"
+      ],
+      "question": "Is an aware UTC datetime classified as aware?",
+      "test_question": "For datetime(2025,1,1,tzinfo=UTC), what boolean does Django is_aware return?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-6c7975f1c29857b2a32cc92b"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "is_naive"
+      ],
+      "question": "Is a datetime without tzinfo classified as naive?",
+      "test_question": "What does Django is_naive report for datetime(2025,1,1) without a timezone?",
+      "answer": "True",
+      "observed": "True",
+      "heldout": false,
+      "supporting_fact_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "slugify"
+      ],
+      "question": "Does slugify retain accents when allow_unicode is true?",
+      "test_question": "With allow_unicode=True, does slugifying 'café' preserve 'é'? Return True or False.",
+      "answer": "True",
+      "observed": "True",
+      "heldout": true,
+      "supporting_fact_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "parse_date"
+      ],
+      "question": "Which exception is raised for a well-formatted but impossible date?",
+      "test_question": "Django parses '2025-02-30'. Name the exception instead of its message.",
+      "answer": "ValueError",
+      "observed": "ValueError",
+      "heldout": true,
+      "supporting_fact_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ]
+    },
+    {
+      "repository": "django",
+      "symbols": [
+        "constant_time_compare"
+      ],
+      "question": "Can constant_time_compare compare bytes with matching text?",
+      "test_question": "Django compares b'abc' and 'abc' with constant_time_compare. Give the resulting boolean.",
+      "answer": "True",
+      "observed": "True",
+      "heldout": true,
+      "supporting_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ]
+    }
+  ],
+  "passed": 34,
+  "imports": {
+    "itsdangerous": "C:\\Users\\АдминРадо\\Documents\\ИИ аудит документов\\benchmarks\\repos\\itsdangerous\\src\\itsdangerous\\__init__.py",
+    "httpx": "C:\\Users\\АдминРадо\\Documents\\ИИ аудит документов\\benchmarks\\repos\\httpx\\httpx\\__init__.py"
+  },
+  "scope": "executed case fixtures; not exhaustive proof of all repository behavior"
+}

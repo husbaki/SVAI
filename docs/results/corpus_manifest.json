@@ -1,0 +1,24 @@
+{
+  "kind": "real_codebase",
+  "version": "b507935b976d13a9a0bef6fa59e31ec60d435529839605beb4f564b068c4a51a",
+  "facts": 12244,
+  "splits": {
+    "train": 103,
+    "dev": 53,
+    "test": 61
+  },
+  "teacher": {},
+  "repository_counts": {
+    "itsdangerous": 79,
+    "httpx": 533,
+    "django": 11632
+  },
+  "source_index_versions": {
+    "itsdangerous": "a9a3e54a786f54a908378ce37cdc3cc225405e0bd83909edeb5bdc0b89f826d7",
+    "httpx": "34ae2d19f8498e2ce48fdd8004de0cd24ec8ded09d80d891573aaca96f0984b3",
+    "django": "0fd9804e77f762cec6b8ca05739ded5b7ade58df00638436dd0077214478a1cb"
+  },
+  "heldout_behavior_cases": 8,
+  "behavior_cases": 34,
+  "protocol": "common pinned source corpus; independent question forms; heldout behavior intents absent from train/dev; no test tuning"
+}

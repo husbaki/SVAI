@@ -1,0 +1,26 @@
+model_id: Qwen/Qwen2.5-0.5B-Instruct
+encoder_id: sentence-transformers/all-MiniLM-L6-v2
+model_cache: .cache-memory
+device: cpu
+dtype: float32
+seed: 17
+data: experiments/cpu_corpus
+output: experiments/cpu
+products: 1
+memory_tokens: 8
+hidden: 64
+depth: 1
+slots: 2
+max_new_tokens: 20
+train_batch: 1
+eval_batch: 1
+answer_epochs: 1
+address_epochs: 30
+benchmark_batches: [1, 2]
+benchmark_repeats: 2
+benchmark_warmup: 1
+hybrid_loss_candidates: [[1.0, 0.25]]
+prices:
+  gpu_hour_usd: 0
+  cpu_hour_usd: 0.05
+  hours_between_updates: 720

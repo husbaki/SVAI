@@ -1,0 +1,7 @@
+fastapi==0.115.6
+uvicorn==0.32.1
+pydantic>=2.10,<3
+torch>=2.4
+transformers==4.57.3
+numpy>=1.26,<3
+PyYAML>=6,<7

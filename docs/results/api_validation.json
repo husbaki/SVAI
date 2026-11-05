@@ -1,0 +1,67 @@
+{
+  "checks": [
+    "create_read_citation",
+    "update_invalidates_index_and_original_source_claim",
+    "concurrent_optimistic_version_conflict",
+    "request_validation",
+    "delete_and_missing_document",
+    "all_three_real_repositories",
+    "unknown_abstention",
+    "actual_qwen_answer_changes_after_document_update"
+  ],
+  "sources": {
+    "itsdangerous": {
+      "symbols": [
+        "Signer.verify_signature",
+        "SigningAlgorithm.verify_signature"
+      ],
+      "first_ms": 85.529,
+      "warm_ms": 26.349
+    },
+    "httpx": {
+      "symbols": [
+        "BaseClient._set_timeout",
+        "BaseClient.build_request"
+      ],
+      "first_ms": 604.055,
+      "warm_ms": 71.422
+    },
+    "django": {
+      "symbols": [
+        "Atomic",
+        "mark_for_rollback_on_error"
+      ],
+      "first_ms": 9797.813,
+      "warm_ms": 149.86
+    }
+  },
+  "actual_ml": [
+    {
+      "version": 1,
+      "expected": "3",
+      "answer": "3",
+      "model": {
+        "loaded": true,
+        "llm_id": "Qwen/Qwen2.5-0.5B-Instruct",
+        "encoder_id": "sentence-transformers/all-MiniLM-L6-v2",
+        "device": "cuda",
+        "error": null,
+        "base_models_frozen": true
+      }
+    },
+    {
+      "version": 2,
+      "expected": "7",
+      "answer": "7",
+      "model": {
+        "loaded": true,
+        "llm_id": "Qwen/Qwen2.5-0.5B-Instruct",
+        "encoder_id": "sentence-transformers/all-MiniLM-L6-v2",
+        "device": "cuda",
+        "error": null,
+        "base_models_frozen": true
+      }
+    }
+  ],
+  "scope": "integration correctness; not a held-out code understanding benchmark"
+}

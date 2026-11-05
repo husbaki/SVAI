@@ -1,0 +1,46 @@
+model_id: Qwen/Qwen2.5-0.5B-Instruct
+revision: 7ae557604adf67be50417f59c2c2f167def9a775
+encoder_id: sentence-transformers/all-MiniLM-L6-v2
+encoder_revision: 1110a243fdf4706b3f48f1d95db1a4f5529b4d41
+model_cache: .cache-memory
+device: cuda
+dtype: auto
+seed: 17
+data: experiments/full_corpus
+output: experiments/full
+products: 6
+memory_tokens: 16
+hidden: 384
+depth: 2
+slots: 2
+address_head: categorical
+encoder_length: 128
+encoder_batch: 32
+max_prompt_tokens: 384
+max_new_tokens: 20
+train_batch: 4
+eval_batch: 8
+answer_epochs: 60
+address_epochs: 500
+learning_rate: 0.0003
+address_lr: 0.001
+patience: 8
+ridge: 0.1
+hybrid_loss_candidates: [[1.0, 0.25], [0.3, 0.5], [1.0, 1.0]]
+rag_k_candidates: [1, 2, 4]
+rag_threshold_candidates: [0.0, 0.3, 0.5, 0.7]
+benchmark_batches: [1, 4, 8]
+benchmark_repeats: 30
+benchmark_warmup: 3
+compile_backend: inductor
+answer_logits_only: true
+last_token_logits: true
+stop_on_eos: true
+system_prompt: 'You extract one value from records. Output the value only, without source, country, product, category or other fields. For example, if the requested credit limit is 120 EUR, output exactly: 120 EUR. If there is no matching record, output UNKNOWN. For two requested values output value1; value2. No explanation.'
+prices:
+  gpu_hour_usd: 0.35
+  cpu_hour_usd: 0.05
+  preparation_cpu_hours: 0
+  teacher_input_million_usd: 0
+  teacher_output_million_usd: 0
+  hours_between_updates: 720

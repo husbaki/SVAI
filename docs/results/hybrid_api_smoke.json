@@ -1,0 +1,68 @@
+{
+  "initial_status": {
+    "loaded": true,
+    "llm_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "encoder_id": "sentence-transformers/all-MiniLM-L6-v2",
+    "device": "cuda",
+    "error": null,
+    "base_models_frozen": true,
+    "default_mode": "hybrid",
+    "hybrid": {
+      "ready": true,
+      "reason": null,
+      "corpus_version": "b507935b976d13a9a0bef6fa59e31ec60d435529839605beb4f564b068c4a51a",
+      "matched_records": 12244,
+      "changed_records": 0,
+      "new_records": 0,
+      "checkpoint": "hybrid.pt",
+      "latent_tokens": 8,
+      "architecture": "shared_trunk_latent_plus_address",
+      "training_scope": "source-grounded QA subset; full candidate source table"
+    }
+  },
+  "questions": [
+    {
+      "repository": "itsdangerous",
+      "question": "How does Signer.validate handle an invalid signature?",
+      "expected": "False",
+      "answer": "False",
+      "expected_literal_present": true,
+      "actual_mode": "hybrid",
+      "citations": [
+        "Signer.validate"
+      ],
+      "elapsed_ms": 1803.846
+    },
+    {
+      "repository": "httpx",
+      "question": "What exception does Response.raise_for_status raise on an error status?",
+      "expected": "HTTPStatusError",
+      "answer": "HTTPStatusError",
+      "expected_literal_present": true,
+      "actual_mode": "hybrid",
+      "citations": [
+        "Response.raise_for_status"
+      ],
+      "elapsed_ms": 266.704
+    },
+    {
+      "repository": "django",
+      "question": "What does Django transaction atomic do when an exception is raised?",
+      "expected": "rollback",
+      "answer": "SuspiciousOperation",
+      "expected_literal_present": false,
+      "actual_mode": "hybrid",
+      "citations": [
+        "strip_tags"
+      ],
+      "elapsed_ms": 535.878
+    }
+  ],
+  "stale_snapshot": {
+    "actual_mode": "rag",
+    "fallback_reason": "source_changed_rebake_required",
+    "changed_records": 1,
+    "answer": "bool"
+  },
+  "scope": "API integration smoke; expected_literal_present is diagnostic, not held-out benchmark accuracy"
+}

@@ -1,0 +1,17 @@
+.venv/
+.venv*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+data/
+.cache/
+*.sqlite3*
+runtime.json
+*.log
+live_smoke_results.json
+real_*_ml_smoke.json
+*.pt
+*.safetensors
+experiments/
+.cache-memory/
