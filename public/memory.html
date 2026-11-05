@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corporate memory</title>
+<style>
+:root {
+  --bg: #f6f6f4; --panel: #ffffff; --line: #e3e2de; --line-strong: #cfcdc7;
+  --text: #1c1b19; --muted: #6b6963; --accent: #2b5fd9; --accent-weak: #e8eefc;
+  --ok: #1f7a4d; --ok-bg: #e4f3ea; --warn: #8a5a00; --warn-bg: #fbf0d9; --bad: #b42318; --bad-bg: #fde8e6;
+  --mark: #ffe58a; --shadow: 0 1px 2px rgba(0,0,0,.06);
+  --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --c-rag: #8a8780; --c-latent: #2b5fd9; --c-address: #c2410c; --c-hybrid: #0f8a6a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141413; --panel: #1d1c1a; --line: #2e2d2a; --line-strong: #3d3b37;
+    --text: #ecebe7; --muted: #9c9a93; --accent: #7aa2ff; --accent-weak: #1f2a44;
+    --ok: #5fd39a; --ok-bg: #16301f; --warn: #f2c063; --warn-bg: #33270f; --bad: #ff8a7a; --bad-bg: #3a1714;
+    --mark: #6b5600; --shadow: none;
+    --c-rag: #a9a69f; --c-latent: #7aa2ff; --c-address: #fb8c4a; --c-hybrid: #4fd1a8;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.mono { font-family: var(--mono); font-size: 12px; }
+.muted { color: var(--muted); }
+
+header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line); }
+.bar { max-width: 1320px; margin: 0 auto; padding: 10px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.brand { font-weight: 650; letter-spacing: -.01em; }
+.project { display: flex; gap: 6px; align-items: center; }
+.project input { width: 140px; }
+.version { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+nav { display: flex; gap: 2px; }
+nav button { border: 0; background: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--muted); }
+nav button[aria-selected="true"] { background: var(--accent-weak); color: var(--accent); font-weight: 600; }
+
+main { max-width: 1320px; margin: 0 auto; padding: 20px; }
+section[hidden] { display: none !important; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start; }
+@media (max-width: 960px) { .grid { grid-template-columns: 1fr; } main { padding: 16px; } }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 16px; }
+.card + .card, .grid + .card { margin-top: 16px; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+input[type=text], select, textarea { background: var(--bg); border: 1px solid var(--line-strong); border-radius: 6px; padding: 7px 9px; }
+textarea { width: 100%; resize: vertical; min-height: 84px; font-size: 16px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.btn { border: 1px solid var(--line-strong); background: var(--panel); border-radius: 6px; padding: 7px 14px; cursor: pointer; display: inline-block; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.btn:disabled { opacity: .5; cursor: default; }
+.switch { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; user-select: none; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.s-grounded { background: var(--ok-bg); color: var(--ok); }
+.s-insufficient { background: var(--warn-bg); color: var(--warn); }
+.s-contradiction { background: var(--bad-bg); color: var(--bad); }
+.s-new { background: var(--accent-weak); color: var(--accent); }
+.s-changed { background: var(--warn-bg); color: var(--warn); }
+.s-unchanged { background: var(--bg); color: var(--muted); }
+.s-removed { background: var(--bad-bg); color: var(--bad); }
+.chip { border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
+
+.answer { font-size: 18px; line-height: 1.5; margin: 10px 0; }
+.meta { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 12px; }
+.variants { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 700px) { .variants { grid-template-columns: 1fr; } }
+.vcard { border: 1px solid var(--line); border-radius: 8px; padding: 12px; cursor: pointer; background: var(--panel); text-align: left; }
+.vcard[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.vcard .answer { font-size: 15px; }
+.vname { font-weight: 650; display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+
+.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.fact { border: 1px solid var(--line); border-radius: 8px; padding: 10px; cursor: pointer; background: none; text-align: left; width: 100%; }
+.fact:hover { border-color: var(--line-strong); }
+.fact.used { border-left: 3px solid var(--accent); }
+.fact .src { color: var(--accent); font-size: 12px; margin-top: 4px; display: flex; justify-content: space-between; gap: 8px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tbody tr.click { cursor: pointer; }
+tbody tr.click:hover { background: var(--bg); }
+tbody tr[aria-selected="true"] { background: var(--accent-weak); }
+
+.drop { border: 2px dashed var(--line-strong); border-radius: 10px; padding: 28px; text-align: center; color: var(--muted); }
+.drop.over { border-color: var(--accent); background: var(--accent-weak); color: var(--accent); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
+.step { padding: 8px 4px; border-radius: 6px; background: var(--bg); color: var(--muted); font-size: 12px; text-align: center; }
+.step.active { background: var(--accent-weak); color: var(--accent); font-weight: 600; }
+.step.done { background: var(--ok-bg); color: var(--ok); }
+.step.failed { background: var(--bad-bg); color: var(--bad); }
+details summary { cursor: pointer; font-weight: 600; margin: 8px 0; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 13px; margin: 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.charts .card { margin: 0; }
+@media (max-width: 960px) { .charts { grid-template-columns: 1fr; } }
+svg text { fill: var(--muted); font-size: 11px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; margin-top: 6px; }
+
+.drawer { position: fixed; inset: 0 0 0 auto; width: min(640px, 100vw); background: var(--panel); border-left: 1px solid var(--line);
+  box-shadow: -8px 0 24px rgba(0,0,0,.12); z-index: 10; display: flex; flex-direction: column; transform: translateX(100%);
+  transition: transform .2s; visibility: hidden; }
+.drawer.open { transform: none; visibility: visible; }
+.drawer header { position: static; padding: 14px 18px; display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.drawer pre { margin: 0; padding: 18px; overflow: auto; white-space: pre-wrap; font: 14px/1.6 system-ui, sans-serif; flex: 1; }
+mark { background: var(--mark); color: inherit; padding: 1px 0; border-radius: 2px; }
+.toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--bad); color: #fff; padding: 10px 16px;
+  border-radius: 8px; z-index: 20; max-width: 90vw; }
+.empty { color: var(--muted); padding: 18px 0; text-align: center; }
+.error-item { border-top: 1px solid var(--line); padding: 12px 0; }
+.error-item:first-child { border-top: 0; }
+.error-item dl { display: grid; grid-template-columns: 140px 1fr; gap: 4px 12px; margin: 0; }
+@media (max-width: 600px) { .error-item dl { grid-template-columns: 1fr; } }
+.error-item dt { color: var(--muted); }
+.error-item dd { margin: 0; }
+@media (prefers-reduced-motion: reduce) { .drawer { transition: none; } }
+
+/* ===== minimal demo skin: no boxes, monochrome, one accent, more air ===== */
+:root {
+  --bg: #fafaf9; --panel: #fafaf9; --line: #ebeae7; --line-strong: #d6d4cf;
+  --text: #171615; --muted: #8a8780; --accent: #171615; --accent-weak: transparent;
+  --c-rag: #b5b2ab; --c-latent: #171615; --c-address: #e0572b; --c-hybrid: #3b82f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111110; --panel: #111110; --line: #262524; --line-strong: #3a3937;
+    --text: #f2f1ee; --muted: #8a8780; --accent: #f2f1ee; --c-latent: #f2f1ee; --c-rag: #5e5c58; }
+}
+body { font-size: 15px; }
+header { background: var(--bg); border-bottom: 0; }
+.bar { padding: 22px 32px; max-width: 1180px; }
+.brand { font-weight: 500; }
+.project input { border: 0; border-bottom: 1px solid var(--line-strong); border-radius: 0; background: none; padding: 4px 2px; width: 110px; }
+nav { gap: 22px; margin-left: 12px; }
+nav button { padding: 4px 0; border-radius: 0; border-bottom: 1.5px solid transparent; }
+nav button[aria-selected="true"] { background: none; color: var(--text); font-weight: 500; border-bottom-color: var(--text); }
+.version .chip { border: 0; padding: 0; color: var(--muted); }
+.version > .muted { display: none; }
+main { max-width: 1180px; padding: 24px 32px 64px; }
+.grid { gap: 56px; grid-template-columns: minmax(0, 1fr) 340px; }
+.card { border: 0; box-shadow: none; padding: 0; background: none; }
+.card + .card, .grid + .card, .charts { margin-top: 40px; }
+h2 { font-size: 12px; letter-spacing: .08em; font-weight: 500; margin-bottom: 16px; }
+textarea { border: 0; border-bottom: 1px solid var(--line-strong); border-radius: 0; background: none; font-size: 26px;
+  line-height: 1.3; padding: 0 0 14px; min-height: 64px; resize: none; letter-spacing: -.01em; }
+textarea:focus-visible { outline: none; border-bottom-color: var(--text); }
+select, input[type=text] { background: none; border-color: var(--line); }
+.btn { border-color: var(--line-strong); background: none; border-radius: 99px; padding: 7px 18px; }
+.btn.primary { background: var(--text); border-color: var(--text); color: var(--bg); font-weight: 500; }
+.badge { background: none !important; padding: 0; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.answer { font-size: 22px; line-height: 1.45; letter-spacing: -.01em; margin: 12px 0 14px; }
+#q-result .card { margin-top: 36px; }
+.variants { gap: 32px 40px; }
+.vcard { border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 16px 0 0; background: none;
+  display: flex; flex-direction: column; justify-content: flex-start; }
+.vcard[aria-pressed="true"] { box-shadow: none; border-top: 1.5px solid var(--text); }
+.vcard .answer { font-size: 16px; }
+.facts { gap: 0; }
+.fact { border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 14px 0; }
+.fact.used { border-left: 0; }
+.fact.used .src span:first-child::before { content: "● "; }
+.fact .src { color: var(--muted); }
+th { font-weight: 500; }
+th, td { padding: 10px 8px; }
+tbody tr[aria-selected="true"] { background: none; box-shadow: inset 2px 0 0 var(--text); }
+.drop { border: 1px dashed var(--line-strong); padding: 40px; }
+.steps { gap: 0; }
+.step { background: none; border-top: 2px solid var(--line); border-radius: 0; padding: 8px 2px 0; text-align: left; }
+.step.active { background: none; border-top-color: var(--text); color: var(--text); }
+.step.done { background: none; border-top-color: var(--text); color: var(--muted); }
+.step.failed { background: none; border-top-color: var(--bad); }
+.drawer { box-shadow: none; }
+.toast { background: var(--text); color: var(--bg); }
+
+/* ===== embedded over the Hyper Warp corridor: transparent page, cream-on-glass palette ===== */
+html.embed {
+  --bg: rgba(20, 12, 6, 0.35); --panel: transparent; --line: rgba(255, 241, 214, 0.14); --line-strong: rgba(255, 241, 214, 0.32);
+  --text: #fff1d6; --muted: rgba(255, 241, 214, 0.62); --accent: #fff1d6; --mark: rgba(255, 196, 90, 0.45);
+  --ok: #8fe3b0; --warn: #ffd27a; --bad: #ff9a85;
+  --c-rag: rgba(255, 241, 214, 0.45); --c-latent: #fff1d6; --c-address: #ff7a3d; --c-hybrid: #23c4b8;
+  --font: "Inter Tight", system-ui, sans-serif;
+}
+html.embed, html.embed body { background: transparent; }
+html.embed { scrollbar-color: rgba(255, 241, 214, 0.28) transparent; scrollbar-width: thin; }
+html.embed body { font-family: var(--font); }
+html.embed header { background: transparent; }
+html.embed .bar { padding: 18px 28px; max-width: none; }
+html.embed main { max-width: none; padding: 16px 28px 40px; }
+html.embed .brand { display: none; }
+html.embed textarea { color: var(--text); }
+html.embed .btn.primary { color: #2a170a; }
+html.embed select option { background: #2a170a; }
+html.embed .drawer { background: #24160c; border-left-color: var(--line); }
+html.embed .toast { background: #fff1d6; color: #2a170a; }
+.bar > a.btn { color: var(--text); text-decoration: none; }
+@media (max-width: 900px) {
+  html.embed .grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  html.embed .bar { padding: 16px; gap: 12px; }
+  html.embed main { padding: 16px 18px 32px; }
+  html.embed nav { gap: 14px; margin-left: 0; }
+  html.embed .version { width: 100%; }
+  html.embed textarea { font-size: 21px; min-height: 110px; }
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap">
+<script>if (new URLSearchParams(location.search).has("embed")) document.documentElement.classList.add("embed");</script>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <span class="brand">Corporate memory</span>
+    <label class="project">Project
+      <input id="project" type="text" list="projects" value="itsdangerous" spellcheck="false">
+      <datalist id="projects"></datalist>
+    </label>
+    <a class="btn" href="/tutorial.html" target="_blank" rel="noopener">Quick guide ↗</a><nav role="tablist">
+      <button role="tab" data-tab="query" aria-selected="true">Query</button>
+      <button role="tab" data-tab="memory" aria-selected="false">Memory</button>
+      <button role="tab" data-tab="compare" aria-selected="false">Compare</button>
+    </nav>
+    <div class="version" id="version"></div>
+  </div>
+</header>
+
+<main>
+  <!-- ============ Query ============ -->
+  <section id="tab-query">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <textarea id="q-text" placeholder="How does Signer.validate handle an invalid signature?"></textarea>
+          <div class="row" style="margin-top:10px">
+            <select id="q-variant" aria-label="Architecture"></select>
+            <label class="switch"><input type="checkbox" id="q-compare"> Compare variants</label>
+            <span class="muted" style="margin-left:auto;font-size:12px">Ctrl+Enter</span>
+            <button class="btn primary" id="q-ask">Ask</button>
+          </div>
+        </div>
+        <div id="q-result"></div>
+      </div>
+      <aside class="card">
+        <h2>Supporting facts</h2>
+        <ul class="facts" id="q-facts"><li class="empty">Ask a question</li></ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ Memory ============ -->
+  <section id="tab-memory" hidden>
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="drop" id="drop">
+            Drop a folder of documents here<br>
+            <span style="font-size:12px">.py .js .ts .md .txt .rst .json .html · uploads add or update documents by path</span>
+            <div style="margin-top:12px"><label class="btn">Choose folder<input type="file" id="folder" webkitdirectory multiple hidden></label></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="row" style="justify-content:space-between"><h2>Documents</h2><button class="btn" id="new-document">New document</button><span class="muted mono" id="m-corpus"></span></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Document</th><th>Version</th><th class="num">Facts</th><th>Change</th></tr></thead>
+            <tbody id="m-docs"></tbody>
+          </table></div>
+        </div>
+      </div>
+      <aside>
+        <div class="card">
+          <h2>Memory readiness</h2>
+          <details id="experiment">
+            <summary>Experiment</summary>
+            <div id="m-variants" style="display:grid;gap:6px;margin-bottom:8px"></div>
+            <p class="muted" style="font-size:12px;margin:0">Snapshot validation checks source versions. New training runs are never simulated.</p>
+          </details>
+          <button class="btn primary" id="m-bake" style="width:100%;margin-top:8px">Validate / activate snapshot</button>
+          <div class="steps" id="m-steps"></div>
+          <div id="m-job"></div>
+        </div>
+        <div class="card">
+          <h2>Active memory version</h2>
+          <div id="m-active" class="empty">Memory has not been baked yet</div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ Compare ============ -->
+  <section id="tab-compare" hidden>
+    <div class="card">
+      <div class="row">
+        <label class="btn">Question set (.jsonl)<input type="file" id="c-suite" accept=".jsonl,.json,.txt" hidden></label>
+        <span class="muted" id="c-suite-name" style="flex:1;min-width:180px">Saved real-code evaluation: 61 questions across three repositories.</span>
+        <button class="btn primary" id="c-eval">Load saved quality</button>
+        <button class="btn" id="c-bench">Load saved timings</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr>
+          <th>Variant</th><th class="num">Accuracy</th><th class="num">Answer rate</th><th class="num">p95 latency</th>
+          <th class="num">Cost per 1,000 queries</th><th class="num">Baking</th>
+        </tr></thead>
+        <tbody id="c-table"></tbody>
+      </table></div>
+      <p class="muted" style="font-size:12px;margin:8px 0 0" id="c-note"></p>
+    </div>
+    <div class="charts">
+      <div class="card"><h2>Quality vs. response cost</h2><div id="c-chart1"></div></div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;align-items:flex-start">
+          <h2>Total cost vs. query volume</h2>
+          <label class="muted" style="font-size:12px">memory updates <input type="text" id="c-updates" value="12" inputmode="numeric" style="width:52px"></label>
+        </div>
+        <div id="c-chart2"></div>
+      </div>
+    </div>
+    <div class="card" id="c-errors-card" hidden style="margin-top:16px">
+      <h2 id="c-errors-title">Errors</h2>
+      <div id="c-errors"></div>
+    </div>
+  </section>
+</main>
+
+<div class="drawer" id="drawer" role="dialog" aria-label="Source document">
+  <header><strong id="d-title" class="mono"></strong><button class="btn" id="d-close">Close</button></header>
+  <pre id="d-text"></pre>
+</div>
+
+<dialog id="document-editor" style="width:min(760px,95vw);background:var(--bg);color:var(--text);border:1px solid var(--line-strong);border-radius:10px;padding:24px">
+ <form id="document-editor-form"><h2>Edit document</h2><input id="edit-title" type="text" required maxlength="300" placeholder="Document title / path" style="width:100%;margin-bottom:16px"><textarea id="edit-content" required style="font:13px/1.6 var(--mono);min-height:340px;resize:vertical"></textarea><p id="edit-version" class="muted"></p><div class="row"><button type="button" class="btn" id="delete-document">Delete</button><button type="button" class="btn" id="cancel-edit">Cancel</button><button class="btn primary" id="save-document">Save</button></div></form>
+</dialog>
+
+
+<script>
+const VARIANT_LABEL ={ rag: "RAG", latent: "Latent", address: "Address", hybrid: "Hybrid" };
+const STATUS_LABEL = { grounded: "Source evidence attached", insufficient: "Insufficient information", contradiction: "Contradiction detected" };
+const STAGE_LABEL = { prepare_examples: "Preparing examples", train: "Training", validate: "Validation", done: "Done" };
+const CHANGE_LABEL = { new: "new", changed: "changed", unchanged: "unchanged", removed: "removed" };
+const TEXT_EXT = /\.(py|js|jsx|ts|tsx|java|go|rs|c|cpp|h|md|markdown|txt|rst|csv|json|html?)$/i;
+const EMPTY_TABLE = `<tr><td colspan="6" class="empty">No results yet. Run Check quality and Measure speed.</td></tr>`;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const project = () => $("#project").value.trim();
+const P = () => `/api/projects/${encodeURIComponent(project())}`;
+const color = v => `var(--c-${v})`;
+const fmtPct = x => x == null ? "—" : (x * 100).toFixed(1) + " %";
+const fmtMs = x => x == null ? "—" : x.toFixed(2) + " ms";
+const fmtUsd = x => x == null ? "—" : x === 0 ? "$0" : x < 0.0001 ? "<$0.0001" : "$" + (x < 0.01 ? x.toFixed(4) : x.toFixed(4).replace(/0+$/, "").replace(/\.$/, ""));
+// greedy label placement: shift a label (down for dir=1, up for dir=-1) until it clears earlier ones
+function placeLabels(items, minDy = 13, minDx = 70, dir = 1) {
+  const placed = [];
+  for (const it of [...items].sort((a, b) => dir * (a.y - b.y) || a.x - b.x)) {
+    let y = it.y;
+    while (placed.some(p => Math.abs(p.y - y) < minDy && Math.abs(p.x - it.x) < minDx)) y += dir * minDy;
+    placed.push({ ...it, y });
+  }
+  return placed;
+}
+const fmtS = x => x == null ? "—" : (x < 1 ? (x * 1000).toFixed(0) + " ms" : x.toFixed(1) + " s");
+
+const state = { overview: null, lastQuery: null, selected: null, compare: null, selectedRow: null };
+
+// Same-origin Vite proxy forwards real API calls to the local backend.
+async function api(method, path, body) {
+  const response = await fetch(path, {method, headers:{'Content-Type':'application/json'}, body:body===undefined?undefined:JSON.stringify(body)});
+  const raw=await response.text();let value;
+  try{value=raw?JSON.parse(raw):{};}catch{value={detail:raw||'HTTP '+response.status};}
+  if(!response.ok){const detail=value.detail;const error=new Error(typeof detail==='string'?detail:detail?.message||JSON.stringify(detail||value));error.code=detail?.code||value.code;throw error;}
+  return value;
+}
+function toast(msg) {
+  const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "alert"); t.textContent = msg;
+  document.body.append(t); setTimeout(() => t.remove(), 5000);
+}
+async function busy(btn, fn) {
+  btn.disabled = true;
+  try { return await fn(); } catch (e) { toast(e.message); } finally { btn.disabled = false; }
+}
+
+/* ---------------- tabs ---------------- */
+function showTab(name) {
+  document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === name));
+  document.querySelectorAll("main > section").forEach(s => s.hidden = s.id !== "tab-" + name);
+  try { localStorage.setItem("memory.tab", name); } catch {}
+  if (name === "compare") loadCompare();
+}
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+/* ---------------- overview / header ---------------- */
+async function loadOverview() {
+  try { state.overview = await api("GET", P()); }
+  catch (e) { state.overview = null; if (e.code !== "PROJECT_NOT_FOUND") toast(e.message); }
+  renderHeader(); renderMemory(); renderVariantSelect();
+}
+function renderHeader() {
+  const s = state.overview?.active_snapshot;
+  $("#version").innerHTML = s
+    ? `<span class="muted">Memory</span><span class="chip mono">${esc(s.snapshot_id)}</span><span class="muted">corpus</span><span class="chip mono">${esc(s.corpus_version)}</span>`
+    : `<span class="muted">Memory has not been baked</span>`;
+}
+function renderVariantSelect() {
+  const baked = Object.keys(state.overview?.active_snapshot?.variants || {});
+  const sel = $("#q-variant"), cur = sel.value;
+  sel.innerHTML = baked.length ? baked.map(v => `<option value="${v}">${VARIANT_LABEL[v]}</option>`).join("") : `<option value="">—</option>`;
+  sel.value = baked.includes(cur) ? cur : (baked.includes("hybrid") ? "hybrid" : baked[0] || "");
+}
+async function loadProjects() {
+  try {
+    const { projects } = await api("GET", "/api/projects");
+    $("#projects").innerHTML = projects.map(p => `<option value="${esc(p)}">`).join("");
+    if (projects.length && !projects.includes(project())) $("#project").value = projects[0];
+  } catch {}
+}
+$("#project").onchange = () => {
+  state.compare = null; state.lastQuery = null; state.selectedRow = null;
+  $("#q-result").innerHTML = ""; renderFacts(null);
+  loadOverview(); if (!$("#tab-compare").hidden) loadCompare();
+};
+
+/* ---------------- query ---------------- */
+async function ask() {
+  const text = $("#q-text").value.trim();
+  if (!text) { $("#q-text").focus(); return; }
+  await busy($("#q-ask"), async () => {
+    const compare = $("#q-compare").checked;
+    const r = await api("POST", `${P()}/query`, { text, variant: compare ? null : ($("#q-variant").value || null), compare });
+    state.lastQuery = r;
+    state.selected = compare ? (r.results.find(x => x.variant === $("#q-variant").value) || r.results[0])?.variant : r.variant;
+    renderQuery();
+  });
+}
+function answerBlock(x) {
+  const execution = x.actual_mode ? `<div class="muted" style="font-size:12px">Executed: ${esc(x.actual_mode.toUpperCase())}${x.fallback_reason ? ' · '+esc(x.fallback_reason) : ''}</div>` : '';
+  return `<span class="badge s-${x.status}">${STATUS_LABEL[x.status] || esc(x.status)}</span>${execution}<div class="answer">${esc(x.answer)}</div>`;
+}
+function renderQuery() {
+  const r = state.lastQuery; if (!r) return;
+  const version = `<span>Memory <span class="mono">${esc(r.snapshot_id)}</span></span><span>Corpus <span class="mono">${esc(r.corpus_version)}</span></span>`;
+  if (r.results) {
+    $("#q-result").innerHTML = `<div class="card"><div class="variants">${r.results.map(x => `
+      <button class="vcard" data-v="${x.variant}" aria-pressed="${x.variant === state.selected}">
+        <div class="row" style="justify-content:space-between"><span class="vname"><span class="dot" style="background:${color(x.variant)}"></span>${VARIANT_LABEL[x.variant]}</span>
+        <span class="muted" style="font-size:12px">${fmtMs(x.latency_ms)}</span></div>
+        ${answerBlock(x)}</button>`).join("")}
+      ${r.missing_variants.map(v => `<div class="vcard muted" style="cursor:default"><span class="vname">${VARIANT_LABEL[v]}</span><p>Not baked in this memory version.</p></div>`).join("")}
+      </div><div class="meta" style="margin-top:12px">${version}<span>Select a variant to see its supporting facts</span></div></div>`;
+    document.querySelectorAll(".vcard[data-v]").forEach(b => b.onclick = () => { state.selected = b.dataset.v; renderQuery(); });
+  } else {
+    $("#q-result").innerHTML = `<div class="card"><div class="muted" style="font-size:12px;margin-bottom:6px">${VARIANT_LABEL[r.variant]}</div>
+      ${answerBlock(r)}<div class="meta">${version}<span>Response time ${fmtMs(r.latency_ms)}</span></div></div>`;
+  }
+  const cur = r.results ? r.results.find(x => x.variant === state.selected) : r;
+  renderFacts(cur?.facts || [], r.corpus_version);
+}
+function renderFacts(facts, corpus) {
+  const ul = $("#q-facts");
+  if (facts === null) { ul.innerHTML = `<li class="empty">Ask a question</li>`; return; }
+  if (!facts.length) { ul.innerHTML = `<li class="empty">No matching facts found</li>`; return; }
+  ul.innerHTML = facts.map((f, i) => `<li><button class="fact ${f.used ? "used" : ""}" data-i="${i}">
+      ${f.heading ? `<div class="muted" style="font-size:12px">${esc(f.heading)}</div>` : ""}
+      <div>${esc(f.text)}</div>
+      <div class="src"><span class="mono">${esc(f.doc_id)}</span><span class="muted">${f.used ? "used in answer · " : ""}${f.score}</span></div>
+    </button></li>`).join("");
+  ul.querySelectorAll(".fact").forEach(b => b.onclick = () => openDoc(facts[+b.dataset.i], corpus, b));
+}
+let drawerReturn = null;
+async function openDoc(fact, corpus, opener) {
+  try {
+    const d = await api("GET", `${P()}/document?doc=${encodeURIComponent(fact.doc_id)}&corpus=${encodeURIComponent(corpus)}`);
+    $("#d-title").textContent = d.id;
+    $("#d-text").innerHTML = esc(d.text.slice(0, fact.start)) + `<mark id="hl">${esc(d.text.slice(fact.start, fact.end))}</mark>` + esc(d.text.slice(fact.end));
+    drawerReturn = opener;
+    $("#drawer").classList.add("open");
+    $("#hl").scrollIntoView({ block: "center" });
+    $("#d-close").focus();
+  } catch (e) { toast(e.message); }
+}
+function closeDrawer() {
+  if (!$("#drawer").classList.contains("open")) return;
+  $("#drawer").classList.remove("open"); drawerReturn?.focus();
+}
+$("#d-close").onclick = closeDrawer;
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if ($("#drawer").classList.contains("open")) closeDrawer();
+  else if (window.parent !== window) window.parent.postMessage({ type: "memory:hide" }, location.origin);
+});
+$("#q-ask").onclick = ask;
+$("#q-text").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask(); });
+$("#q-compare").onchange = () => { if (state.lastQuery) ask(); };
+
+/* ---------------- memory ---------------- */
+function renderMemory() {
+  const o = state.overview;
+  const ch = o?.last_changes || {};
+  const status = id => (ch.added || []).includes(id) ? "new" : (ch.changed || []).includes(id) ? "changed" : "unchanged";
+  $("#m-corpus").textContent = o?.current_corpus ? `${o.current_corpus} · ${o.facts} source records${o.documents_truncated ? ' · showing first '+o.documents.length+' documents' : ''}` : "";
+  const rows = (o?.documents || []).map(d => `<tr><td class="mono">${esc(d.title || d.id)} <button class="btn" data-edit-document="${esc(d.id)}">Edit</button></td><td class="mono muted">${esc(d.version)}</td>
+      <td class="num">${d.facts}</td><td><span class="badge s-${status(d.id)}">${CHANGE_LABEL[status(d.id)]}</span></td></tr>`)
+    .concat((ch.removed || []).map(id => `<tr><td class="mono muted">${esc(id)}</td><td></td><td></td><td><span class="badge s-removed">removed</span></td></tr>`));
+  $("#m-docs").innerHTML = rows.join("") || `<tr><td colspan="4" class="empty">The corpus is empty — drop a folder of documents here</td></tr>`;
+
+  const box = $("#m-variants");
+  if (!box.children.length) box.innerHTML = (o?.variants || ["rag", "latent", "address", "hybrid"]).map(v =>
+    `<label class="switch"><input type="checkbox" value="${v}" checked><span class="dot" style="background:${color(v)}"></span>${VARIANT_LABEL[v]}</label>`).join("");
+
+  const s = o?.active_snapshot;
+  $("#m-active").className = s ? "" : "empty";
+  $("#m-active").innerHTML = s ? `<dl class="kv">
+      <dt>Version</dt><dd class="mono">${esc(s.snapshot_id)}</dd>
+      <dt>Corpus</dt><dd class="mono">${esc(s.corpus_version)}</dd>
+      <dt>Created</dt><dd>${esc(s.created_at)}</dd>
+      ${Object.entries(s.variants).map(([v, m]) => `<dt class="vname"><span class="dot" style="background:${color(v)}"></span>${VARIANT_LABEL[v]}</dt>
+        <dd>${fmtS(m.bake_s)} · ${fmtUsd(m.bake_cost_usd)} · self-check ${fmtPct(m.self_check_recall_at_1)}${m.reused ? " · cached" : ""}</dd>`).join("")}
+    </dl>` : "Memory has not been baked yet";
+
+  const job = o?.jobs?.[0];
+  renderJob(job);
+  if (job && (job.status === "queued" || job.status === "running")) pollJob(job.job_id);
+}
+function renderJob(job) {
+  const stages = ["prepare_examples", "train", "validate", "done"];
+  const idx = job ? stages.indexOf(job.stage) : -1;
+  $("#m-steps").innerHTML = stages.map((st, i) => {
+    let cls = "";
+    if (job?.status === "succeeded" || i < idx) cls = "done";
+    else if (i === idx) cls = job.status === "failed" ? "failed" : "active";
+    return `<div class="step ${cls}">${STAGE_LABEL[st]}</div>`;
+  }).join("");
+  if (!job) { $("#m-job").innerHTML = ""; return; }
+  const r = job.result;
+  $("#m-job").innerHTML = `<dl class="kv">
+      <dt>Job</dt><dd class="mono">${esc(job.job_id)}</dd>
+      <dt>Status</dt><dd>${esc(job.status)}</dd>
+      ${r ? `<dt>Time</dt><dd>${fmtS(r.duration_s)}</dd><dt>Cost</dt><dd>${fmtUsd(r.bake_cost_usd)}</dd>` : ""}
+      ${job.error ? `<dt>Error</dt><dd style="color:var(--bad)">${esc(job.error.code)}: ${esc(job.error.message)}</dd>` : ""}
+    </dl>`;
+}
+let polling = null;
+let editingDocument=null;
+async function editDocument(id){
+ try{
+  editingDocument=id?await api('GET','/api/documents/'+encodeURIComponent(id)):null;
+  $('#edit-title').value=editingDocument?.title||''; $('#edit-content').value=editingDocument?.content||'';
+  $('#edit-version').textContent=editingDocument?'Version '+editingDocument.version+' · changes refresh retrieval and invalidate the old hybrid snapshot.':'New source in '+project();
+  $('#delete-document').hidden=!editingDocument; $('#document-editor').showModal();
+ }catch(e){toast(e.message);}
+}
+$('#m-docs').onclick=e=>{const button=e.target.closest('[data-edit-document]');if(button)editDocument(button.dataset.editDocument);};
+$('#new-document').onclick=()=>editDocument(null);
+$('#cancel-edit').onclick=()=>$('#document-editor').close();
+$('#document-editor-form').onsubmit=async e=>{
+ e.preventDefault();await busy($('#save-document'),async()=>{
+  const body={title:$('#edit-title').value,content:$('#edit-content').value,repository:project()};
+  if(editingDocument)body.expected_version=editingDocument.version;
+  await api(editingDocument?'PUT':'POST','/api/documents'+(editingDocument?'/'+encodeURIComponent(editingDocument.id):''),body);
+  $('#document-editor').close();await loadProjects();await loadOverview();toast('Document saved. Retrieval refreshed.');
+ });
+};
+$('#delete-document').onclick=async()=>{
+ if(!editingDocument||!confirm('Delete this document?'))return;
+ await busy($('#delete-document'),async()=>{await api('DELETE','/api/documents/'+encodeURIComponent(editingDocument.id));$('#document-editor').close();await loadOverview();toast('Document deleted.');});
+};
+async function pollJob(id) {
+  if (polling === id) return;
+  polling = id;
+  try {
+    for (;;) {
+      const job = await api("GET", `/api/jobs/${encodeURIComponent(id)}`);
+      renderJob(job);
+      if (job.status === "succeeded" || job.status === "failed") break;
+      await new Promise(r => setTimeout(r, 400));
+    }
+  } catch (e) { toast(e.message); }
+  polling = null;
+  await loadOverview();
+}
+$("#m-bake").onclick = () => busy($("#m-bake"), async () => {
+  const variants = [...document.querySelectorAll("#m-variants input:checked")].map(i => i.value);
+  if (!variants.length) { $("#experiment").open = true; throw new Error("Select at least one variant in the Experiment section"); }
+  const job = await api("POST", `${P()}/bake`, { variants });
+  renderJob(job); pollJob(job.job_id);
+});
+
+async function readDir(dir, prefix, out) {
+  const reader = dir.createReader();
+  for (;;) {
+    const batch = await new Promise((res, rej) => reader.readEntries(res, rej));
+    if (!batch.length) break;
+    for (const e of batch) await readEntry(e, prefix, out);
+  }
+}
+async function readEntry(entry, prefix, out) {
+  if (entry.name.startsWith(".")) return;
+  if (["node_modules", "venv", "dist", "build", "__pycache__"].includes(entry.name)) return;
+  if (entry.isFile) {
+    if (!TEXT_EXT.test(entry.name)) return;
+    const file = await new Promise((res, rej) => entry.file(res, rej));
+    out.push({ path: prefix + entry.name, content: await file.text() });
+  } else if (entry.isDirectory) {
+    await readDir(entry, prefix + entry.name + "/", out);
+  }
+}
+async function upload(files) {
+  if (!files.length) throw new Error("The folder contains no text documents");
+  await api("POST", `${P()}/upload`, { files });
+  await loadProjects(); await loadOverview();
+}
+const drop = $("#drop");
+drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = async e => {
+  e.preventDefault(); drop.classList.remove("over");
+  const out = [];
+  try {
+    const entries = [...e.dataTransfer.items].map(i => i.webkitGetAsEntry?.()).filter(Boolean);
+    // one dropped folder: paths stay relative to it, like `memory prepare ./folder`
+    if (entries.length === 1 && entries[0].isDirectory) await readDir(entries[0], "", out);
+    else for (const en of entries) await readEntry(en, "", out);
+    await upload(out);
+  } catch (err) { toast(err.message); }
+};
+$("#folder").onchange = async e => {
+  const out = [];
+  for (const f of e.target.files) {
+    const parts = (f.webkitRelativePath || f.name).split("/");
+    if (!TEXT_EXT.test(f.name) || parts.some(p => p.startsWith("."))) continue;
+    out.push({ path: parts.length > 1 ? parts.slice(1).join("/") : f.name, content: await f.text() });
+  }
+  e.target.value = "";
+  try { await upload(out); } catch (err) { toast(err.message); }
+};
+
+/* ---------------- compare ---------------- */
+let suiteItems = null;
+$("#c-suite").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    suiteItems = (await f.text()).split(/\r?\n/).filter(l => l.trim()).map((l, i) => {
+      try { return JSON.parse(l); } catch { throw new Error(`${f.name}: line ${i + 1} is not valid JSON`); }
+    });
+    $("#c-suite-name").textContent = `${f.name}: ${suiteItems.length} questions`;
+  } catch (err) { suiteItems = null; toast(err.message); }
+  e.target.value = "";
+};
+$("#c-eval").onclick = () => busy($("#c-eval"), async () => {
+  const suite = suiteItems || null;
+  await api("POST", `${P()}/evaluate`, { suite });
+  await loadCompare();
+});
+$("#c-bench").onclick = () => busy($("#c-bench"), async () => {
+  await api("POST", `${P()}/benchmark`, { batch_sizes: [1, 8, 32] });
+  await loadCompare();
+});
+$("#c-updates").oninput = () => drawCharts();
+
+async function loadCompare() {
+  try { state.compare = await api("GET", `${P()}/compare`); }
+  catch (e) { state.compare = null; if (!["NO_RESULTS", "PROJECT_NOT_FOUND"].includes(e.code)) toast(e.message); }
+  renderCompare();
+}
+function renderCompare() {
+  const c = state.compare;
+  if (!c?.rows.length) {
+    $("#c-table").innerHTML = EMPTY_TABLE; $("#c-note").textContent = "";
+    $("#c-chart1").innerHTML = $("#c-chart2").innerHTML = `<div class="empty">No data</div>`;
+    $("#c-errors-card").hidden = true; return;
+  }
+  $("#c-table").innerHTML = c.rows.map(r => `<tr class="click" data-v="${r.variant}" aria-selected="${r.variant === state.selectedRow}" tabindex="0">
+      <td><span class="vname"><span class="dot" style="background:${color(r.variant)}"></span>${VARIANT_LABEL[r.variant]}</span></td>
+      <td class="num">${fmtPct(r.accuracy)}</td><td class="num">${fmtPct(r.answered_rate)}</td><td class="num">${fmtMs(r.p95_ms)}</td>
+      <td class="num">${fmtUsd(r.cost_per_1k_usd)}</td><td class="num">${fmtS(r.bake_s)} · ${fmtUsd(r.bake_cost_usd)}</td></tr>`).join("");
+  $("#c-note").textContent = c.cost_note + " Select a row to see errors.";
+  document.querySelectorAll("#c-table tr.click").forEach(tr => {
+    const pick = () => { state.selectedRow = state.selectedRow === tr.dataset.v ? null : tr.dataset.v; renderCompare(); };
+    tr.onclick = pick; tr.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } };
+  });
+  drawCharts(); renderErrors();
+}
+function renderErrors() {
+  const row = state.compare?.rows.find(r => r.variant === state.selectedRow);
+  $("#c-errors-card").hidden = !row;
+  if (!row) return;
+  $("#c-errors-title").textContent = `Errors · ${VARIANT_LABEL[row.variant]} · ${row.errors_count ?? row.errors.length} of ${row.n_questions ?? "—"}`;
+  if(row.errors_available===false){$('#c-errors').innerHTML='<div class="empty">Aggregate errors are measured; per-question details are not available in this response.</div>';return;}
+  $("#c-errors").innerHTML = row.errors.length ? row.errors.map(e => `<div class="error-item"><dl>
+      <dt>Question</dt><dd>${esc(e.question)}</dd>
+      <dt>Expected answer</dt><dd>${e.expected ? esc(e.expected.join(" / ")) : "<span class='muted'>abstained: no information</span>"}</dd>
+      <dt>Model answer</dt><dd><span class="badge s-${e.status}">${STATUS_LABEL[e.status]}</span> ${esc(e.answer)}</dd>
+      <dt>Selected facts</dt><dd>${e.facts.map(f => `<div><span class="mono muted">${esc(f.doc_id)}</span> ${esc(f.text)}</div>`).join("") || "—"}</dd>
+    </dl></div>`).join("") : `<div class="empty">No errors</div>`;
+}
+
+/* ---- charts: inline SVG ---- */
+function axes(W, H, P, xTicks, yTicks, xLabel, yLabel) {
+  let s = "";
+  for (const t of yTicks) s += `<line x1="${P.l}" x2="${W - P.r}" y1="${t.y}" y2="${t.y}" stroke="var(--line)"/><text x="${P.l - 6}" y="${t.y + 4}" text-anchor="end">${t.label}</text>`;
+  for (const t of xTicks) s += `<text x="${t.x}" y="${H - P.b + 16}" text-anchor="middle">${t.label}</text>`;
+  s += `<line x1="${P.l}" x2="${W - P.r}" y1="${H - P.b}" y2="${H - P.b}" stroke="var(--line-strong)"/>`;
+  s += `<text x="${(P.l + W - P.r) / 2}" y="${H - 4}" text-anchor="middle">${xLabel}</text>`;
+  s += `<text transform="translate(12 ${(P.t + H - P.b) / 2}) rotate(-90)" text-anchor="middle">${yLabel}</text>`;
+  return s;
+}
+function nice(max) { if (!(max > 0)) return 1; const p = 10 ** Math.floor(Math.log10(max)); return Math.ceil(max / p) * p; }
+function money(v) { return "$" + (v >= 100 ? Math.round(v) : +v.toPrecision(2)); }
+function legend(rows) { return `<div class="legend">${rows.map(r => `<span class="vname" style="font-weight:400"><span class="dot" style="background:${color(r.variant)}"></span>${VARIANT_LABEL[r.variant]}</span>`).join("")}</div>`; }
+function drawCharts() {
+  const rows = (state.compare?.rows || []).filter(r => r.cost_per_1k_usd != null);
+  const W = 520, H = 280, PAD = { l: 56, r: 100, t: 12, b: 40 };
+  if (!rows.length) { $("#c-chart1").innerHTML = $("#c-chart2").innerHTML = `<div class="empty">Run Measure speed to see results</div>`; return; }
+  const F = [0, .25, .5, .75, 1];
+
+  // 1. accuracy vs cost per 1k queries
+  const xMax = nice(Math.max(...rows.map(r => r.cost_per_1k_usd)) * 1.1);
+  const x = v => PAD.l + v / xMax * (W - PAD.l - PAD.r), y = v => H - PAD.b - v * (H - PAD.t - PAD.b);
+  let s1 = axes(W, H, PAD, F.map(f => ({ x: x(f * xMax), label: money(f * xMax) })), F.map(f => ({ y: y(f), label: f * 100 + "%" })),
+    "cost per 1,000 queries", "accuracy");
+  const withAcc = rows.filter(r => r.accuracy != null);
+  for (const r of withAcc) {
+    s1 += `<circle cx="${x(r.cost_per_1k_usd)}" cy="${y(r.accuracy)}" r="7" fill="${color(r.variant)}" stroke="var(--panel)" stroke-width="2">
+        <title>${VARIANT_LABEL[r.variant]}: ${fmtPct(r.accuracy)}, ${fmtUsd(r.cost_per_1k_usd)}</title></circle>`;
+  }
+  // labels go right of the rightmost point in a cluster of nearby points, stacked without overlap
+  const pts = withAcc.map(r => ({ r, cx: x(r.cost_per_1k_usd), cy: y(r.accuracy) }));
+  const labels = pts.map(p => {
+    const cluster = pts.filter(o => Math.abs(o.cy - p.cy) < 16 && Math.abs(o.cx - p.cx) < 40);
+    return { text: VARIANT_LABEL[p.r.variant], x: Math.max(...cluster.map(o => o.cx)) + 12, y: p.cy + 4, v: p.r.variant };
+  });
+  for (const l of placeLabels(labels)) s1 += `<text x="${l.x}" y="${l.y}" style="fill:${color(l.v)}">${l.text}</text>`;
+  $("#c-chart1").innerHTML = withAcc.length
+    ? `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Quality vs. response cost">${s1}</svg>`
+    : `<div class="empty">Run Check quality to see results</div>`;
+
+  // 2. total cost vs requests: bake × (1 + updates) + requests × cost per query
+  const updates = Math.max(0, parseInt($("#c-updates").value, 10) || 0);
+  const N = 1_000_000;
+  const total = (r, n) => (r.bake_cost_usd || 0) * (1 + updates) + n / 1000 * r.cost_per_1k_usd;
+  const yMax = nice(Math.max(...rows.map(r => total(r, N))) * 1.05);
+  const x2 = n => PAD.l + n / N * (W - PAD.l - PAD.r), y2 = v => H - PAD.b - v / yMax * (H - PAD.t - PAD.b);
+  let s2 = axes(W, H, PAD, F.map(f => ({ x: x2(f * N), label: f ? (f * N / 1000) + "k" : "0" })),
+    F.map(f => ({ y: y2(f * yMax), label: money(f * yMax) })), "query count", "total cost");
+  for (const r of rows) {
+    s2 += `<polyline fill="none" stroke="${color(r.variant)}" stroke-width="2.5" points="${F.map(f => `${x2(f * N)},${y2(total(r, f * N))}`).join(" ")}">
+      <title>${VARIANT_LABEL[r.variant]}: ${fmtUsd(total(r, N))} for 1M queries</title></polyline>`;
+  }
+  const ends = rows.map(r => ({ text: `${VARIANT_LABEL[r.variant]} ${money(total(r, N))}`, x: x2(N) + 6, y: y2(total(r, N)) + 4, v: r.variant }));
+  for (const l of placeLabels(ends, 13, 70, -1)) s2 += `<text x="${l.x}" y="${l.y}" style="fill:${color(l.v)}">${l.text}</text>`;
+  $("#c-chart2").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Total cost vs. query volume">${s2}</svg>${legend(rows)}`;
+}
+
+/* ---------------- boot ---------------- */
+(async () => {
+  let tab = "query";
+  try { tab = localStorage.getItem("memory.tab") || tab; } catch {}
+  $("#c-table").innerHTML = EMPTY_TABLE;
+  await loadProjects();
+  await loadOverview();
+  showTab(["query", "memory", "compare"].includes(tab) ? tab : "query");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1740 @@
+[
+  {
+    "gold": {
+      "question": "Repository itsdangerous. An invalid signed token reaches the Signer validation helper. What boolean is returned?",
+      "answer": "False",
+      "supporting_fact_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-0",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. An invalid signed token reaches the Signer validation helper. What boolean is returned?",
+      "answer": "False",
+      "selected_fact_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ],
+      "copied_answer": "Signer.validate",
+      "source_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. A Signer receives an unsigned string with no dot. Name the exception raised by unsign.",
+      "answer": "BadSignature",
+      "supporting_fact_ids": [
+        "CODE-66c94ecd7ad7e94dd17adfe2"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-1",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. A Signer receives an unsigned string with no dot. Name the exception raised by unsign.",
+      "answer": "BadSignature",
+      "selected_fact_ids": [
+        "CODE-66c94ecd7ad7e94dd17adfe2"
+      ],
+      "copied_answer": "Signer.unsign",
+      "source_ids": [
+        "CODE-66c94ecd7ad7e94dd17adfe2"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. Without a sep argument, which character separates a value from its signature?",
+      "answer": ".",
+      "supporting_fact_ids": [
+        "CODE-b41c0eba030625674e2dafa0"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-2",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. Without a sep argument, which character separates a value from its signature?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-b41c0eba030625674e2dafa0"
+      ],
+      "copied_answer": "Signer.__init__",
+      "source_ids": [
+        "CODE-b41c0eba030625674e2dafa0"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. Derive a signing key with key_derivation='invalid'. Which exception results?",
+      "answer": "TypeError",
+      "supporting_fact_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-3",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. Derive a signing key with key_derivation='invalid'. Which exception results?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ],
+      "copied_answer": "Signer.derive_key",
+      "source_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. Does verification still accept the old key when both old and new secret keys are configured?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-f0a1374dc36ebbf8eccd76de"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-4",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. Does verification still accept the old key when both old and new secret keys are configured?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-f0a1374dc36ebbf8eccd76de"
+      ],
+      "copied_answer": "Signer.verify_signature",
+      "source_ids": [
+        "CODE-f0a1374dc36ebbf8eccd76de"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. Are signatures produced with keys ['old','new'] identical to using only 'new'?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-c6f2b32c7f44f94f266a8cb2",
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase",
+        "multi"
+      ],
+      "case_id": "case-5",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. Are signatures produced with keys ['old','new'] identical to using only 'new'?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ],
+      "copied_answer": "Signer.derive_key",
+      "source_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. Is '=' padding preserved by the package's base64 encoding helper?",
+      "answer": "False",
+      "supporting_fact_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-6",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. Is '=' padding preserved by the package's base64 encoding helper?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ],
+      "copied_answer": "base64_encode",
+      "source_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. Decode an empty byte string with the package's integer helper. Give the integer.",
+      "answer": "0",
+      "supporting_fact_ids": [
+        "CODE-f6237feb1fc58e18adc1473f"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-7",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. Decode an empty byte string with the package's integer helper. Give the integer.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-f6237feb1fc58e18adc1473f"
+      ],
+      "copied_answer": "bytes_to_int",
+      "source_ids": [
+        "CODE-f6237feb1fc58e18adc1473f"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. The signed payload is 11 seconds old and max_age is 10. What exception is raised?",
+      "answer": "SignatureExpired",
+      "supporting_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-8",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. The signed payload is 11 seconds old and max_age is 10. What exception is raised?",
+      "answer": "SignatureExpired",
+      "selected_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ],
+      "copied_answer": "TimestampSigner.unsign",
+      "source_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. Age equals max_age exactly. Does unsign raise an exception or succeed? Return NO_EXCEPTION if it succeeds.",
+      "answer": "NO_EXCEPTION",
+      "supporting_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "heldout_behavior"
+      ],
+      "case_id": "case-9",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. Age equals max_age exactly. Does unsign raise an exception or succeed? Return NO_EXCEPTION if it succeeds.",
+      "answer": "NO_EXCEPTION",
+      "selected_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ],
+      "copied_answer": "TimestampSigner.unsign",
+      "source_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. A signature has a negative age and max_age is enabled. Name the exception.",
+      "answer": "SignatureExpired",
+      "supporting_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "heldout_behavior"
+      ],
+      "case_id": "case-10",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. A signature has a negative age and max_age is enabled. Name the exception.",
+      "answer": "SignatureExpired",
+      "selected_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ],
+      "copied_answer": "TimestampSigner.unsign",
+      "source_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository itsdangerous. Does encoding integer 256 put byte 1 before byte 0? Return True or False.",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-960f609434f9fce253cb34a0"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "behavior",
+        "heldout_behavior"
+      ],
+      "case_id": "case-11",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository itsdangerous. Does encoding integer 256 put byte 1 before byte 0? Return True or False.",
+      "answer": "True",
+      "selected_fact_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ],
+      "copied_answer": "base64_encode",
+      "source_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. What does the success predicate return for a 204 response?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-12",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. What does the success predicate return for a 204 response?",
+      "answer": "bool",
+      "selected_fact_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ],
+      "copied_answer": "Response.is_success",
+      "source_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. A response status is 404. What boolean does the error property report?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-13",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. A response status is 404. What boolean does the error property report?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ],
+      "copied_answer": "Response.is_error",
+      "source_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. For a 302 HTTP response, is the redirect flag True or False?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-ebcae66ee1c4ce1bac5742db"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-14",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. For a 302 HTTP response, is the redirect flag True or False?",
+      "answer": "True",
+      "selected_fact_ids": [
+        "CODE-ebcae66ee1c4ce1bac5742db"
+      ],
+      "copied_answer": "Response.is_redirect",
+      "source_ids": [
+        "CODE-ebcae66ee1c4ce1bac5742db"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. Calling raise_for_status on a requested URL that returned 404 raises which exception class?",
+      "answer": "HTTPStatusError",
+      "supporting_fact_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-15",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. Calling raise_for_status on a requested URL that returned 404 raises which exception class?",
+      "answer": "HTTPStatusError",
+      "selected_fact_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ],
+      "copied_answer": "Response.raise_for_status",
+      "source_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. A newly constructed Response lacks its Request. Name the error from raise_for_status.",
+      "answer": "RuntimeError",
+      "supporting_fact_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-16",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. A newly constructed Response lacks its Request. Name the error from raise_for_status.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ],
+      "copied_answer": "Response.raise_for_status",
+      "source_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. Can Headers({'X-Test':'yes'}) be read with key 'x-test'? Return True or False.",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-c6e281604cb62348ceac4c4c"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-17",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. Can Headers({'X-Test':'yes'}) be read with key 'x-test'? Return True or False.",
+      "answer": "True",
+      "selected_fact_ids": [
+        "CODE-c6e281604cb62348ceac4c4c"
+      ],
+      "copied_answer": "Headers.__getitem__",
+      "source_ids": [
+        "CODE-c6e281604cb62348ceac4c4c"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. HTTPX receives a scalar timeout of 5. Give the configured read timeout.",
+      "answer": "5",
+      "supporting_fact_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-18",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. HTTPX receives a scalar timeout of 5. Give the configured read timeout.",
+      "answer": "5",
+      "selected_fact_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ],
+      "copied_answer": "Timeout.__init__",
+      "source_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. An HTTPX response body contains the JSON literal true. Give the decoded Python boolean.",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-ba7f00ca91b0aad3e4382a92"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-19",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. An HTTPX response body contains the JSON literal true. Give the decoded Python boolean.",
+      "answer": "bool",
+      "selected_fact_ids": [
+        "CODE-ba7f00ca91b0aad3e4382a92"
+      ],
+      "copied_answer": "Response.json",
+      "source_ids": [
+        "CODE-ba7f00ca91b0aad3e4382a92"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. Is the upper end of HTTPX's 2xx range, status 299, considered successful?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "heldout_behavior"
+      ],
+      "case_id": "case-20",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. Is the upper end of HTTPX's 2xx range, status 299, considered successful?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ],
+      "copied_answer": "Response.is_success",
+      "source_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository httpx. Is a redirection response also marked as an HTTP error by is_error?",
+      "answer": "False",
+      "supporting_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "behavior",
+        "heldout_behavior"
+      ],
+      "case_id": "case-21",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository httpx. Is a redirection response also marked as an HTTP error by is_error?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ],
+      "copied_answer": "Response.is_error",
+      "source_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. HTML-escape the literal <b> using Django. Return only the resulting text.",
+      "answer": "&lt;b&gt;",
+      "supporting_fact_ids": [
+        "CODE-ea8a34a6fa99cba809e1c902"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-22",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. HTML-escape the literal <b> using Django. Return only the resulting text.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-ea8a34a6fa99cba809e1c902"
+      ],
+      "copied_answer": "escape",
+      "source_ids": [
+        "CODE-ea8a34a6fa99cba809e1c902"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. Remove the HTML tags from <b>Hello</b> with Django's helper. Give the result.",
+      "answer": "Hello",
+      "supporting_fact_ids": [
+        "CODE-c56a59cd060c920c06508782"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-23",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. Remove the HTML tags from <b>Hello</b> with Django's helper. Give the result.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-c56a59cd060c920c06508782"
+      ],
+      "copied_answer": "strip_tags",
+      "source_ids": [
+        "CODE-c56a59cd060c920c06508782"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. Convert Hello World into Django's default URL slug.",
+      "answer": "hello-world",
+      "supporting_fact_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-24",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. Convert Hello World into Django's default URL slug.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ],
+      "copied_answer": "slugify",
+      "source_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. Django decodes the byte string b'hello' with force_str. What text is produced?",
+      "answer": "hello",
+      "supporting_fact_ids": [
+        "CODE-7facd9b96af1f730825da1eb"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-25",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. Django decodes the byte string b'hello' with force_str. What text is produced?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-7facd9b96af1f730825da1eb"
+      ],
+      "copied_answer": "force_str",
+      "source_ids": [
+        "CODE-7facd9b96af1f730825da1eb"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. Comparing 'same' with 'same' using Django's timing-safe equality helper gives which boolean?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-26",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. Comparing 'same' with 'same' using Django's timing-safe equality helper gives which boolean?",
+      "answer": "boolean",
+      "selected_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ],
+      "copied_answer": "constant_time_compare",
+      "source_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. What does Django's constant-time comparison return for 'one' and 'two'?",
+      "answer": "False",
+      "supporting_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-27",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. What does Django's constant-time comparison return for 'one' and 'two'?",
+      "answer": "constant_time_compare",
+      "selected_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ],
+      "copied_answer": "constant_time_compare",
+      "source_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. Pass the string 'not-a-date' to Django's date parser. Give its return value.",
+      "answer": "None",
+      "supporting_fact_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-28",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. Pass the string 'not-a-date' to Django's date parser. Give its return value.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ],
+      "copied_answer": "parse_date",
+      "source_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. For datetime(2025,1,1,tzinfo=UTC), what boolean does Django is_aware return?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-6c7975f1c29857b2a32cc92b"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-29",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. For datetime(2025,1,1,tzinfo=UTC), what boolean does Django is_aware return?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-6c7975f1c29857b2a32cc92b"
+      ],
+      "copied_answer": "is_aware",
+      "source_ids": [
+        "CODE-6c7975f1c29857b2a32cc92b"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. What does Django is_naive report for datetime(2025,1,1) without a timezone?",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "paraphrase"
+      ],
+      "case_id": "case-30",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. What does Django is_naive report for datetime(2025,1,1) without a timezone?",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ],
+      "copied_answer": "is_naive",
+      "source_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. With allow_unicode=True, does slugifying 'café' preserve 'é'? Return True or False.",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "heldout_behavior"
+      ],
+      "case_id": "case-31",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. With allow_unicode=True, does slugifying 'café' preserve 'é'? Return True or False.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ],
+      "copied_answer": "slugify",
+      "source_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. Django parses '2025-02-30'. Name the exception instead of its message.",
+      "answer": "ValueError",
+      "supporting_fact_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "heldout_behavior"
+      ],
+      "case_id": "case-32",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. Django parses '2025-02-30'. Name the exception instead of its message.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ],
+      "copied_answer": "Response.is_error",
+      "source_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Repository django. Django compares b'abc' and 'abc' with constant_time_compare. Give the resulting boolean.",
+      "answer": "True",
+      "supporting_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "behavior",
+        "heldout_behavior"
+      ],
+      "case_id": "case-33",
+      "copy_evaluable": false
+    },
+    "prediction": {
+      "question": "Repository django. Django compares b'abc' and 'abc' with constant_time_compare. Give the resulting boolean.",
+      "answer": "boolean",
+      "selected_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ],
+      "copied_answer": "constant_time_compare",
+      "source_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need base64_encode from itsdangerous; return its qualified name.",
+      "answer": "base64_encode",
+      "supporting_fact_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-11c6f694eaf90ef0d02346b9",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need base64_encode from itsdangerous; return its qualified name.",
+      "answer": "bytes",
+      "selected_fact_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ],
+      "copied_answer": "base64_encode",
+      "source_ids": [
+        "CODE-11c6f694eaf90ef0d02346b9"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need bytes_to_int from itsdangerous; return its qualified name.",
+      "answer": "bytes_to_int",
+      "supporting_fact_ids": [
+        "CODE-f6237feb1fc58e18adc1473f"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-f6237feb1fc58e18adc1473f",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need bytes_to_int from itsdangerous; return its qualified name.",
+      "answer": "bytes_to_int",
+      "selected_fact_ids": [
+        "CODE-f6237feb1fc58e18adc1473f"
+      ],
+      "copied_answer": "bytes_to_int",
+      "source_ids": [
+        "CODE-f6237feb1fc58e18adc1473f"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Signer.__init__ from itsdangerous; return its qualified name.",
+      "answer": "Signer.__init__",
+      "supporting_fact_ids": [
+        "CODE-b41c0eba030625674e2dafa0"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-b41c0eba030625674e2dafa0",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Signer.__init__ from itsdangerous; return its qualified name.",
+      "answer": "itsdangerous/src/itsdangerous/signer.py",
+      "selected_fact_ids": [
+        "CODE-b41c0eba030625674e2dafa0"
+      ],
+      "copied_answer": "Signer.__init__",
+      "source_ids": [
+        "CODE-b41c0eba030625674e2dafa0"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Signer.derive_key from itsdangerous; return its qualified name.",
+      "answer": "Signer.derive_key",
+      "supporting_fact_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-cf4f778cf6bb2ade7b876444",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Signer.derive_key from itsdangerous; return its qualified name.",
+      "answer": "derive_key",
+      "selected_fact_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ],
+      "copied_answer": "Signer.derive_key",
+      "source_ids": [
+        "CODE-cf4f778cf6bb2ade7b876444"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Signer.sign from itsdangerous; return its qualified name.",
+      "answer": "Signer.sign",
+      "supporting_fact_ids": [
+        "CODE-c6f2b32c7f44f94f266a8cb2"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-c6f2b32c7f44f94f266a8cb2",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Signer.sign from itsdangerous; return its qualified name.",
+      "answer": "signatures",
+      "selected_fact_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ],
+      "copied_answer": "Signer.validate",
+      "source_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Signer.verify_signature from itsdangerous; return its qualified name.",
+      "answer": "Signer.verify_signature",
+      "supporting_fact_ids": [
+        "CODE-f0a1374dc36ebbf8eccd76de"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-f0a1374dc36ebbf8eccd76de",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Signer.verify_signature from itsdangerous; return its qualified name.",
+      "answer": "signer.verify_signature",
+      "selected_fact_ids": [
+        "CODE-f0a1374dc36ebbf8eccd76de"
+      ],
+      "copied_answer": "Signer.verify_signature",
+      "source_ids": [
+        "CODE-f0a1374dc36ebbf8eccd76de"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Signer.unsign from itsdangerous; return its qualified name.",
+      "answer": "Signer.unsign",
+      "supporting_fact_ids": [
+        "CODE-66c94ecd7ad7e94dd17adfe2"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-66c94ecd7ad7e94dd17adfe2",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Signer.unsign from itsdangerous; return its qualified name.",
+      "answer": "signer",
+      "selected_fact_ids": [
+        "CODE-66c94ecd7ad7e94dd17adfe2"
+      ],
+      "copied_answer": "Signer.unsign",
+      "source_ids": [
+        "CODE-66c94ecd7ad7e94dd17adfe2"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Signer.validate from itsdangerous; return its qualified name.",
+      "answer": "Signer.validate",
+      "supporting_fact_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-b1771d81a42922d76cf96390",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Signer.validate from itsdangerous; return its qualified name.",
+      "answer": "signer.validate",
+      "selected_fact_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ],
+      "copied_answer": "Signer.validate",
+      "source_ids": [
+        "CODE-b1771d81a42922d76cf96390"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need TimestampSigner.unsign from itsdangerous; return its qualified name.",
+      "answer": "TimestampSigner.unsign",
+      "supporting_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ],
+      "answerable": true,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "location"
+      ],
+      "case_id": "location-CODE-6294f7b47c2cb0cc282474e7",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need TimestampSigner.unsign from itsdangerous; return its qualified name.",
+      "answer": "timestamp_signer",
+      "selected_fact_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ],
+      "copied_answer": "TimestampSigner.unsign",
+      "source_ids": [
+        "CODE-6294f7b47c2cb0cc282474e7"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Timeout.__init__ from httpx; return its qualified name.",
+      "answer": "Timeout.__init__",
+      "supporting_fact_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "location"
+      ],
+      "case_id": "location-CODE-096e4a939d682e0476f495f2",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Timeout.__init__ from httpx; return its qualified name.",
+      "answer": "httpx.Timeout",
+      "selected_fact_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ],
+      "copied_answer": "Timeout.__init__",
+      "source_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Headers.__getitem__ from httpx; return its qualified name.",
+      "answer": "Headers.__getitem__",
+      "supporting_fact_ids": [
+        "CODE-c6e281604cb62348ceac4c4c"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "location"
+      ],
+      "case_id": "location-CODE-c6e281604cb62348ceac4c4c",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Headers.__getitem__ from httpx; return its qualified name.",
+      "answer": "Headers.__getitem__",
+      "selected_fact_ids": [
+        "CODE-c6e281604cb62348ceac4c4c"
+      ],
+      "copied_answer": "Headers.__getitem__",
+      "source_ids": [
+        "CODE-c6e281604cb62348ceac4c4c"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Response.is_success from httpx; return its qualified name.",
+      "answer": "Response.is_success",
+      "supporting_fact_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "location"
+      ],
+      "case_id": "location-CODE-c92fad9f9ca33ed5cf4502ac",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Response.is_success from httpx; return its qualified name.",
+      "answer": "Response.is_success",
+      "selected_fact_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ],
+      "copied_answer": "Response.is_success",
+      "source_ids": [
+        "CODE-c92fad9f9ca33ed5cf4502ac"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Response.is_redirect from httpx; return its qualified name.",
+      "answer": "Response.is_redirect",
+      "supporting_fact_ids": [
+        "CODE-ebcae66ee1c4ce1bac5742db"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "location"
+      ],
+      "case_id": "location-CODE-ebcae66ee1c4ce1bac5742db",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Response.is_redirect from httpx; return its qualified name.",
+      "answer": "Response.is_redirect",
+      "selected_fact_ids": [
+        "CODE-ebcae66ee1c4ce1bac5742db"
+      ],
+      "copied_answer": "Response.is_redirect",
+      "source_ids": [
+        "CODE-ebcae66ee1c4ce1bac5742db"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Response.is_error from httpx; return its qualified name.",
+      "answer": "Response.is_error",
+      "supporting_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "location"
+      ],
+      "case_id": "location-CODE-50b317e4da4e503dcc6e7de4",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Response.is_error from httpx; return its qualified name.",
+      "answer": "Response.is_error",
+      "selected_fact_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ],
+      "copied_answer": "Response.is_error",
+      "source_ids": [
+        "CODE-50b317e4da4e503dcc6e7de4"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Response.raise_for_status from httpx; return its qualified name.",
+      "answer": "Response.raise_for_status",
+      "supporting_fact_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "location"
+      ],
+      "case_id": "location-CODE-2ab7da3053ad2985df641bd8",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Response.raise_for_status from httpx; return its qualified name.",
+      "answer": "HTTPStatusError",
+      "selected_fact_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ],
+      "copied_answer": "Response.raise_for_status",
+      "source_ids": [
+        "CODE-2ab7da3053ad2985df641bd8"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need Response.json from httpx; return its qualified name.",
+      "answer": "Response.json",
+      "supporting_fact_ids": [
+        "CODE-ba7f00ca91b0aad3e4382a92"
+      ],
+      "answerable": true,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "location"
+      ],
+      "case_id": "location-CODE-ba7f00ca91b0aad3e4382a92",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need Response.json from httpx; return its qualified name.",
+      "answer": "jsonlib",
+      "selected_fact_ids": [
+        "CODE-ba7f00ca91b0aad3e4382a92"
+      ],
+      "copied_answer": "Response.json",
+      "source_ids": [
+        "CODE-ba7f00ca91b0aad3e4382a92"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need constant_time_compare from django; return its qualified name.",
+      "answer": "constant_time_compare",
+      "supporting_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "location"
+      ],
+      "case_id": "location-CODE-505099e6c20e539a7c524b2d",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need constant_time_compare from django; return its qualified name.",
+      "answer": "secrets",
+      "selected_fact_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ],
+      "copied_answer": "constant_time_compare",
+      "source_ids": [
+        "CODE-505099e6c20e539a7c524b2d"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need parse_date from django; return its qualified name.",
+      "answer": "parse_date",
+      "supporting_fact_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "location"
+      ],
+      "case_id": "location-CODE-5e931895c58cc27a64876fb7",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need parse_date from django; return its qualified name.",
+      "answer": "parse_date",
+      "selected_fact_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ],
+      "copied_answer": "parse_date",
+      "source_ids": [
+        "CODE-5e931895c58cc27a64876fb7"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need force_str from django; return its qualified name.",
+      "answer": "force_str",
+      "supporting_fact_ids": [
+        "CODE-7facd9b96af1f730825da1eb"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "location"
+      ],
+      "case_id": "location-CODE-7facd9b96af1f730825da1eb",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need force_str from django; return its qualified name.",
+      "answer": "force_str",
+      "selected_fact_ids": [
+        "CODE-7facd9b96af1f730825da1eb"
+      ],
+      "copied_answer": "force_str",
+      "source_ids": [
+        "CODE-7facd9b96af1f730825da1eb"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need escape from django; return its qualified name.",
+      "answer": "escape",
+      "supporting_fact_ids": [
+        "CODE-ea8a34a6fa99cba809e1c902"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "location"
+      ],
+      "case_id": "location-CODE-ea8a34a6fa99cba809e1c902",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need escape from django; return its qualified name.",
+      "answer": "html.escape",
+      "selected_fact_ids": [
+        "CODE-ea8a34a6fa99cba809e1c902"
+      ],
+      "copied_answer": "escape",
+      "source_ids": [
+        "CODE-ea8a34a6fa99cba809e1c902"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need strip_tags from django; return its qualified name.",
+      "answer": "strip_tags",
+      "supporting_fact_ids": [
+        "CODE-c56a59cd060c920c06508782"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "location"
+      ],
+      "case_id": "location-CODE-c56a59cd060c920c06508782",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need strip_tags from django; return its qualified name.",
+      "answer": "django/django/utils/html.py",
+      "selected_fact_ids": [
+        "CODE-c56a59cd060c920c06508782"
+      ],
+      "copied_answer": "strip_tags",
+      "source_ids": [
+        "CODE-c56a59cd060c920c06508782"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need slugify from django; return its qualified name.",
+      "answer": "slugify",
+      "supporting_fact_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "location"
+      ],
+      "case_id": "location-CODE-339ac804d835aa916eead775",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need slugify from django; return its qualified name.",
+      "answer": "slugify",
+      "selected_fact_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ],
+      "copied_answer": "slugify",
+      "source_ids": [
+        "CODE-339ac804d835aa916eead775"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need is_aware from django; return its qualified name.",
+      "answer": "is_aware",
+      "supporting_fact_ids": [
+        "CODE-6c7975f1c29857b2a32cc92b"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "location"
+      ],
+      "case_id": "location-CODE-6c7975f1c29857b2a32cc92b",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need is_aware from django; return its qualified name.",
+      "answer": "django.utils.timezone.is_aware",
+      "selected_fact_ids": [
+        "CODE-6c7975f1c29857b2a32cc92b"
+      ],
+      "copied_answer": "is_aware",
+      "source_ids": [
+        "CODE-6c7975f1c29857b2a32cc92b"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "I need is_naive from django; return its qualified name.",
+      "answer": "is_naive",
+      "supporting_fact_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ],
+      "answerable": true,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "location"
+      ],
+      "case_id": "location-CODE-962686128f7859b7acbb768d",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "I need is_naive from django; return its qualified name.",
+      "answer": "django/utils/timezone.py",
+      "selected_fact_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ],
+      "copied_answer": "is_naive",
+      "source_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Find the imaginary intergalactic_payment_engine symbol in itsdangerous.",
+      "answer": "UNKNOWN",
+      "supporting_fact_ids": [],
+      "answerable": false,
+      "family": "test_itsdangerous",
+      "tags": [
+        "itsdangerous",
+        "unknown"
+      ],
+      "case_id": "unknown-itsdangerous",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "Find the imaginary intergalactic_payment_engine symbol in itsdangerous.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ],
+      "copied_answer": "is_naive",
+      "source_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Find the imaginary intergalactic_payment_engine symbol in httpx.",
+      "answer": "UNKNOWN",
+      "supporting_fact_ids": [],
+      "answerable": false,
+      "family": "test_httpx",
+      "tags": [
+        "httpx",
+        "unknown"
+      ],
+      "case_id": "unknown-httpx",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "Find the imaginary intergalactic_payment_engine symbol in httpx.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ],
+      "copied_answer": "Timeout.__init__",
+      "source_ids": [
+        "CODE-096e4a939d682e0476f495f2"
+      ]
+    }
+  },
+  {
+    "gold": {
+      "question": "Find the imaginary intergalactic_payment_engine symbol in django.",
+      "answer": "UNKNOWN",
+      "supporting_fact_ids": [],
+      "answerable": false,
+      "family": "test_django",
+      "tags": [
+        "django",
+        "unknown"
+      ],
+      "case_id": "unknown-django",
+      "copy_evaluable": true
+    },
+    "prediction": {
+      "question": "Find the imaginary intergalactic_payment_engine symbol in django.",
+      "answer": "UNKNOWN",
+      "selected_fact_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ],
+      "copied_answer": "is_naive",
+      "source_ids": [
+        "CODE-962686128f7859b7acbb768d"
+      ]
+    }
+  }
+]

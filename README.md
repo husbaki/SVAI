@@ -16,6 +16,17 @@ $env:SVAI_MODEL_CACHE = 'C:\path\to\huggingface-cache'
 
 Open [workspace](http://127.0.0.1:8011/) or [API documentation](http://127.0.0.1:8011/docs).
 
+### Hackathon website
+
+With the backend running on port 8011, open a second terminal in this repository:
+
+```powershell
+npm ci
+npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
+```
+
+Open [Hyper Warp website](http://127.0.0.1:5173/) and its [interface tutorial](http://127.0.0.1:5173/tutorial.html). The corridor design, English interface, Hide window / Esc and Show memory are preserved. Requests go through the Vite `/api` proxy to the real backend. Browser mock data and simulated baking have been removed. `npm run build` produces the static frontend; serving it in production requires routing `/api` to the backend.
+
 `SVAI_DB` overrides the SQLite database path. `SVAI_DEVICE` accepts `auto`, `cuda`, or `cpu`. Models load lazily, or through `POST /api/model/load`. Base models are Qwen/Qwen2.5-0.5B-Instruct and sentence-transformers/all-MiniLM-L6-v2.
 
 ## Sources and hybrid checkpoint

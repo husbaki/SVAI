@@ -176,6 +176,8 @@ def query(payload: QueryRequest):
                     response = adapter.query(payload.question, documents, payload.top_k)
                 except ValueError as exc:
                     raise HTTPException(422, str(exc))
+                except Exception as exc:
+                    raise HTTPException(503, f"Hybrid engine unavailable: {type(exc).__name__}: {exc}")
                 selected = {d["id"]: d for d in documents}
                 citations = [citation(selected[key]) for key in response.get("document_ids", []) if key in selected]
                 return dict(question=payload.question, answer=response["answer"], citations=citations,
@@ -207,6 +209,10 @@ def query(payload: QueryRequest):
     result["elapsed_ms"] += round((time.perf_counter()-start)*1000, 3)
     result["caveat"] = "Source hashes verify identity. Neural relevance and generated explanations can be wrong; no trained compiled code-memory quality is claimed."
     return result
+
+
+from .legacy_api import create_router
+app.include_router(create_router(store, ml, query, QueryRequest, ROOT))
 
 
 static = ROOT / "static"

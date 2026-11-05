@@ -67,17 +67,26 @@ class LocalML:
             try:
                 import torch
                 from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
+                from huggingface_hub import snapshot_download
+                from huggingface_hub.errors import LocalEntryNotFoundError
                 self.torch = torch
                 if self.device == "auto":
                     self.device = "cuda" if torch.cuda.is_available() else "cpu"
                 dtype = torch.bfloat16 if self.device == "cuda" and torch.cuda.is_bf16_supported() else torch.float32
                 opts = dict(cache_dir=self.cache)
-                self.tokenizer = AutoTokenizer.from_pretrained(self.model_id, **opts)
-                self.model = AutoModelForCausalLM.from_pretrained(self.model_id, torch_dtype=dtype,
+                def reference(model_id):
+                    # Local paths bypass tokenizer metadata probes that break offline use.
+                    try:
+                        return snapshot_download(model_id, cache_dir=self.cache, local_files_only=True)
+                    except LocalEntryNotFoundError:
+                        return model_id
+                llm_reference, encoder_reference = reference(self.model_id), reference(self.encoder_id)
+                self.tokenizer = AutoTokenizer.from_pretrained(llm_reference, **opts)
+                self.model = AutoModelForCausalLM.from_pretrained(llm_reference, torch_dtype=dtype,
                     attn_implementation="sdpa", **opts).to(self.device).eval()
                 self.model.requires_grad_(False)
-                self.encoder_tokenizer = AutoTokenizer.from_pretrained(self.encoder_id, **opts)
-                self.encoder = AutoModel.from_pretrained(self.encoder_id, **opts).to(self.device).eval()
+                self.encoder_tokenizer = AutoTokenizer.from_pretrained(encoder_reference, **opts)
+                self.encoder = AutoModel.from_pretrained(encoder_reference, **opts).to(self.device).eval()
                 self.encoder.requires_grad_(False)
                 self.loaded, self.error = True, None
             except Exception as exc:

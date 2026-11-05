@@ -1,0 +1,28 @@
+{
+  "checks": [
+    "real_projects_overview_and_error_schema",
+    "actual_hybrid_query_and_source_drawer",
+    "saved_offline_metrics_actual_errors_and_measured_bake_time",
+    "archived_evaluate_benchmark_are_not_fresh_experiments",
+    "existing_snapshot_validation_not_simulated_training",
+    "persistent_upload_update_real_qwen_answer_3_to_7_and_explicit_rag_fallback",
+    "temporary_documents_and_jobs_cleaned"
+  ],
+  "query": {
+    "answer": "False",
+    "actual_mode": "hybrid",
+    "facts": 1
+  },
+  "saved_comparison": {
+    "accuracy": 0.7540983606557377,
+    "questions": 61,
+    "error_count": 15,
+    "executed_now": false
+  },
+  "changed_document": {
+    "before": "3",
+    "after": "7",
+    "actual_mode": "rag"
+  },
+  "scope": "Live compatibility integration checks; archived quality remains a separate 61-question experiment"
+}
