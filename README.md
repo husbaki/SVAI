@@ -4,7 +4,7 @@
 
 HyperWarp combines learned neural memory with exact source retrieval. A shared hybrid model selects code fragments and supplies learned context to Qwen, then returns an answer alongside the original source.
 
-[Open local demo](http://127.0.0.1:5173/) · [Quick start](http://127.0.0.1:5173/tutorial.html) · [API docs](http://127.0.0.1:8011/docs)
+[Watch demo video (1:28)](docs/visuals/hyperwarp-demo.mp4) · [Open local demo](http://127.0.0.1:5173/) · [Quick start](http://127.0.0.1:5173/tutorial.html) · [API docs](http://127.0.0.1:8011/docs)
 
 ## Key results
 
